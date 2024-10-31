@@ -1,25 +1,44 @@
 package model;
 
+import model.algorithms.IAlgorithms;
+
 import java.util.Objects;
 
 public class System {
-    private boolean isEncrypt, isFile;
+    private boolean isEncrypt, isFile, isLoadKey;
     private String mode;
-    private String algorithm;
-    private String key;
+    private IAlgorithms algorithm;
     private String input;
+    private static System instance;
 
-    public System() {
+    public static System getInstance() {
+        if (instance == null) {
+            instance = new System();
+        }
+        return instance;
     }
 
-    public System(boolean isEncrypt, boolean isFile, String mode, String algorithm, String key, String input) {
+    private System() {
+    }
+
+    public void setInstanceProperties(boolean isEncrypt, boolean isLoadKey, boolean isFile, String mode, IAlgorithms algorithm, String key, String input) {
         this.isEncrypt = isEncrypt;
         this.isFile = isFile;
         this.mode = mode;
         this.algorithm = algorithm;
-        this.key = key;
+        this.isLoadKey = isLoadKey;
         this.input = input;
     }
+//
+//    public System(boolean isEncrypt, boolean isFile, String mode, String algorithm, String key, String input) {
+//        this.isEncrypt = isEncrypt;
+//        this.isFile = isFile;
+//        this.mode = mode;
+//        this.algorithm = algorithm;
+//        this.key = key;
+//        this.input = input;
+//    }
+
 
     @Override
     public String toString() {
@@ -28,7 +47,6 @@ public class System {
                 ", isFile=" + isFile +
                 ", mode='" + mode + '\'' +
                 ", algorithm='" + algorithm + '\'' +
-                ", key='" + key + '\'' +
                 ", input='" + input + '\'' +
                 '}';
     }
@@ -38,12 +56,12 @@ public class System {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         System system = (System) o;
-        return isEncrypt == system.isEncrypt && isFile == system.isFile && Objects.equals(mode, system.mode) && Objects.equals(algorithm, system.algorithm) && Objects.equals(key, system.key) && Objects.equals(input, system.input);
+        return isEncrypt == system.isEncrypt && isFile == system.isFile && Objects.equals(mode, system.mode) && Objects.equals(algorithm, system.algorithm) && Objects.equals(input, system.input);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isEncrypt, isFile, mode, algorithm, key, input);
+        return Objects.hash(isEncrypt, isFile, mode, algorithm, input);
     }
 
     public boolean isEncrypt() {
@@ -70,21 +88,14 @@ public class System {
         this.mode = mode;
     }
 
-    public String getAlgorithm() {
+    public IAlgorithms getAlgorithm() {
         return algorithm;
     }
 
-    public void setAlgorithm(String algorithm) {
+    public void setAlgorithm(IAlgorithms algorithm) {
         this.algorithm = algorithm;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
 
     public String getInput() {
         return input;
@@ -92,5 +103,22 @@ public class System {
 
     public void setInput(String input) {
         this.input = input;
+    }
+
+    public void genKey() {
+        algorithm.genKey();
+    }
+
+    public void loadKey(String key) {
+        isLoadKey = true;
+//        algorithm.loadKey(key);
+    }
+
+    public String encrypt() {
+        return algorithm.encrypt(input);
+    }
+
+    public String decrypt() {
+        return algorithm.decrypt(input);
     }
 }

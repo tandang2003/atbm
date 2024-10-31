@@ -4,7 +4,7 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-import static common.Button.*;
+import static model.common.Button.*;
 
 public class VInputPanel extends JPanel {
     private JButton start;

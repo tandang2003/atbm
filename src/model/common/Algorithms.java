@@ -1,6 +1,4 @@
-package common;
-
-import view.VToolPanel;
+package model.common;
 
 public enum Algorithms {
     //Algorithms

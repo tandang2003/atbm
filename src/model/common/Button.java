@@ -1,4 +1,4 @@
-package common;
+package model.common;
 
 public class Button {
     public static final String ENCRYPT = "Encrypt";

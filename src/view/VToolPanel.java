@@ -5,13 +5,11 @@ import view.Event.impl.LoadKeyEvent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
-import static common.Algorithms.*;
-import static common.Button.*;
-import static common.Mode.DECRYPT;
-import static common.Mode.ENCRYPT;
+import static model.common.Algorithms.*;
+import static model.common.Button.*;
+import static model.common.Mode.DECRYPT;
+import static model.common.Mode.ENCRYPT;
 
 public class VToolPanel extends JPanel {
     private JButton loadKey, genKey, saveKey, loadFile;
