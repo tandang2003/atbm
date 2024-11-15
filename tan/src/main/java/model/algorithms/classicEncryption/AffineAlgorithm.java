@@ -7,7 +7,8 @@ import model.common.Cipher;
 import model.key.AffineKey;
 import model.utils.MyMath;
 
-import java.io.File;
+import javax.crypto.IllegalBlockSizeException;
+import java.io.*;
 import java.util.List;
 import java.util.Random;
 
@@ -82,12 +83,6 @@ public class AffineAlgorithm extends AAlgorithm {
         return Cipher.AFFINE;
     }
 
-    @Override
-    public void saveKey(File selectedFile) {
-        super.saveKey(selectedFile);
-
-
-    }
 
     private String decryptChar(char c, boolean upperCase) {
         int size = this.arrChar.size();
@@ -108,7 +103,12 @@ public class AffineAlgorithm extends AAlgorithm {
         algorithm.genKey();
 //        String input = "Tai ptit";
         String input = "Nguyễn Văn Á";
-        String encrypt = algorithm.encrypt(input);
+        String encrypt = null;
+        try {
+            encrypt = algorithm.encrypt(input);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(encrypt);
         String decrypt = algorithm.decrypt(encrypt);
         System.out.println(decrypt);

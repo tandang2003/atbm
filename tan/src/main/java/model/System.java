@@ -3,6 +3,7 @@ package model;
 
 import model.algorithms.IAlgorithms;
 
+import javax.crypto.IllegalBlockSizeException;
 import java.util.Objects;
 
 public class System {
@@ -115,7 +116,7 @@ public class System {
 //        algorithm.loadKey(key);
     }
 
-    public String encrypt() {
+    public String encrypt() throws IllegalBlockSizeException {
         return algorithm.encrypt(input);
     }
 

@@ -1,7 +1,9 @@
 package view;
 
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import controller.MainController;
 import view.font.MyFont;
 

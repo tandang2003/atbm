@@ -7,6 +7,7 @@ import model.common.Alphabet;
 import model.common.Cipher;
 import model.key.VigenereKey;
 
+import javax.crypto.IllegalBlockSizeException;
 import java.util.List;
 import java.util.Random;
 
@@ -113,7 +114,12 @@ public class VigenereAlgorithm extends AAlgorithm {
         algorithm.genKey();
 //        String input = "Tai ptit";
         String input = "Nguyễn Văn Á";
-        String encrypt = algorithm.encrypt(input);
+        String encrypt = null;
+        try {
+            encrypt = algorithm.encrypt(input);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(encrypt);
         String decrypt = algorithm.decrypt(encrypt);
         System.out.println(decrypt);

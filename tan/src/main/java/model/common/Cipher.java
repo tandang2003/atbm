@@ -15,6 +15,12 @@ public enum Cipher {
     RC2("RC2", "RC2"),
     RC4("RC4", "RC4"),
     MD5("MD5", "MD5"),
+    AES_128("AES_128", "AES 128"),
+    AES_192("AES_192", "AES 192"),
+    AES_256("AES_256", "AES 256"),
+    SHA_1("SHA-1", "SHA-1"),
+    SHA_256("SHA-256", "SHA-256"),
+    SHA_512("SHA-512", "SHA-512"),
     ;
     private final String name;
     private final String displayName;

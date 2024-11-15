@@ -4,6 +4,10 @@ public class Algorithms {
     //DEFAULT KEY LENGTH
     public static final int HILL_ALGORITHM_DEFAULT_KEY_LENGTH = 2;
 
+    //DEFAULT KEY
+    public static final String KEY_FILE_EXTENSION = ".tan.key";
+    public static final String FILE_ENCRYPT_EXTENSION = ".tan";
+
     //TYPES ALGORITHMS
     public static final String SYMMETRIC = "Symmetric";
     public static final String CLASSICAL = "Classic";

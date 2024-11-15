@@ -3,7 +3,9 @@ package model.key;
 
 import model.common.Exception;
 
-public interface IKey<T> {
+import java.io.Serializable;
+
+public interface IKey<T> extends Serializable {
     default T getKey() {
         throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
     }

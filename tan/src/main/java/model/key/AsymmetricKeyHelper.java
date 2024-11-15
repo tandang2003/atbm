@@ -1,19 +1,20 @@
 package model.key;
 
 import model.common.Cipher;
+import model.common.Size;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 public class AsymmetricKeyHelper {
     private Cipher cipher;
-    private int keySize;
+    private Size keySize;
     private String Transformation;
-    private int ivSize;
+    private Size ivSize;
     private SecretKey secretKey;
     private IvParameterSpec ivParameterSpec;
 
-    public AsymmetricKeyHelper(Cipher cipher, int keySize, String transformation, int ivSize) {
+    public AsymmetricKeyHelper(Cipher cipher, Size keySize, String transformation, Size ivSize) {
         this.cipher = cipher;
         this.keySize = keySize;
         Transformation = transformation;
@@ -25,7 +26,7 @@ public class AsymmetricKeyHelper {
     }
 
     public int getKeySize() {
-        return keySize;
+        return keySize.getBit();
     }
 
     public String getTransformation() {
@@ -33,7 +34,7 @@ public class AsymmetricKeyHelper {
     }
 
     public int getIvSize() {
-        return ivSize;
+        return ivSize.getByteFormat();
     }
 
     public void setSecretKey(SecretKey secretKey) {

@@ -9,13 +9,15 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 import static model.common.Button.*;
 
 public class VToolPanel extends JPanel {
-    private JButton loadKey, genKey, saveKey, loadFile;
+    private JButton loadKey, genKey, saveKey;
     private Font font;
     private MainController controller;
 
@@ -34,8 +36,6 @@ public class VToolPanel extends JPanel {
 
         setLayout(new GridBagLayout());
         layoutComponents();
-        loadKeyEvent();
-
     }
 
     private void layoutComponents() {
@@ -48,7 +48,6 @@ public class VToolPanel extends JPanel {
         add(genKey, gbc);
         add(loadKey, gbc);
         add(saveKey, gbc);
-        add(loadFile, gbc);
     }
 
     private void init() {
@@ -58,15 +57,42 @@ public class VToolPanel extends JPanel {
         genKey.setFont(font);
         saveKey = new JButton(SAVE_KEY);
         saveKey.setFont(font);
-        loadFile = new JButton(LOAD_FILE);
-        loadFile.setFont(font);
         Dimension buttonSize = new Dimension(150, 50);
         loadKey.setPreferredSize(buttonSize);
         genKey.setPreferredSize(buttonSize);
         saveKey.setPreferredSize(buttonSize);
-        loadFile.setPreferredSize(buttonSize);
         genKeyEvent();
         saveKeyEvent();
+        loadKeyEvent();
+    }
+
+    private void loadKeyEvent() {
+        loadKey.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Specify a folder to save");
+            fileChooser.setCurrentDirectory(new File("."));
+//            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    // Accept files that end with ".tan.key"
+                    return f.getName().toLowerCase().endsWith(".tan.key");
+                }
+
+                @Override
+                public String getDescription() {
+                    return "TAN Key Files (*.tan.key)";
+                }
+            });
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    controller.loadKey(fileChooser.getSelectedFile());
+                } catch (IOException | ClassNotFoundException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     private void genKeyEvent() {
@@ -85,17 +111,16 @@ public class VToolPanel extends JPanel {
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fileChooser.setAcceptAllFileFilterUsed(false);
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                System.out.println("getCurrentDirectory(): " + fileChooser.getCurrentDirectory());
-                controller.saveKey(fileChooser.getSelectedFile());
-//                System.out.println("getSelectedFile() : " + fileChooser.getSelectedFile());
-            } else {
-                System.out.println("No Selection ");
+                try {
+                    controller.saveKey(fileChooser.getSelectedFile());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-
         });
     }
 
-    private void loadKeyEvent() {
-        loadKey.addActionListener(new LoadKeyEvent());
-    }
+//    private void loadKeyEvent() {
+//        loadKey.addActionListener(new LoadKeyEvent());
+//    }
 }

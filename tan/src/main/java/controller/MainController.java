@@ -15,6 +15,7 @@ import view.AlgorithmPanel.VAlgorithmAbs;
 import view.VFrame;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +111,12 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         this.algorithmAbs = selectedIndex;
     }
 
-    public void saveKey(File selectedFile) {
+    public void saveKey(File selectedFile) throws IOException {
         algorithms.saveKey(selectedFile);
+    }
+
+    public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
+        algorithms.loadKey(selectedFile);
+        notifyAlgorithmObservers();
     }
 }

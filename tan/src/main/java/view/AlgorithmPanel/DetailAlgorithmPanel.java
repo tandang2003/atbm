@@ -1,10 +1,7 @@
 package view.AlgorithmPanel;
 
 import controller.MainController;
-import model.common.Cipher;
-import model.common.CipherSpecification;
-import model.common.Mode;
-import model.common.Padding;
+import model.common.*;
 import observer.algorithmObserver.ObserverAlgorithm;
 import observer.alphabetObserver.AlphaObserver;
 import view.font.MyFont;
@@ -26,7 +23,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private Font keyFont;
     //    private JComboBox<String> mode, padding, keySize;
     private JTextField alphabetField;
-    private JComboBox<Integer> keySize, IvSize;
+    private JComboBox<Size> keySize, IvSize;
     private JComboBox<Mode> keyMode;
     private JComboBox<Padding> keyPadding;
     private JComboBox<String> hillKeySize;

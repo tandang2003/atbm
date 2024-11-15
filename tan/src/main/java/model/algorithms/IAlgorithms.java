@@ -4,23 +4,26 @@ package model.algorithms;
 import model.common.Cipher;
 import model.common.Exception;
 import model.key.IKey;
-import observer.algorithmObserver.SubjectAlgorithm;
 
+import javax.crypto.IllegalBlockSizeException;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
-public interface IAlgorithms  {
+public interface IAlgorithms {
     void genKey();
 
-    void loadKey(IKey key);
+    void loadKey(File selectedFile) throws ClassNotFoundException, IOException;
 
-    String encrypt(String input);
+    String encrypt(String input) throws IllegalBlockSizeException;
 
-    String decrypt(String encryptInput);
+    String decrypt(String encryptInput) throws IllegalBlockSizeException;
 
     void setArrChar(List<String> chars);
+
     Cipher getCipher();
-    default boolean encryptFile(String input, String output) {
+
+    default boolean encryptFile(String input, String output) throws IOException {
         throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
     }
 
@@ -30,6 +33,6 @@ public interface IAlgorithms  {
 
     IKey getKey();
 
-    void saveKey(File selectedFile);
+    void saveKey(File selectedFile) throws IOException;
 
 }

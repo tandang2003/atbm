@@ -5,9 +5,14 @@ import model.algorithms.AAlgorithm;
 import model.common.Algorithms;
 import model.common.Alphabet;
 import model.common.Cipher;
+import model.key.AffineKey;
 import model.key.HillKey;
 import model.utils.MyMath;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
 
@@ -65,6 +70,7 @@ public class HillAlgorithm extends AAlgorithm {
 //        return sb.toString().substring(0, input.length());
         return sb.toString();
     }
+
 
 
     public String encryptArrChar(String input, double[][] key) {
@@ -202,8 +208,8 @@ public class HillAlgorithm extends AAlgorithm {
     public static void main(String[] args) {
         HillAlgorithm algorithm = new HillAlgorithm(Alphabet.VIETNAMESE_CHAR_SET);
         algorithm.genKey();
-        String input = "Nguyễn Đình Lam sinh ngày 01 tháng 0";
-//        String input = "DHNONGLAM";
+//        String input = "Nguyễn Đình Lam sinh ngày 01 tháng 0";
+        String input = "DHNONGLAM";
         String encrypt = algorithm.encrypt(input);
         System.out.println(encrypt);
         String decrypt = algorithm.decrypt(encrypt);
