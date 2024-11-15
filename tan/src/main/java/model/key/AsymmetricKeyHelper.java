@@ -5,6 +5,7 @@ import model.common.Size;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import java.util.Base64;
 
 public class AsymmetricKeyHelper {
     private Cipher cipher;
@@ -52,4 +53,9 @@ public class AsymmetricKeyHelper {
     public IvParameterSpec getIvParameterSpec() {
         return ivParameterSpec;
     }
+
+    public String[] getStringKeyAndIv() {
+        return new String[]{Base64.getEncoder().encodeToString(secretKey.getEncoded()), Base64.getEncoder().encodeToString(ivParameterSpec.getIV())};
+    }
+
 }

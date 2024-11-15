@@ -6,16 +6,19 @@ import model.algorithms.classicEncryption.TranspositionAlgorithm;
 import model.algorithms.classicEncryption.AffineAlgorithm;
 import model.algorithms.classicEncryption.HillAlgorithm;
 import model.algorithms.classicEncryption.VigenereAlgorithm;
-import model.common.Alphabet;
-import model.common.Cipher;
+import model.algorithms.symmetricEncryption.SymmetricAlgorithm;
+import model.common.*;
 import observer.algorithmObserver.ObserverAlgorithm;
 import observer.algorithmObserver.SubjectAlgorithm;
 import observer.alphabetObserver.AlphaSubject;
 import view.AlgorithmPanel.VAlgorithmAbs;
 import view.VFrame;
 
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,7 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         System.out.println("Language set to " + (isEnglish ? "English" : "Vietnamese"));
     }
 
-    public void genKey() {
+    public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         algorithms.genKey();
         this.notifyAlgorithmObservers();
 //        algorithms.notifyObservers();
@@ -87,7 +90,6 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     }
 
     public void setAlgorithm(Cipher selectedItem) {
-        System.out.println(selectedItem);
         switch (selectedItem) {
             case AFFINE:
                 algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
@@ -104,6 +106,17 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
             case TRANSPOSITION:
                 algorithms = new TranspositionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
                 break;
+            case AES, BLOWFISH, DES, DESEDE, RC2, RC4:
+                CipherSpecification specification = CipherSpecification.findCipherSpecification(selectedItem);
+                Size keySize = specification.getSupportedKeySizes().stream().findFirst().get();
+                Mode mode = specification.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
+                Padding padding = specification.getValidModePaddingCombinations().get(mode).getFirst();
+                Size ivSize = specification.getIvSizes().get(mode);
+                algorithms = new SymmetricAlgorithm(selectedItem, mode, padding, keySize, ivSize);
+                break;
+            case RSA:
+                break;
+
         }
     }
 

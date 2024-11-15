@@ -6,12 +6,14 @@ import model.common.Exception;
 import model.key.IKey;
 
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.util.List;
 
 public interface IAlgorithms {
-    void genKey();
+    void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException;
 
     void loadKey(File selectedFile) throws ClassNotFoundException, IOException;
 
@@ -35,4 +37,5 @@ public interface IAlgorithms {
 
     void saveKey(File selectedFile) throws IOException;
 
+//    void loadIKey(IKey key);
 }

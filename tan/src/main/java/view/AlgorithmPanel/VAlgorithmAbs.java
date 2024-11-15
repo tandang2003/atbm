@@ -69,7 +69,6 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         if (algorithmAbs != this) {
             return;
         }
-
         switch (cipher) {
             case Cipher.AFFINE:
                 algorithmPanel.genAffineKey();
@@ -87,7 +86,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
                 algorithmPanel.genVergenceKey();
                 break;
             case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4, Cipher.RSA:
-//                genSymmetricKey();
+                algorithmPanel.genSymmetricKey();
                 break;
         }
     }

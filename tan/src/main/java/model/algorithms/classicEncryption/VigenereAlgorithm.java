@@ -111,7 +111,7 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     public static void main(String[] args) {
         IAlgorithms algorithm = new VigenereAlgorithm(Alphabet.VIETNAMESE_CHAR_SET, "dasdadvxc");
-        algorithm.genKey();
+//        algorithm.genKey();
 //        String input = "Tai ptit";
         String input = "Nguyễn Văn Á";
         String encrypt = null;
@@ -121,8 +121,8 @@ public class VigenereAlgorithm extends AAlgorithm {
             throw new RuntimeException(e);
         }
         System.out.println(encrypt);
-        String decrypt = algorithm.decrypt(encrypt);
-        System.out.println(decrypt);
+//        String decrypt = algorithm.decrypt(encrypt);
+//        System.out.println(decrypt);
 
     }
 }

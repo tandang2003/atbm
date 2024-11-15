@@ -1,6 +1,8 @@
 package model.common;
 
-public enum Mode {
+import java.util.Comparator;
+
+public enum Mode  {
     NONE("", "None", false),
     CBC("CBC", "Cipher Block Chaining", true),
     PCBC("PCBC", "Propagating Cipher Block Chaining", true),
@@ -46,4 +48,5 @@ public enum Mode {
     public String toString() {
         return displayName;
     }
+
 }

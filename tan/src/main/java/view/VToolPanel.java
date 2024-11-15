@@ -5,6 +5,8 @@ import controller.MainController;
 import view.Event.impl.LoadKeyEvent;
 import view.font.MyFont;
 
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -13,6 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
 import static model.common.Button.*;
 
@@ -97,7 +100,11 @@ public class VToolPanel extends JPanel {
 
     private void genKeyEvent() {
         genKey.addActionListener(e -> {
-            controller.genKey();
+            try {
+                controller.genKey();
+            } catch (IllegalBlockSizeException | NoSuchPaddingException | InvalidKeyException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 

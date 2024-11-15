@@ -1,8 +1,9 @@
 package model.common;
 
 import java.util.BitSet;
+import java.util.Comparator;
 
-public enum Size {
+public enum Size implements Comparator<Size> {
     Size_1(8, 1),
     Size_2(16, 2),
     Size_4(32, 4),
@@ -42,5 +43,10 @@ public enum Size {
     @Override
     public String toString() {
         return String.valueOf(bit);
+    }
+
+    @Override
+    public int compare(Size o1, Size o2) {
+        return o1.getBit() - o2.getBit();
     }
 }
