@@ -7,6 +7,7 @@ import model.common.Alphabet;
 import model.common.Cipher;
 import model.key.NumberKey;
 
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Random;
 
@@ -54,6 +55,11 @@ public class TranspositionAlgorithm extends AAlgorithm {
     @Override
     public Cipher getCipher() {
         return Cipher.TRANSPOSITION;
+    }
+
+    @Override
+    public void updateKey(Object[] key) {
+        this.key = new NumberKey((int) key[0]);
     }
 
 

@@ -49,7 +49,6 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         algorithms.genKey();
         this.notifyAlgorithmObservers();
-//        algorithms.notifyObservers();
     }
 
 
@@ -131,5 +130,9 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
         algorithms.loadKey(selectedFile);
         notifyAlgorithmObservers();
+    }
+
+    public void updateKey(Object... objects) {
+        algorithms.updateKey(objects);
     }
 }

@@ -64,6 +64,10 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         return name;
     }
 
+    public JComboBox<Cipher> getAlgorithms() {
+        return algorithms;
+    }
+
     @Override
     public void update(VAlgorithmAbs algorithmAbs, Cipher cipher) {
         if (algorithmAbs != this) {
@@ -89,5 +93,6 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
                 algorithmPanel.genSymmetricKey();
                 break;
         }
+
     }
 }

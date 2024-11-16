@@ -8,11 +8,13 @@ public class AffineKey implements IKey<int[]> {
         this.b = b;
     }
 
+    public AffineKey() {
+    }
+
     @Override
     public int[] getKey() {
         return new int[]{a, b};
     }
-
 
 
 

@@ -11,4 +11,5 @@ public class VigenereKey implements IKey<String[]> {
     public String[] getKey() {
         return key;
     }
+
 }

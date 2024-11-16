@@ -183,6 +183,23 @@ public class SymmetricAlgorithm extends AAlgorithm {
         }
     }
 
+    @Override
+    public void updateKey(Object[] objects) {
+//        if (objects.length != 3) {
+//            return;
+//        }
+        AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
+        if (objects.length >= 1) {
+            asymmetricKeyHelper.setKeySize((Size) objects[0]);
+        }
+        if (objects.length >= 2) {
+            asymmetricKeyHelper.setTransformation(asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+        }
+//        asymmetricKeyHelper.setTransformation(asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+        if (objects.length >= 3)
+            asymmetricKeyHelper.setIvSize((Size) objects[2]);
+    }
+
     public static void main(String[] args) {
         IAlgorithms algorithms = new SymmetricAlgorithm(Cipher.AES, Mode.CTR, Padding.NoPadding, Size.Size_16, Size.Size_16);
         try {

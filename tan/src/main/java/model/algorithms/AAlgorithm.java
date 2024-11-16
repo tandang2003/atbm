@@ -83,6 +83,7 @@ public abstract class AAlgorithm implements IAlgorithms {
         }
     }
 
+
     public static void main(String[] args) {
 //        File file = new File("/home/tan/Documents/Hehe/hehe1/");
 //        if (!file.exists()) {

@@ -145,6 +145,11 @@ public class HillAlgorithm extends AAlgorithm {
         return Cipher.HILL;
     }
 
+    @Override
+    public void updateKey(Object[] key) {
+        this.key = new HillKey((double[][]) key);
+    }
+
     private String decryptArrChar(String input, double[][] key) {
         double[][] inverse = MyMath.inverseMatrix(key, arrChar.size());
         StringBuilder sb = new StringBuilder();

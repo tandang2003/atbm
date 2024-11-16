@@ -12,5 +12,4 @@ public class NumberKey implements IKey<Integer> {
         return key;
     }
 
-
 }

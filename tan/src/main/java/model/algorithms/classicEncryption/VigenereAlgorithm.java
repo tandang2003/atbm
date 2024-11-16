@@ -81,6 +81,12 @@ public class VigenereAlgorithm extends AAlgorithm {
         return Cipher.VIGENERE;
     }
 
+    @Override
+    public void updateKey(Object[] key) {
+        this.key = new VigenereKey((String[]) key);
+    }
+
+
     public String decryptArrChar(String input, int[] key) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {

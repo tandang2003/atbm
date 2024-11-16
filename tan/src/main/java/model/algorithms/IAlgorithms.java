@@ -37,5 +37,6 @@ public interface IAlgorithms {
 
     void saveKey(File selectedFile) throws IOException;
 
+    void updateKey(Object[] key);
 //    void loadIKey(IKey key);
 }

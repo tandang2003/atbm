@@ -15,6 +15,9 @@ public class AsymmetricKeyHelper {
     private SecretKey secretKey;
     private IvParameterSpec ivParameterSpec;
 
+    public AsymmetricKeyHelper() {
+    }
+
     public AsymmetricKeyHelper(Cipher cipher, Size keySize, String transformation, Size ivSize) {
         this.cipher = cipher;
         this.keySize = keySize;
@@ -52,6 +55,22 @@ public class AsymmetricKeyHelper {
 
     public IvParameterSpec getIvParameterSpec() {
         return ivParameterSpec;
+    }
+
+    public void setCipher(Cipher cipher) {
+        this.cipher = cipher;
+    }
+
+    public void setKeySize(Size keySize) {
+        this.keySize = keySize;
+    }
+
+    public void setTransformation(String transformation) {
+        Transformation = transformation;
+    }
+
+    public void setIvSize(Size ivSize) {
+        this.ivSize = ivSize;
     }
 
     public String[] getStringKeyAndIv() {

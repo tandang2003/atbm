@@ -3,19 +3,20 @@ package view.AlgorithmPanel;
 import controller.MainController;
 import model.common.*;
 import model.key.AsymmetricKeyHelper;
-import observer.algorithmObserver.ObserverAlgorithm;
 import observer.alphabetObserver.AlphaObserver;
 import view.font.MyFont;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static model.common.Button.FONTSIZE_NORMAL;
 import static view.font.MyFont.ROBOTO_REGULAR;
@@ -26,7 +27,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private Font keyFont;
     //    private JComboBox<String> mode, padding, keySize;
     private JTextField alphabetField;
-    private JComboBox<Size> keySize, IvSize;
+    private JComboBox<Size> keySize, ivSize;
     private JComboBox<Mode> keyMode;
     private JComboBox<Padding> keyPadding;
     private JComboBox<String> hillKeySize;
@@ -150,6 +151,22 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JTextField keyField = new JTextField();
         keyField.setPreferredSize(new Dimension(200, 100));
         keyField.setBorder(BorderFactory.createTitledBorder("Cipher alphabet"));
+        keyField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                controller.updateKey(keyField.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                controller.updateKey(keyField.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+//                controller.updateAlphabet(keyField.getText());
+            }
+        });
         //TODO: Add event to keyField
         //TODO: Insert default text
         keyField.setFont(keyFont);
@@ -179,6 +196,12 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         bField.setFont(keyFont);
         bPanel.setLayout(new BorderLayout());
         bPanel.add(bField, BorderLayout.CENTER);
+        aField.addChangeListener(e -> {
+            controller.updateKey(aField.getValue(), bField.getValue());
+        });
+        bField.addChangeListener(e -> {
+            controller.updateKey(aField.getValue(), bField.getValue());
+        });
         keyPanel.add(aPanel);
         keyPanel.add(bPanel);
         add(keyPanel);
@@ -190,7 +213,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private void createVergenerePanel() {
         setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 0));
         Font keyFont = MyFont.loadCustomFont(ROBOTO_REGULAR, FONTSIZE_NORMAL);
-        setLayout(new GridLayout(4, 1));
+        setLayout(new GridLayout(3, 1));
         keyPanel = new JPanel();
         JTextField keyField = new JTextField();
         keyField.setPreferredSize(new Dimension(200, 100));
@@ -198,23 +221,27 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.setFont(keyFont);
         keyPanel.setLayout(new BorderLayout());
         keyPanel.add(keyField, BorderLayout.CENTER);
+        keyField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                controller.updateKey(keyField.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                controller.updateKey(keyField.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
         add(keyPanel);
 
-        JPanel keyModelPanel = new JPanel();
-        JComboBox<String> keyModel = new JComboBox<>();
-        keyModel.addItem("Auto key");
-        keyModel.addItem("Repeat");
-        keyModel.setFont(keyFont);
-        keyModel.setEditable(false);
-        keyModel.setSelectedIndex(0);
-        keyModel.setBorder(BorderFactory.createTitledBorder("Key Model"));
-        keyModelPanel.setLayout(new BorderLayout());
-        keyModelPanel.add(keyModel, BorderLayout.CENTER);
-        add(keyModelPanel);
         add(alphabetsPanel);
 
         add(foreignPanel);
-//        add(keyAndDesPanel, BorderLayout.CENTER);
     }
 
     private void createSymmetric(Cipher algorithmName) {
@@ -230,7 +257,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keySize = new JComboBox<>();
         keyMode = new JComboBox<>();
         keyPadding = new JComboBox<>();
-        IvSize = new JComboBox<>();
+        ivSize = new JComboBox<>();
         cipherSpecification.getSupportedKeySizes().forEach((size) -> {
             keySize.addItem(size);
         });
@@ -258,15 +285,17 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             keyInsPanel.setLayout(new GridLayout(1, 4, 5, 5));
             IvSizePanel.setLayout(new BorderLayout());
             IvSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "IV Size"));
-            IvSizePanel.add(IvSize, BorderLayout.CENTER);
+            IvSizePanel.add(ivSize, BorderLayout.CENTER);
             keyInsPanel.add(IvSizePanel);
         }
         keyMode.addActionListener(e -> {
             rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
         });
-        keyMode.setSelectedIndex(0);
         rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
-        // Layout for panelOne (occupies one row)
+//         Layout for panelOne (occupies one row)
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
         gbc.gridwidth = 1; // Occupy 1 column
@@ -303,6 +332,33 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.weighty = 1.0; // Vertical weight
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
+        keySize.addActionListener(e -> {
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+
+        });
+//        keyMode.addActionListener(e -> {
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
+//        });
+        keyPadding.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (keyPadding.getSelectedItem() != null) {
+                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() +"/"+( (Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+                }
+            }
+        });
+//        keyPadding.addActionListener(e -> {
+//            rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
+//                controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
+//        });
+//        ivSize.addActionListener(e -> {
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
+//            symmetricListener(cipherSpecification, (Mode) keyMode.getSelectedItem());
+//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+//        });
+
     }
 
     public void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
@@ -311,8 +367,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             keyPadding.addItem(padding);
         });
 //        keyPadding.setSelectedIndex(0);
-        IvSize.removeAllItems();
-        IvSize.addItem(specification.getIvSizes().get(mode));
+        ivSize.removeAllItems();
+        ivSize.addItem(specification.getIvSizes().get(mode));
 
 
     }
@@ -322,11 +378,15 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.revalidate();
         keyPanel.repaint();
         NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+        NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
+        numberFormatter.setAllowsInvalid(false);
+        numberFormatter.setValueClass(Integer.class);
         switch (size) {
             case "2x2":
                 keyPanel.setLayout(new GridLayout(2, 2, 5, 5));
                 for (int i = 0; i < 4; i++) {
-                    JFormattedTextField numberField = new JFormattedTextField(numberFormat);
+                    JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
+                    numberField.addPropertyChangeListener(hillListener);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -334,7 +394,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             case "3x3":
                 keyPanel.setLayout(new GridLayout(3, 3, 5, 5));
                 for (int i = 0; i < 9; i++) {
-                    JFormattedTextField numberField = new JFormattedTextField(numberFormat);
+                    JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
+                    numberField.addPropertyChangeListener(hillListener);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -342,7 +403,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             case "4x4":
                 keyPanel.setLayout(new GridLayout(4, 4, 5, 5));
                 for (int i = 0; i < 16; i++) {
-                    JFormattedTextField numberField = new JFormattedTextField(numberFormat);
+                    JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
+                    numberField.addPropertyChangeListener(hillListener);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -350,6 +412,33 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         }
     }
 
+//    private void symmetricListener(CipherSpecification specification, Mode mode) {
+//        rebuildPaddingAndIVSize(specification, mode);
+//        controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+//    }
+
+    private PropertyChangeListener hillListener = e -> {
+        double[][] key = new double[0][];
+        switch ((String) hillKeySize.getSelectedItem()) {
+            case "2x2":
+                key = new double[2][2];
+                break;
+            case "3x3":
+                key = new double[3][3];
+                break;
+            case "4x4":
+                key = new double[4][4];
+                break;
+        }
+        int index = 0;
+        for (Component c : keyPanel.getComponents()) {
+            if (c instanceof JFormattedTextField textField) {
+                key[index / key.length][index % key.length] = Double.parseDouble(textField.getText());
+                index++;
+            }
+        }
+        controller.updateKey(key);
+    };
 
     public void genSubstitutionKey() {
         Map<String, String> key = (Map<String, String>) controller.getAlgorithms().getKey().getKey();

@@ -3,6 +3,7 @@ package view;
 
 import com.sun.tools.javac.Main;
 import controller.MainController;
+import model.common.Cipher;
 import view.AlgorithmPanel.*;
 import view.font.MyFont;
 
@@ -50,7 +51,9 @@ public class VAlgorithmPanel extends JTabbedPane {
 
         addChangeListener(e -> {
             Component selectedComponent = this.getSelectedComponent();
+            controller.setAlgorithm((Cipher) ((VAlgorithmAbs) selectedComponent).getAlgorithms().getSelectedItem());
             controller.setTabbedPane((VAlgorithmAbs) selectedComponent);
+
         });
     }
 

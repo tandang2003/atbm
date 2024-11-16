@@ -159,6 +159,11 @@ public class Base64EncodeAlgorithm extends AAlgorithm {
         }
     }
 
+    @Override
+    public void updateKey(Object[] objects) {
+
+    }
+
     public static void main(String[] args) {
         Base64EncodeAlgorithm base64EncodeAlgorithm = new Base64EncodeAlgorithm();
         String input = "Hello World";

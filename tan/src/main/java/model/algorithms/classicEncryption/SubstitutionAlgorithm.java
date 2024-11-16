@@ -17,6 +17,7 @@ public class SubstitutionAlgorithm extends AAlgorithm {
         this.arrChar = chars;
         this.key = validationKey(keys);
     }
+
     public SubstitutionAlgorithm(List<String> chars) {
         super();
         this.arrChar = chars;
@@ -86,6 +87,12 @@ public class SubstitutionAlgorithm extends AAlgorithm {
     public Cipher getCipher() {
         return Cipher.SUBSTITUTION;
     }
+
+    @Override
+    public void updateKey(Object[] key) {
+        this.key = validationKey((String) key[0]);
+    }
+
 
     public String decryptToken(char token, boolean isUpperCase) {
         Map<String, String> key = (Map<String, String>) this.key.getKey();

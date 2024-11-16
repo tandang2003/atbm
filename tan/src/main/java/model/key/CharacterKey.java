@@ -4,6 +4,8 @@ import java.util.Map;
 
 public class CharacterKey implements IKey<Map<String, String>> {
     private Map<String, String> keys;
+    public CharacterKey() {
+    }
 
     public CharacterKey(Map<String, String> key) {
         this.keys = key;
@@ -13,4 +15,5 @@ public class CharacterKey implements IKey<Map<String, String>> {
     public Map<String, String> getKey() {
         return keys;
     }
+
 }

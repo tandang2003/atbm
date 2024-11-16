@@ -48,8 +48,7 @@ public class AffineAlgorithm extends AAlgorithm {
     public String encrypt(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
-            if (!this.arrChar.contains(String.valueOf(c).toUpperCase()))
-                sb.append(c);
+            if (!this.arrChar.contains(String.valueOf(c).toUpperCase())) sb.append(c);
             else sb.append(encryptChar(c, Character.isUpperCase(c)));
         }
         return sb.toString();
@@ -71,8 +70,7 @@ public class AffineAlgorithm extends AAlgorithm {
     public String decrypt(String input) {
         StringBuilder sb = new StringBuilder();
         for (char c : input.toCharArray()) {
-            if (!this.arrChar.contains(String.valueOf(c).toUpperCase()))
-                sb.append(c);
+            if (!this.arrChar.contains(String.valueOf(c).toUpperCase())) sb.append(c);
             else sb.append(decryptChar(c, Character.isUpperCase(c)));
         }
         return sb.toString();
@@ -81,6 +79,13 @@ public class AffineAlgorithm extends AAlgorithm {
     @Override
     public Cipher getCipher() {
         return Cipher.AFFINE;
+    }
+
+    @Override
+    public void updateKey(Object[] key) {
+        this.key = new AffineKey((int) key[0], (int) key[1]);
+        System.out.println("Updated key for Affine Algorithm");
+        System.out.println("a: " + key[0] + " b: " + key[1]);
     }
 
 
