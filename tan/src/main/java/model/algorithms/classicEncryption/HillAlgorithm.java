@@ -5,14 +5,9 @@ import model.algorithms.AAlgorithm;
 import model.common.Algorithms;
 import model.common.Alphabet;
 import model.common.Cipher;
-import model.key.AffineKey;
 import model.key.HillKey;
 import model.utils.MyMath;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Random;
 

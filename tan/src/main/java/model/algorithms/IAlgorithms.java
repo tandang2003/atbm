@@ -6,20 +6,20 @@ import model.common.Exception;
 import model.key.IKey;
 
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
-import java.security.InvalidKeyException;
 import java.util.List;
 
 public interface IAlgorithms {
-    void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException;
+    void genKey();
 
     void loadKey(File selectedFile) throws ClassNotFoundException, IOException;
 
     String encrypt(String input) throws IllegalBlockSizeException;
 
-    String decrypt(String encryptInput) throws IllegalBlockSizeException;
+    default String decrypt(String encryptInput) throws IllegalBlockSizeException {
+        throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
+    }
 
     void setArrChar(List<String> chars);
 

@@ -4,7 +4,6 @@ package model.common;
 import java.security.Provider;
 import java.security.Security;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CipherSpecification {
     private Cipher algorithm;
@@ -58,8 +57,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+//                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_16, Size.Size_24, Size.Size_32),  // Supported key sizes for AES
             Map.ofEntries(
@@ -80,8 +79,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB64, Size.Size_16),
                     Map.entry(Mode.OFB128, Size.Size_16),
                     Map.entry(Mode.CTR, Size.Size_16),
-                    Map.entry(Mode.CTS, Size.Size_16),
-                    Map.entry(Mode.GCM, Size.Size_16)
+                    Map.entry(Mode.CTS, Size.Size_16)
+//                    Map.entry(Mode.GCM, Size.Size_12)
             )
     );
 
@@ -103,12 +102,13 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+//                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_7),  // Supported key size for DES (56-bit)
             Map.ofEntries(
                     Map.entry(Mode.NONE, Size.Size_0),
+                    Map.entry(Mode.ECB, Size.Size_0),
                     Map.entry(Mode.CBC, Size.Size_8),
                     Map.entry(Mode.PCBC, Size.Size_8),
                     Map.entry(Mode.CFB, Size.Size_8),
@@ -122,8 +122,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, Size.Size_8),
                     Map.entry(Mode.OFB64, Size.Size_8),
                     Map.entry(Mode.CTR, Size.Size_8),
-                    Map.entry(Mode.CTS, Size.Size_8),
-                    Map.entry(Mode.GCM, Size.Size_12)
+                    Map.entry(Mode.CTS, Size.Size_8)
+//                    Map.entry(Mode.GCM, Size.Size_12)
             )
     );
 
@@ -145,8 +145,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+//                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_14, Size.Size_21),  // Supported key sizes for DESede (112-bit, 168-bit)
             Map.ofEntries(
@@ -164,8 +164,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, Size.Size_8),
                     Map.entry(Mode.OFB64, Size.Size_8),
                     Map.entry(Mode.CTR, Size.Size_8),
-                    Map.entry(Mode.CTS, Size.Size_8),
-                    Map.entry(Mode.GCM, Size.Size_8)
+                    Map.entry(Mode.CTS, Size.Size_8)
+//                    Map.entry(Mode.GCM, Size.Size_8)
             )
     );
 
@@ -202,8 +202,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+//                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_4, Size.Size_12, Size.Size_24, Size.Size_32, Size.Size_56),  // Blowfish supports key sizes of 128-bit, 192-bit, and 256-bit
             Map.ofEntries(
@@ -221,8 +221,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, Size.Size_8),
                     Map.entry(Mode.OFB64, Size.Size_8),
                     Map.entry(Mode.CTR, Size.Size_8),
-                    Map.entry(Mode.CTS, Size.Size_8),
-                    Map.entry(Mode.GCM, Size.Size_8)
+                    Map.entry(Mode.CTS, Size.Size_8)
+//                    Map.entry(Mode.GCM, Size.Size_8)
             )
 
     );
@@ -246,8 +246,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+//                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_5, Size.Size_8, Size.Size_16),  // RC2 supports key sizes from 40 bits to 128 bits
             Map.ofEntries(
@@ -265,8 +265,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, Size.Size_8),
                     Map.entry(Mode.OFB64, Size.Size_8),
                     Map.entry(Mode.CTR, Size.Size_8),
-                    Map.entry(Mode.CTS, Size.Size_8),
-                    Map.entry(Mode.GCM, Size.Size_8)
+                    Map.entry(Mode.CTS, Size.Size_8)
+//                    Map.entry(Mode.GCM, Size.Size_8)
             )
     );
 

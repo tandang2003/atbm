@@ -89,8 +89,11 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
             case Cipher.VIGENERE:
                 algorithmPanel.genVergenceKey();
                 break;
-            case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4, Cipher.RSA:
+            case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
                 algorithmPanel.genSymmetricKey();
+                break;
+            case Cipher.RSA:
+                algorithmPanel.genAsymmtricKey();
                 break;
         }
 

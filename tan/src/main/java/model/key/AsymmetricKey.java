@@ -18,5 +18,4 @@ public class AsymmetricKey implements IKey<AsymmetricKeyHelper> {
         }
         return key;
     }
-
 }

@@ -1,80 +1,74 @@
 package model.key;
 
 import model.common.Cipher;
+import model.common.Mode;
+import model.common.Padding;
 import model.common.Size;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
+import java.io.Serializable;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-public class AsymmetricKeyHelper {
+public class AsymmetricKeyHelper implements Serializable {
+    //    private PublicKey publicKey;
+    //    private PrivateKey privateKey;
     private Cipher cipher;
+    //    private Mode mode;
+//    private Padding padding;
+    private String transformation;
     private Size keySize;
-    private String Transformation;
-    private Size ivSize;
-    private SecretKey secretKey;
-    private IvParameterSpec ivParameterSpec;
+    private String publicKey;
+    private String privateKey;
 
     public AsymmetricKeyHelper() {
+
     }
 
-    public AsymmetricKeyHelper(Cipher cipher, Size keySize, String transformation, Size ivSize) {
+    public AsymmetricKeyHelper(Cipher cipher,String transformation, Size keySize) {
         this.cipher = cipher;
+        this.transformation=transformation;
         this.keySize = keySize;
-        Transformation = transformation;
-        this.ivSize = ivSize;
     }
 
     public Cipher getCipher() {
         return cipher;
     }
 
-    public int getKeySize() {
-        return keySize.getBit();
+    public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyFactory kf = KeyFactory.getInstance(cipher.getName());
+        X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
+        return kf.generatePublic(encodedKeySpec);
+    }
+
+    public void setPublicKey(PublicKey publicKey) {
+        this.publicKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+    }
+
+    public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        KeyFactory kf = KeyFactory.getInstance(cipher.getName());
+        PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
+        return kf.generatePrivate(encodedKeySpec);
+    }
+
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = Base64.getEncoder().encodeToString(privateKey.getEncoded());
+    }
+
+    public String[] getKeys() {
+        return new String[]{publicKey, privateKey};
+    }
+
+    public Size getKeySize() {
+        return keySize;
     }
 
     public String getTransformation() {
-        return Transformation;
+        return transformation;
     }
-
-    public int getIvSize() {
-        return ivSize.getByteFormat();
-    }
-
-    public void setSecretKey(SecretKey secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public void setIvParameterSpec(IvParameterSpec ivParameterSpec) {
-        this.ivParameterSpec = ivParameterSpec;
-    }
-
-    public SecretKey getSecretKey() {
-        return secretKey;
-    }
-
-    public IvParameterSpec getIvParameterSpec() {
-        return ivParameterSpec;
-    }
-
-    public void setCipher(Cipher cipher) {
-        this.cipher = cipher;
-    }
-
-    public void setKeySize(Size keySize) {
-        this.keySize = keySize;
-    }
-
-    public void setTransformation(String transformation) {
-        Transformation = transformation;
-    }
-
-    public void setIvSize(Size ivSize) {
-        this.ivSize = ivSize;
-    }
-
-    public String[] getStringKeyAndIv() {
-        return new String[]{Base64.getEncoder().encodeToString(secretKey.getEncoded()), Base64.getEncoder().encodeToString(ivParameterSpec.getIV())};
-    }
-
 }

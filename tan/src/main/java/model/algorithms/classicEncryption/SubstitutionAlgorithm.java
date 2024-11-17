@@ -2,7 +2,6 @@ package model.algorithms.classicEncryption;
 
 
 import model.algorithms.AAlgorithm;
-import model.common.Alphabet;
 import model.common.Cipher;
 import model.key.CharacterKey;
 

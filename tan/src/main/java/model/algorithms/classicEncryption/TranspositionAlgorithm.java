@@ -2,12 +2,9 @@ package model.algorithms.classicEncryption;
 
 
 import model.algorithms.AAlgorithm;
-import model.algorithms.IAlgorithms;
-import model.common.Alphabet;
 import model.common.Cipher;
 import model.key.NumberKey;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Random;
 

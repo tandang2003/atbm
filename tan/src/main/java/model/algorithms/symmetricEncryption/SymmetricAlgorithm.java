@@ -2,21 +2,21 @@ package model.algorithms.symmetricEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.algorithms.IAlgorithms;
-import model.common.*;
 import model.common.Cipher;
-import model.key.AsymmetricKey;
-import model.key.AsymmetricKeyHelper;
+import model.common.Mode;
+import model.common.Padding;
+import model.common.Size;
+import model.key.SymmetricKey;
+import model.key.SymmetricKeyHelper;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
-import java.lang.Exception;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.List;
 
 public class SymmetricAlgorithm extends AAlgorithm {
     private javax.crypto.Cipher cipherIn;
@@ -28,14 +28,13 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
         if (mode == Mode.NONE) {
             transformation = cipher.getName();
-
         }
-        this.key = new AsymmetricKey(new AsymmetricKeyHelper(cipher, keySize, transformation, ivSize));
+        this.key = new SymmetricKey(new SymmetricKeyHelper(cipher, keySize, transformation, ivSize));
     }
 
     @Override
-    public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
-        AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
+    public void genKey() {
+        SymmetricKeyHelper asymmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         try {
             genKeySize(asymmetricKeyHelper);
             genIv(asymmetricKeyHelper);
@@ -56,7 +55,7 @@ public class SymmetricAlgorithm extends AAlgorithm {
         }
     }
 
-    private void genIv(AsymmetricKeyHelper asymmetricKeyHelper) {
+    private void genIv(SymmetricKeyHelper asymmetricKeyHelper) {
 //        if (asymmetricKeyHelper.getIvSize() == 0) {
 //            return;
 //        }
@@ -66,15 +65,18 @@ public class SymmetricAlgorithm extends AAlgorithm {
         asymmetricKeyHelper.setIvParameterSpec(new IvParameterSpec(b));
     }
 
-    private void genKeySize(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException {
+    private void genKeySize(SymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(asymmetricKeyHelper.getCipher().getName());
         keyGenerator.init(asymmetricKeyHelper.getKeySize());
         asymmetricKeyHelper.setSecretKey(keyGenerator.generateKey());
     }
 
-    private void genCipher(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
+    private void genCipher(SymmetricKeyHelper asymmetricKeyHelper) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
         cipherIn = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         cipherOut = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
+        if (asymmetricKeyHelper.getSecretKey() == null || asymmetricKeyHelper.getIvParameterSpec() == null) {
+            return;
+        }
         if (asymmetricKeyHelper.getIvSize() == 0) {
             cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, asymmetricKeyHelper.getSecretKey());
             cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, asymmetricKeyHelper.getSecretKey());
@@ -142,7 +144,7 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public Cipher getCipher() {
-        return ((AsymmetricKeyHelper) this.getKey().getKey()).getCipher();
+        return ((SymmetricKeyHelper) this.getKey().getKey()).getCipher();
     }
 
     @Override
@@ -188,29 +190,38 @@ public class SymmetricAlgorithm extends AAlgorithm {
 //        if (objects.length != 3) {
 //            return;
 //        }
-        AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
+        SymmetricKeyHelper asymmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         if (objects.length >= 1) {
             asymmetricKeyHelper.setKeySize((Size) objects[0]);
         }
         if (objects.length >= 2) {
-            asymmetricKeyHelper.setTransformation(asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+            asymmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty()?asymmetricKeyHelper.getCipher().getName():asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
         }
 //        asymmetricKeyHelper.setTransformation(asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
         if (objects.length >= 3)
             asymmetricKeyHelper.setIvSize((Size) objects[2]);
+
+        try {
+            genCipher(asymmetricKeyHelper);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchPaddingException e) {
+//            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
+            throw new RuntimeException(e);
+
+        } catch (InvalidAlgorithmParameterException e) {
+//            throw new IllegalBlockSizeException("The mode or padding is not suitable.Please change block size or adding padding mode");
+            throw new RuntimeException(e);
+
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+//            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
+        }
     }
 
     public static void main(String[] args) {
         IAlgorithms algorithms = new SymmetricAlgorithm(Cipher.AES, Mode.CTR, Padding.NoPadding, Size.Size_16, Size.Size_16);
-        try {
-            algorithms.genKey();
-        } catch (IllegalBlockSizeException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchPaddingException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        }
+        algorithms.genKey();
         String encrypt = null;
         try {
             encrypt = algorithms.encrypt("Hello World");

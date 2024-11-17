@@ -17,7 +17,7 @@ public class VAsymmetricPanel extends VAlgorithmAbs {
     @Override
     protected void init() {
         algorithms.addItem(Cipher.RSA);
-
+        algorithms.addItem(Cipher.DSA);
         algorithms.setSelectedIndex(0);
         algorithms.setBackground(Color.WHITE);
     }

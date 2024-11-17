@@ -4,7 +4,6 @@ public enum Padding {
     NoPadding("NoPadding", "No Padding"),
     PKCS1Padding("PKCS1Padding", "PKCS1 padding"),
     PKCS5Padding("PKCS5Padding", "PKCS5 Padding"),
-    PKCS7Padding("PKCS7Padding", "PKCS7 Padding"),
     ISO10126Padding("ISO10126Padding", "ISO10126 Padding"),
     OAEPPadding("OAEPPadding", "Optimal Asymmetric Encryption Padding (OAEP)"),
     OAEPWithMD5AndMGF1Padding("OAEPWithMD5AndMGF1Padding", "OAEP with MD5 and MGF1"),
