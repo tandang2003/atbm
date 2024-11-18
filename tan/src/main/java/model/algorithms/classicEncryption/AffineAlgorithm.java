@@ -102,6 +102,11 @@ public class AffineAlgorithm extends AAlgorithm {
         return de_char;
     }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
     public static void main(String[] args) {
         IAlgorithms algorithm = new AffineAlgorithm(Alphabet.VIETNAMESE_CHAR_SET);
 //        algorithm.genKey();

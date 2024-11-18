@@ -164,6 +164,11 @@ public class Base64EncodeAlgorithm extends AAlgorithm {
 
     }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
     public static void main(String[] args) {
         Base64EncodeAlgorithm base64EncodeAlgorithm = new Base64EncodeAlgorithm();
         String input = "Hello World";

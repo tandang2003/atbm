@@ -17,7 +17,10 @@ public abstract class AAlgorithm implements IAlgorithms {
     protected AAlgorithm() {
     }
 
-    //    protected List<ObserverAlgorithm> observers;
+    protected abstract boolean validation();
+
+
+
     @Override
     public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
 

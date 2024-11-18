@@ -3,7 +3,7 @@ package model.common;
 public class Algorithms {
     //DEFAULT KEY LENGTH
     public static final int HILL_ALGORITHM_DEFAULT_KEY_LENGTH = 2;
-
+    public static final String HILL_DEFAULT_PADDING = "=";
     //DEFAULT KEY
     public static final String KEY_FILE_EXTENSION = ".tan.key";
     public static final String FILE_ENCRYPT_EXTENSION = ".tan";

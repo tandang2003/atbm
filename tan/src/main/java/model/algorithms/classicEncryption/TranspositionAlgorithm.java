@@ -82,6 +82,11 @@ public class TranspositionAlgorithm extends AAlgorithm {
         return this.arrChar.get((crr - move - this.arrChar.size()) % this.arrChar.size() + this.arrChar.size());
     }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
     public static void main(String[] args) {
 //        IAlgorithms algorithms = new SubstitutionAlgorithm(Alphabet.VIETNAMESE_CHAR_SET);
 //        algorithms.genKey();

@@ -12,6 +12,11 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     @Override
+    protected boolean validation() {
+        return false;
+    }
+
+    @Override
     public void genKey() {
         System.out.println("HashAlgorithm genKey");
     }

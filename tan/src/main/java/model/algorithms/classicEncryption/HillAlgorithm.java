@@ -8,8 +8,11 @@ import model.common.Cipher;
 import model.key.HillKey;
 import model.utils.MyMath;
 
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Random;
+
+import static model.common.Algorithms.HILL_DEFAULT_PADDING;
 
 public class HillAlgorithm extends AAlgorithm {
     private String encrypt;
@@ -46,6 +49,12 @@ public class HillAlgorithm extends AAlgorithm {
     public String encrypt(String input) {
         double[][] key = (double[][]) this.key.getKey();
         StringBuilder sb = new StringBuilder();
+        int padding = 0;
+        for (int i = 0; i < input.length(); i++) {
+            if (this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase()))
+                padding++;
+        }
+        padding = (key.length - padding % key.length) % key.length;
         int i = 0;
         String[] arr = input.split("");
         StringBuilder encrypted = new StringBuilder();
@@ -55,17 +64,17 @@ public class HillAlgorithm extends AAlgorithm {
             if (i == key.length) {
                 sb.append(encryptArrChar(encrypted.toString(), key));
                 i = 0;
-                encrypted = new StringBuilder();
+                encrypted.setLength(0);
             }
         }
         if (i > 0) {
             sb.append(encryptArrChar(encrypted.toString(), key));
+            for (int j = 0; j < padding; j++) {
+                sb.append(HILL_DEFAULT_PADDING);
+            }
         }
-//        this.encrypt = sb.toString();
-//        return sb.toString().substring(0, input.length());
         return sb.toString();
     }
-
 
 
     public String encryptArrChar(String input, double[][] key) {
@@ -76,12 +85,7 @@ public class HillAlgorithm extends AAlgorithm {
                 temp.append(s);
             }
         }
-        if(temp.length() % key.length != 0){
-            int n = key.length - temp.length() % key.length;
-            for (int j = 0; j < n; j++) {
-                temp.append('\0');
-            }
-        }
+
         int j = 0;
         while (sb.length() < temp.length()) {
             j = Math.min(temp.length() - sb.length(), key.length);
@@ -93,7 +97,6 @@ public class HillAlgorithm extends AAlgorithm {
                 result[i] = (multiplyMatrices[i] % arrChar.size() + arrChar.size()) % arrChar.size();
             }
             String s = reverseTransformInput(result, multiplyMatrices.length);
-//            sb.append(reverseTransformInput(result, cut.length()));
             for (int i = 0; i < input.length(); i++) {
                 if (!this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase())) {
                     sb.append(input.charAt(i));
@@ -112,6 +115,23 @@ public class HillAlgorithm extends AAlgorithm {
     @Override
     public String decrypt(String input) {
         int inputLength = input.length();
+        //count padding and remove padding
+        int padding = 0;
+        for (int i = input.length() - 1; i > input.length() - 4; i--) {
+            if (input.charAt(i) == HILL_DEFAULT_PADDING.charAt(0)) {
+                padding++;
+            } else {
+                break;
+            }
+        }
+        if (padding > 0) {
+            input = input.substring(0, input.length() - padding);
+        }
+
+//        if (input.endsWith(HILL_DEFAULT_PADDING)) {
+//            input = input.substring(0, input.indexOf(HILL_DEFAULT_PADDING));
+//        }
+
 //        if (this.encrypt != null && this.encrypt.startsWith(input)) {
 //            input = this.encrypt;
 //        }
@@ -132,7 +152,8 @@ public class HillAlgorithm extends AAlgorithm {
         if (i > 0) {
             sb.append(decryptArrChar(encrypted.toString(), key));
         }
-        return sb.toString().substring(0, inputLength);
+
+        return sb.substring(0, inputLength - padding - padding);
     }
 
     @Override
@@ -205,11 +226,17 @@ public class HillAlgorithm extends AAlgorithm {
 //        return result;
 //    }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
     public static void main(String[] args) {
         HillAlgorithm algorithm = new HillAlgorithm(Alphabet.VIETNAMESE_CHAR_SET);
         algorithm.genKey();
-//        String input = "Nguyễn Đình Lam sinh ngày 01 tháng 0";
-        String input = "DHNONGLAM";
+        String input = "Nguyễn Đình Lam sinh ngày 01 tháng 01 năm 1999 1";
+        System.out.println(input.length());
+//        String input = "DHNONGLAM";
         String encrypt = algorithm.encrypt(input);
         System.out.println(encrypt);
         String decrypt = algorithm.decrypt(encrypt);

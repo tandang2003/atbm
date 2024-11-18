@@ -35,6 +35,7 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     @Override
     public String encrypt(String input) {
+        if (validation()) throw new RuntimeException("Key is not valid");
         int[] key = transformKey();
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -66,6 +67,7 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     @Override
     public String decrypt(String input) {
+        if (validation()) throw new RuntimeException("Key is not valid");
         int[] key = transformKey();
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -83,7 +85,7 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     @Override
     public void updateKey(Object[] key) {
-        this.key = new VigenereKey((String[]) key);
+        this.key = new VigenereKey(((String) key[0]).split(""));
     }
 
 
@@ -113,6 +115,12 @@ public class VigenereAlgorithm extends AAlgorithm {
             result[i] = this.arrChar.indexOf(key[i]);
         }
         return result;
+    }
+
+    @Override
+    protected boolean validation() {
+        if (this.key == null) return false;
+        return true;
     }
 
     public static void main(String[] args) {

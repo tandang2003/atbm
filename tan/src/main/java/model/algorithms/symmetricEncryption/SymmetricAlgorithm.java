@@ -219,6 +219,11 @@ public class SymmetricAlgorithm extends AAlgorithm {
         }
     }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
     public static void main(String[] args) {
         IAlgorithms algorithms = new SymmetricAlgorithm(Cipher.AES, Mode.CTR, Padding.NoPadding, Size.Size_16, Size.Size_16);
         algorithms.genKey();

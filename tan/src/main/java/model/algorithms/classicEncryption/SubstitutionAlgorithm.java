@@ -116,6 +116,11 @@ public class SubstitutionAlgorithm extends AAlgorithm {
         return stringBuilder.toString();
     }
 
+    @Override
+    protected boolean validation() {
+        return false;
+    }
+
 //    public static void main(String[] args) {
 //        TranspositionAlgorithm1 algorithm = new TranspositionAlgorithm1(Alphabet.VIETNAMESE_CHAR_SET);
 //        algorithm.genKey();

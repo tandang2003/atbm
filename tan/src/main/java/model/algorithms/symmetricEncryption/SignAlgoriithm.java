@@ -25,4 +25,9 @@ public class SignAlgoriithm extends AAlgorithm {
     public void updateKey(Object[] key) {
 
     }
+
+    @Override
+    protected boolean validation() {
+        return false;
+    }
 }
