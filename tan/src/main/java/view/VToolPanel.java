@@ -2,7 +2,6 @@ package view;
 
 
 import controller.MainController;
-import view.Event.impl.LoadKeyEvent;
 import view.font.MyFont;
 
 import javax.crypto.IllegalBlockSizeException;

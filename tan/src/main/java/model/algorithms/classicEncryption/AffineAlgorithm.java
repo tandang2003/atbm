@@ -37,7 +37,7 @@ public class AffineAlgorithm extends AAlgorithm {
     private int genA() {
         int size = this.arrChar.size();
         int a = new Random().nextInt(size);
-        while (MyMath.gcd(a, size) != 1) {
+        while (MyMath.greatestCommonDivisor(a, size) != 1) {
             a = new Random().nextInt(size);
         }
         return a;
@@ -92,7 +92,7 @@ public class AffineAlgorithm extends AAlgorithm {
         int size = this.arrChar.size();
         int[] key = (int[]) (this.key.getKey());
         int a = key[0], b = key[1];
-        int inverseA = MyMath.inverseInZm(a, size);
+        int inverseA = MyMath.findModularInverse(a, size);
         int crr = this.arrChar.indexOf(String.valueOf(c).toUpperCase());
         int de_index = (inverseA * (crr - b + size)) % size;
         String de_char = this.arrChar.get(de_index);

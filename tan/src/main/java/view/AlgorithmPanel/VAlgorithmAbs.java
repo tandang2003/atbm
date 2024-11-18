@@ -93,7 +93,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
                 algorithmPanel.genSymmetricKey();
                 break;
             case Cipher.RSA:
-                algorithmPanel.genAsymmtricKey();
+                algorithmPanel.genAsymmetricKey();
                 break;
         }
 

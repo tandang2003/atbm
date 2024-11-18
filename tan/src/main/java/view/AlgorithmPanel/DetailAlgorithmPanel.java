@@ -2,6 +2,7 @@ package view.AlgorithmPanel;
 
 import controller.MainController;
 import model.common.*;
+import model.key.AsymmetricKeyHelper;
 import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
 import view.font.MyFont;
@@ -14,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 import java.util.Map;
 
@@ -59,12 +59,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         alphabetField.setEditable(false);
         alphabetField.setBackground(Color.WHITE);
         alphabetsPanel.add(alphabetField, BorderLayout.CENTER);
-        init();
     }
-
-    private void init() {
-    }
-
 
     public void rebuildPanel(Cipher algorithmName) {
         removeAll();
@@ -389,6 +384,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
 //        }
         keyMode.addActionListener(e -> {
             rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
 //            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
         rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
@@ -406,21 +402,23 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JPanel keyFieldPanel = new JPanel();
         keyFieldPanel.setLayout(new BorderLayout());
         JTextField keyField = new JTextField();
-        keyField.setEnabled(false);
+        keyField.setEnabled(true);
+        keyField.setEditable(false);
         keyField.setBackground(Color.WHITE);
-        keyFieldPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Key"));
+        keyFieldPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Public key"));
         keyField.setFont(keyFont);
         keyFieldPanel.add(keyField, BorderLayout.CENTER);
         keyPanel.add(keyFieldPanel);
-        JPanel ivFieldPanel = new JPanel();
-        ivFieldPanel.setLayout(new BorderLayout());
-        JTextField ivField = new JTextField();
-        ivField.setEnabled(false);
-        ivField.setBackground(Color.WHITE);
-        ivFieldPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Initialization Vector"));
-        ivField.setFont(keyFont);
-        ivFieldPanel.add(ivField, BorderLayout.CENTER);
-        keyPanel.add(ivFieldPanel);
+        JPanel privateKeydPanel = new JPanel();
+        privateKeydPanel.setLayout(new BorderLayout());
+        JTextField privateKeyField = new JTextField();
+        privateKeyField.setEnabled(true);
+        privateKeyField.setEditable(false);
+        privateKeyField.setBackground(Color.WHITE);
+        privateKeydPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Private key"));
+        privateKeyField.setFont(keyFont);
+        privateKeydPanel.add(privateKeyField, BorderLayout.CENTER);
+        keyPanel.add(privateKeydPanel);
         gbc.gridx = 0; // Column 0
         gbc.gridy = 1; // Row 1
         gbc.gridwidth = 1; // Occupy 1 column
@@ -430,13 +428,13 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
         keySize.addActionListener(e -> {
-//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
         });
         keyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (keyPadding.getSelectedItem() != null) {
-//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
                 }
             }
         });
@@ -589,7 +587,17 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         }
     }
 
-    public void genAsymmtricKey() {
+    public void genAsymmetricKey() {
+        AsymmetricKeyHelper key = (AsymmetricKeyHelper) controller.getAlgorithms().getKey().getKey();
+        String[] texts = key.getKeys();
+        int index = 0;
+        for (Component c : keyPanel.getComponents()) {
+            if (c instanceof JPanel panel) {
+                if (panel.getComponent(0) instanceof JTextField textField)
+                    textField.setText(texts[index++]);
+            }
+        }
+
     }
 
     @Override

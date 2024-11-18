@@ -30,9 +30,9 @@ public class AsymmetricKeyHelper implements Serializable {
 
     }
 
-    public AsymmetricKeyHelper(Cipher cipher,String transformation, Size keySize) {
+    public AsymmetricKeyHelper(Cipher cipher, String transformation, Size keySize) {
         this.cipher = cipher;
-        this.transformation=transformation;
+        this.transformation = transformation;
         this.keySize = keySize;
     }
 
@@ -41,6 +41,9 @@ public class AsymmetricKeyHelper implements Serializable {
     }
 
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (publicKey == null) {
+            return null;
+        }
         KeyFactory kf = KeyFactory.getInstance(cipher.getName());
         X509EncodedKeySpec encodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKey));
         return kf.generatePublic(encodedKeySpec);
@@ -51,6 +54,9 @@ public class AsymmetricKeyHelper implements Serializable {
     }
 
     public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (privateKey == null) {
+            return null;
+        }
         KeyFactory kf = KeyFactory.getInstance(cipher.getName());
         PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
         return kf.generatePrivate(encodedKeySpec);
@@ -70,5 +76,14 @@ public class AsymmetricKeyHelper implements Serializable {
 
     public String getTransformation() {
         return transformation;
+    }
+
+    public void setTransformation(String transformation) {
+
+        this.transformation = transformation;
+    }
+
+    public void setKeySize(Size keySize) {
+        this.keySize = keySize;
     }
 }

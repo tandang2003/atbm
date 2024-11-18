@@ -1,66 +1,81 @@
 package model.utils;
 
 public class MyMath {
-    public static int gcd(int a, int b) {
+    /**
+     * Tính ước chung lớn nhất (GCD) của hai số nguyên a và b.
+     */
+    public static int greatestCommonDivisor(int a, int b) {
         if (b == 0) return a;
-        return gcd(b, a % b);
+        return greatestCommonDivisor(b, a % b);
     }
 
-    public static int inverseInZm(int a, int m) {
+    /**
+     * Tìm nghịch đảo của số a trong modulo m.
+     * Nếu không tìm thấy, trả về 1 (không phải giá trị chính xác).
+     */
+    public static int findModularInverse(int a, int m) {
         a = a % m;
-        for (int x = 1; x < m; x++)
+        for (int x = 1; x < m; x++) {
             if ((a * x) % m == 1)
                 return x;
-        return 1;
+        }
+        return 1; // Không tìm thấy nghịch đảo
     }
 
-    public static void main(String[] args) {
-        int a = 53;
-        int m = 26;
-        System.out.println(inverseInZm(a, m));
-    }
-
-    public static double[] multiplyMatrices(double[] a, double[][] b) {
-        double[] result = new double[a.length];
-        double[][] transpose = transposeMatrix(b);
-        for (int i = 0; i < a.length; i++) {
-            result[i] = multiplyMatrices(a, transpose[i]);
+    /**
+     * Nhân một mảng đơn chiều (vector) với một ma trận và trả về vector kết quả.
+     */
+    public static double[] multiplyVectorWithMatrix(double[] vector, double[][] matrix) {
+        double[] result = new double[vector.length];
+        double[][] transpose = transposeMatrix(matrix);
+        for (int i = 0; i < vector.length; i++) {
+            result[i] = multiplyVectors(vector, transpose[i]);
         }
         return result;
     }
 
-    public static double[][] inverseMatrix(double[][] matrix, int mod) {
+    /**
+     * Tính ma trận nghịch đảo trong modulo mod.
+     * Trả về null nếu ma trận không khả nghịch.
+     */
+    public static double[][] calculateInverseMatrix(double[][] matrix, int mod) {
         int n = matrix.length;
         double[][] inverse = new double[n][n];
         double determinant = calculateDeterminant(matrix, mod);
         if (determinant == 0) {
-            return null;
+            return null; // Ma trận không khả nghịch
         }
-        double invDeterminant = inverseInZm((int) determinant, mod);
+        double invDeterminant = findModularInverse((int) determinant, mod);
         double[][] adjoint = new double[n][n];
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                adjoint[i][j] = (int) (Math.pow(-1, i + j) * calculateDeterminant(getMinor(matrix, i, j), mod));
+                adjoint[i][j] = (int) (Math.pow(-1, i + j) * calculateDeterminant(getMatrixMinor(matrix, i, j), mod));
             }
         }
 
         double[][] adjointTranspose = transposeMatrix(adjoint);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                inverse[i][j] = (int) ((invDeterminant * adjointTranspose[i][j])% mod + mod) % mod;
+                inverse[i][j] = (int) ((invDeterminant * adjointTranspose[i][j]) % mod + mod) % mod;
             }
         }
         return inverse;
     }
 
-    private static double multiplyMatrices(double[] a, double[] b) {
+    /**
+     * Nhân hai vector đơn chiều và trả về kết quả (tích vô hướng).
+     */
+    private static double multiplyVectors(double[] vector1, double[] vector2) {
         double result = 0;
-        for (int i = 0; i < a.length; i++) {
-            result += a[i] * b[i];
+        for (int i = 0; i < vector1.length; i++) {
+            result += vector1[i] * vector2[i];
         }
         return result;
     }
 
+    /**
+     * Tạo ma trận chuyển vị từ một ma trận ban đầu.
+     */
     public static double[][] transposeMatrix(double[][] matrix) {
         int n = matrix.length;
         double[][] transpose = new double[n][n];
@@ -72,31 +87,40 @@ public class MyMath {
         return transpose;
     }
 
-    public static boolean isInverseMatrix(double[][] matrix, int modulus) {
-        return calculateDeterminant(matrix, modulus) == 1;
+    /**
+     * Kiểm tra xem một ma trận có phải ma trận khả nghịch trong modulo mod không.
+     */
+    public static boolean isInvertibleMatrix(double[][] matrix, int mod) {
+        return calculateDeterminant(matrix, mod) == 1;
     }
 
-    private static double calculateDeterminant(double[][] matrix, int modulus) {
+    /**
+     * Tính định thức của một ma trận trong modulo mod.
+     */
+    private static double calculateDeterminant(double[][] matrix, int mod) {
         int n = matrix.length;
         if (n == 1) {
-            return matrix[0][0] % modulus;
+            return matrix[0][0] % mod;
         } else if (n == 2) {
-            return ((matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % modulus + modulus) % modulus;
+            return ((matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % mod + mod) % mod;
         }
 
         double determinant = 0;
         for (int i = 0; i < n; i++) {
-            double minorDeterminant = calculateDeterminant(getMinor(matrix, 0, i), modulus);
+            double minorDeterminant = calculateDeterminant(getMatrixMinor(matrix, 0, i), mod);
             double cofactor = Math.pow(-1, i) * matrix[0][i] * minorDeterminant;
-            determinant = (determinant + cofactor) % modulus;
+            determinant = (determinant + cofactor) % mod;
         }
 
-        // Ensure determinant is non-negative
-        determinant = (determinant + modulus) % modulus;
+        // Đảm bảo định thức là số không âm
+        determinant = (determinant + mod) % mod;
         return determinant;
     }
 
-    private static double[][] getMinor(double[][] matrix, int row, int col) {
+    /**
+     * Lấy ma trận con (minor) khi loại bỏ hàng và cột chỉ định.
+     */
+    private static double[][] getMatrixMinor(double[][] matrix, int row, int col) {
         int n = matrix.length;
         double[][] minor = new double[n - 1][n - 1];
         for (int i = 0, minorRow = 0; i < n; i++) {
@@ -110,7 +134,4 @@ public class MyMath {
         return minor;
     }
 
-    public static boolean coprime(int a, int b) {
-        return gcd(a, b) == 1;
-    }
 }

@@ -23,7 +23,6 @@ public abstract class AAlgorithm implements IAlgorithms {
 
     @Override
     public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
-
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selectedFile));
         Cipher cipher = null;
         try {
