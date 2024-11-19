@@ -34,11 +34,11 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public void genKey() {
-        SymmetricKeyHelper asymmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
+        SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         try {
-            genKeySize(asymmetricKeyHelper);
-            genIv(asymmetricKeyHelper);
-            genCipher(asymmetricKeyHelper);
+            genKeySize(symmetricKeyHelper);
+            genIv(symmetricKeyHelper);
+            genCipher(symmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {
@@ -55,35 +55,38 @@ public class SymmetricAlgorithm extends AAlgorithm {
         }
     }
 
-    private void genIv(SymmetricKeyHelper asymmetricKeyHelper) {
-//        if (asymmetricKeyHelper.getIvSize() == 0) {
+    private void genIv(SymmetricKeyHelper symmetricKeyHelper) {
+//        if (symmetricKeyHelper.getIvSize() == 0) {
 //            return;
 //        }
-        byte[] b = new byte[asymmetricKeyHelper.getIvSize()];
+        byte[] b = new byte[symmetricKeyHelper.getIvSize()];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(b);
-        asymmetricKeyHelper.setIvParameterSpec(new IvParameterSpec(b));
+        symmetricKeyHelper.setIvParameterSpec(new IvParameterSpec(b));
     }
 
-    private void genKeySize(SymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(asymmetricKeyHelper.getCipher().getName());
-        keyGenerator.init(asymmetricKeyHelper.getKeySize());
-        asymmetricKeyHelper.setSecretKey(keyGenerator.generateKey());
+    private void genKeySize(SymmetricKeyHelper symmetricKeyHelper) throws NoSuchAlgorithmException {
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(symmetricKeyHelper.getCipher().getName());
+        keyGenerator.init(symmetricKeyHelper.getKeySize());
+        symmetricKeyHelper.setSecretKey(keyGenerator.generateKey());
     }
 
-    private void genCipher(SymmetricKeyHelper asymmetricKeyHelper) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
-        cipherIn = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
-        cipherOut = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
-        if (asymmetricKeyHelper.getSecretKey() == null || asymmetricKeyHelper.getIvParameterSpec() == null) {
+    private void genCipher(SymmetricKeyHelper symmetricKeyHelper) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
+        cipherIn = javax.crypto.Cipher.getInstance(symmetricKeyHelper.getTransformation());
+        cipherOut = javax.crypto.Cipher.getInstance(symmetricKeyHelper.getTransformation());
+
+        if (symmetricKeyHelper.getSecretKey() == null || symmetricKeyHelper.getIvParameterSpec() == null) {
+            System.out.println("Key or IV is null");
             return;
         }
-        if (asymmetricKeyHelper.getIvSize() == 0) {
-            cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, asymmetricKeyHelper.getSecretKey());
-            cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, asymmetricKeyHelper.getSecretKey());
+        if (symmetricKeyHelper.getIvSize() == 0) {
+            cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, symmetricKeyHelper.getSecretKey());
+            cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, symmetricKeyHelper.getSecretKey());
             return;
         }
-        cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, asymmetricKeyHelper.getSecretKey(), asymmetricKeyHelper.getIvParameterSpec());
-        cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, asymmetricKeyHelper.getSecretKey(), asymmetricKeyHelper.getIvParameterSpec());
+        System.out.println(symmetricKeyHelper.getIvSize());
+        cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, symmetricKeyHelper.getSecretKey(), symmetricKeyHelper.getIvParameterSpec());
+        cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, symmetricKeyHelper.getSecretKey(), symmetricKeyHelper.getIvParameterSpec());
 
     }
 
@@ -190,19 +193,25 @@ public class SymmetricAlgorithm extends AAlgorithm {
 //        if (objects.length != 3) {
 //            return;
 //        }
-        SymmetricKeyHelper asymmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
+        SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         if (objects.length >= 1) {
-            asymmetricKeyHelper.setKeySize((Size) objects[0]);
+            System.out.println(objects[0]);
+            symmetricKeyHelper.setKeySize((Size) objects[0]);
         }
         if (objects.length >= 2) {
-            asymmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty()?asymmetricKeyHelper.getCipher().getName():asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+            System.out.println(objects[1]);
+            symmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty() ? symmetricKeyHelper.getCipher().getName() : symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
         }
-//        asymmetricKeyHelper.setTransformation(asymmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
-        if (objects.length >= 3)
-            asymmetricKeyHelper.setIvSize((Size) objects[2]);
-
+//        symmetricKeyHelper.setTransformation(symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+        if (objects.length >= 3) {
+            System.out.println(objects[2]);
+            symmetricKeyHelper.setIvSize((Size) objects[2]);
+        }
         try {
-            genCipher(asymmetricKeyHelper);
+//            genKeySize(symmetricKeyHelper);
+//            genIv(symmetricKeyHelper);
+            genKeySize(symmetricKeyHelper);
+            genCipher(symmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {

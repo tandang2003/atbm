@@ -143,4 +143,8 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     public void updateKey(Object... objects) {
         algorithms.updateKey(objects);
     }
+
+    public VFrame getFrame() {
+        return frame;
+    }
 }

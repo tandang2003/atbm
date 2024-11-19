@@ -175,10 +175,7 @@ public class CipherSpecification {
             Cipher.RSA,
             Map.of(
 //                    Mode.NONE, List.of(Padding.NoPadding),
-                    Mode.ECB, List.of(Padding.NoPadding, Padding.PKCS1Padding, Padding.OAEPPadding, Padding.OAEPWithMD5AndMGF1Padding,
-                            Padding.OAEPWithSHA1AndMGF1Padding, Padding.OAEPWithSHA224AndMGF1Padding, Padding.OAEPWithSHA256AndMGF1Padding,
-                            Padding.OAEPWithSHA384AndMGF1Padding, Padding.OAEPWithSHA512AndMGF1Padding, Padding.OAEPWithSHA512_224AndMGF1Padding,
-                            Padding.OAEPWithSHA512_256AndMGF1Padding)
+                    Mode.ECB, List.of(Padding.NoPadding, Padding.PKCS1Padding, Padding.OAEPPadding, Padding.OAEPWithMD5AndMGF1Padding)
             ),
             Set.of(Size.Size_64, Size.Size_128, Size.Size_256, Size.Size_512),  // RSA supports these key sizes
             Map.of()  // RSA does not require IVs

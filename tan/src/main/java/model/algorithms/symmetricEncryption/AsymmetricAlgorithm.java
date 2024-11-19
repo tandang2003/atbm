@@ -14,6 +14,7 @@ import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 public class AsymmetricAlgorithm extends AAlgorithm {
     private javax.crypto.Cipher cipherPublic;
@@ -51,12 +52,6 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 //            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);
         }
-//        AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
-//        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(asymmetricKeyHelper.getCipher().getName());
-//        keyPairGenerator.initialize(asymmetricKeyHelper.getKeySize().getBit());
-//        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-//        asymmetricKeyHelper.setPrivateKey(keyPair.getPrivate());
-//        asymmetricKeyHelper.setPublicKey(keyPair.getPublic());
     }
 
     private void genCipher(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
@@ -64,7 +59,6 @@ public class AsymmetricAlgorithm extends AAlgorithm {
         cipherPrivate = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         if (asymmetricKeyHelper.getPublicKey() == null || asymmetricKeyHelper.getPrivateKey() == null) {
             return;
-            //            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
         }
 
         cipherPublic.init(javax.crypto.Cipher.ENCRYPT_MODE, asymmetricKeyHelper.getPublicKey());
@@ -75,11 +69,11 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public String encrypt(String input) throws IllegalBlockSizeException {
         byte[] encrypted;
         try {
-            encrypted = cipherPublic.doFinal(input.getBytes());
+            encrypted = cipherPublic.doFinal(input.getBytes(StandardCharsets.UTF_8));
         } catch (BadPaddingException e) {
             throw new IllegalBlockSizeException("The input is not suitable for the key size. Please using padding mode");
         }
-        return new String(encrypted, StandardCharsets.UTF_8);
+        return Base64.getEncoder().encodeToString(encrypted);
 
     }
 
@@ -87,7 +81,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public String decrypt(String encryptInput) throws IllegalBlockSizeException {
         byte[] decrypted;
         try {
-            decrypted = cipherPrivate.doFinal(encryptInput.getBytes());
+            decrypted = cipherPrivate.doFinal(Base64.getDecoder().decode(encryptInput));
         } catch (BadPaddingException e) {
             throw new IllegalBlockSizeException("The input is not suitable for the key size. Please using padding mode");
         }
@@ -120,11 +114,29 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 //            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
     protected boolean validation() {
         return false;
+    }
+
+    public static void main(String[] args) {
+        AsymmetricAlgorithm asymmetricAlgorithm = new AsymmetricAlgorithm(Cipher.RSA, Mode.ECB, Padding.PKCS1Padding, Size.Size_256);
+        asymmetricAlgorithm.genKey();
+        String input = "Hello";
+        String encrypt = null;
+        try {
+            encrypt = asymmetricAlgorithm.encrypt(input);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(encrypt);
+        try {
+            System.out.println(asymmetricAlgorithm.decrypt(encrypt));
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

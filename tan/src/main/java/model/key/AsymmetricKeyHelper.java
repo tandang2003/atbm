@@ -85,5 +85,7 @@ public class AsymmetricKeyHelper implements Serializable {
 
     public void setKeySize(Size keySize) {
         this.keySize = keySize;
+        this.privateKey = null;
+        this.publicKey = null;
     }
 }

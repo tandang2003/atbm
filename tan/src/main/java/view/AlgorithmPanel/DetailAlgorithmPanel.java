@@ -5,6 +5,7 @@ import model.common.*;
 import model.key.AsymmetricKeyHelper;
 import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
+import view.dialog.ProcessDialog;
 import view.font.MyFont;
 
 import javax.swing.*;
@@ -32,7 +33,6 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private JComboBox<Padding> keyPadding;
     private JComboBox<String> hillKeySize;
     private MainController controller;
-
 
     public DetailAlgorithmPanel(MainController controller) {
         this.controller = controller;
@@ -285,7 +285,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         }
         keyMode.addActionListener(e -> {
             rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
         rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
 //         Layout for panelOne (occupies one row)
@@ -326,13 +326,13 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
         keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
         keyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (keyPadding.getSelectedItem() != null) {
-                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
                 }
             }
         });
@@ -447,7 +447,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
     }
 
-    public void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
+    public synchronized void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
         keyPadding.removeAllItems();
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
             keyPadding.addItem(padding);

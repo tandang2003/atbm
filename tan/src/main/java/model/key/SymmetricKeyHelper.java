@@ -16,7 +16,7 @@ public class SymmetricKeyHelper implements Serializable {
     private Size ivSize;
     private String secretKey;
     private String ivParameterSpec;
-
+//    TODO FIX SYNCHRONIZED THE MODE PADDING KEY AND IV IN VIEW
     public SymmetricKeyHelper() {
     }
 
@@ -55,6 +55,7 @@ public class SymmetricKeyHelper implements Serializable {
         if (secretKey == null) {
             return null;
         }
+        System.out.println(secretKey);
         return new SecretKeySpec(Base64.getDecoder().decode(secretKey), cipher.getName());
     }
 
@@ -71,6 +72,7 @@ public class SymmetricKeyHelper implements Serializable {
 
     public void setKeySize(Size keySize) {
         this.keySize = keySize;
+        this.secretKey = null;
     }
 
     public void setTransformation(String transformation) {
@@ -79,6 +81,7 @@ public class SymmetricKeyHelper implements Serializable {
 
     public void setIvSize(Size ivSize) {
         this.ivSize = ivSize;
+        this.ivParameterSpec = null;
     }
 
     public String[] getStringKeyAndIv() {

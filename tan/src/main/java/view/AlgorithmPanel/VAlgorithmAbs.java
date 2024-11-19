@@ -4,10 +4,12 @@ package view.AlgorithmPanel;
 import controller.MainController;
 import model.common.Cipher;
 import observer.algorithmObserver.ObserverAlgorithm;
+import view.dialog.ProcessDialog;
 import view.font.MyFont;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 import static model.common.Button.FONTSIZE_NORMAL;
 import static view.font.MyFont.ROBOTO_BOLD;
@@ -18,6 +20,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
     protected Font font;
     private DetailAlgorithmPanel algorithmPanel;
     private MainController controller;
+    private ProcessDialog processDialog;
 
     public VAlgorithmAbs(MainController controller) {
         this.controller = controller;
@@ -45,7 +48,6 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         tempAlgoPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Algorithms"));
         add(tempAlgoPanel, BorderLayout.NORTH);
         add(algorithmPanel, BorderLayout.CENTER);
-        ;
 
         algorithms.addActionListener(e -> {
             algorithmPanel.rebuildPanel((Cipher) algorithms.getSelectedItem());
@@ -73,6 +75,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         if (algorithmAbs != this) {
             return;
         }
+//        processDialog = new ProcessDialog(controller.getFrame(), "Generating Key", "Generating key for " + cipher.toString());
         switch (cipher) {
             case Cipher.AFFINE:
                 algorithmPanel.genAffineKey();
@@ -97,5 +100,36 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
                 break;
         }
 
+//        SwingUtilities.invokeLater(() -> {
+//            SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+//
+//                @Override
+//                protected Void doInBackground() throws Exception {
+//                    return null;
+//                }
+//
+//                @Override
+//                protected void done() {
+//                    try {
+//                        // Ensure any exceptions from doInBackground are handled
+//                        get();
+//                        System.out.println("done");
+//                    } catch (Exception e) {
+//                        JOptionPane.showMessageDialog(controller.getFrame(),
+//                                "An error occurred: " + e.getCause().getMessage(),
+//                                "Error",
+//                                JOptionPane.ERROR_MESSAGE);
+//                    } finally {
+//                        processDialog.setVisible(false);
+//                        processDialog.dispose();
+//                    }
+////                    System.out.println("done");
+////                    processDialog.setVisible(false);
+////                    processDialog.dispose();
+//                }
+//            };
+//        });
+
+        ;
     }
 }
