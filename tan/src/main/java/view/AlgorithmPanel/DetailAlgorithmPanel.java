@@ -5,7 +5,6 @@ import model.common.*;
 import model.key.AsymmetricKeyHelper;
 import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
-import view.dialog.ProcessDialog;
 import view.font.MyFont;
 
 import javax.swing.*;

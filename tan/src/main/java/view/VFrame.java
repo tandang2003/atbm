@@ -74,6 +74,10 @@ public class VFrame extends JFrame {
         setVisible(true);
     }
 
+    public VMainPanel getvMainPanel() {
+        return vMainPanel;
+    }
+
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 //        new VFrame();
     }
