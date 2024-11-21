@@ -28,7 +28,7 @@ public class CipherSpecification {
             Map<Mode, List<Padding>> sortedValidModePaddingCombinations = new TreeMap<>(new Comparator<Mode>() {
                 @Override
                 public int compare(Mode o1, Mode o2) {
-                    return  o1.getName().compareTo(o2.getName());
+                    return o1.getName().compareTo(o2.getName());
                 }
             });
             sortedValidModePaddingCombinations.putAll(result.validModePaddingCombinations);
@@ -273,12 +273,20 @@ public class CipherSpecification {
             Cipher.RC4,
             Map.of(
                     Mode.NONE, List.of(Padding.NoPadding),
-                    Mode.ECB,List.of(Padding.NoPadding)
+                    Mode.ECB, List.of(Padding.NoPadding)
             ),
             Set.of(Size.Size_5, Size.Size_7, Size.Size_16),  // RC4 supports key sizes of 40, 56, and 128 bits
             Map.of()  // RC4 does not require an IV
     );
 
+    private static final CipherSpecification DSA = new CipherSpecification(
+            Cipher.DSA,
+            Map.of(
+                    Mode.NONE, List.of(Padding.NoPadding)
+            ),
+            Set.of(Size.Size_128, Size.Size_256, Size.Size_512),  // DSA supports key sizes of 512, 1024, and 2048 bits
+            Map.of()  // DSA does not require an IV
+    );
 
     public CipherSpecification(Cipher algorithm, Map<Mode, List<Padding>> validModePaddingCombinations, Set<Size> supportedKeySizes, Map<Mode, Size> ivSizes) {
         this.algorithm = algorithm;

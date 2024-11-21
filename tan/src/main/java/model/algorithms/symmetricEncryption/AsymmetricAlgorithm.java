@@ -55,6 +55,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     }
 
     private void genCipher(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
+        System.out.println(asymmetricKeyHelper.getTransformation());
         cipherPublic = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         cipherPrivate = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         if (asymmetricKeyHelper.getPublicKey() == null || asymmetricKeyHelper.getPrivateKey() == null) {

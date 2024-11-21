@@ -18,7 +18,6 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
     protected Font font;
     private DetailAlgorithmPanel algorithmPanel;
     private MainController controller;
-    private ProcessDialog processDialog;
 
     public VAlgorithmAbs(MainController controller) {
         this.controller = controller;
@@ -92,7 +91,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
             case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
                 algorithmPanel.genSymmetricKey();
                 break;
-            case Cipher.RSA:
+            case Cipher.RSA, Cipher.DSA:
                 algorithmPanel.genAsymmetricKey();
                 break;
         }
