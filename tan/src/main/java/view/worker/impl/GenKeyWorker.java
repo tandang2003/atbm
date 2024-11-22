@@ -16,12 +16,12 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
     private VMainPanel vMainPanel;
     private JDialog dialog;
     private JProgressBar progressBar;
-
-    public GenKeyWorker(MainController controller, JPanel toolPanel) {
+    public   GenKeyWorker(MainController controller, JPanel toolPanel) {
         this.vMainPanel = (VMainPanel) toolPanel.getParent();
         this.controller = controller;
         init();
     }
+
 
     @Override
     public void init() {
@@ -82,6 +82,7 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
 
     @Override
     protected void done() {
+        controller.notifyAlgorithmObservers();
         vMainPanel.setEnabled(true);
         dialog.dispose();
     }

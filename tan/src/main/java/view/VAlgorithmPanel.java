@@ -44,9 +44,9 @@ public class VAlgorithmPanel extends JTabbedPane {
         this.setFont(font);
         addTab(symmetricPanel.getName(), symmetricPanel);
         addTab(asymmetricPanel.getName(), asymmetricPanel);
-//        addTab(hashPanel.getName(), hashPanel);
         addTab(classicPanel.getName(), classicPanel);
         addTab(blockPanel.getName(), blockPanel);
+        addTab(hashPanel.getName(), hashPanel);
         controller.setTabbedPane((VAlgorithmAbs) this.getSelectedComponent());
 
         addChangeListener(e -> {

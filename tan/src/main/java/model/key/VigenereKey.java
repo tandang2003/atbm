@@ -9,6 +9,8 @@ public class VigenereKey implements IKey<String[]> {
 
     @Override
     public String[] getKey() {
+        System.out.println("VigenereKey getKey");
+        System.out.println(key);
         return key;
     }
 

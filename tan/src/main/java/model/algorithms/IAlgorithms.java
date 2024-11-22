@@ -1,8 +1,8 @@
 package model.algorithms;
 
 
-import model.common.Cipher;
 import model.common.Exception;
+import model.common.ICipherEnum;
 import model.key.IKey;
 
 import javax.crypto.IllegalBlockSizeException;
@@ -23,7 +23,7 @@ public interface IAlgorithms {
 
     void setArrChar(List<String> chars);
 
-    Cipher getCipher();
+    ICipherEnum getCipher();
 
     default boolean encryptFile(String input, String output) throws IOException {
         throw new RuntimeException(Exception.UNSUPPORTED_METHOD);

@@ -1,13 +1,11 @@
 package model.algorithms.classicEncryption;
 
 import model.algorithms.AAlgorithm;
-import model.algorithms.IAlgorithms;
-import model.common.Alphabet;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import model.key.AffineKey;
 import model.utils.MyMath;
 
-import javax.crypto.IllegalBlockSizeException;
 import java.util.List;
 import java.util.Random;
 
@@ -28,9 +26,7 @@ public class AffineAlgorithm extends AAlgorithm {
 
     @Override
     public void genKey() {
-        System.out.println("Generating key for Affine Algorithm");
         int a = genA(), b = new Random().nextInt(this.arrChar.size() - 1);
-        System.out.println("a: " + a + " b: " + b);
         this.key = new AffineKey(a, b);
     }
 
@@ -76,7 +72,7 @@ public class AffineAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return Cipher.AFFINE;
     }
 

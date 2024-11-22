@@ -3,6 +3,7 @@ package view.AlgorithmPanel;
 
 import controller.MainController;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import observer.algorithmObserver.ObserverAlgorithm;
 import view.font.MyFont;
 
@@ -14,7 +15,7 @@ import static view.font.MyFont.ROBOTO_BOLD;
 
 public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm {
     protected String name;
-    protected JComboBox<Cipher> algorithms;
+    protected JComboBox<ICipherEnum> algorithms;
     protected Font font;
     private DetailAlgorithmPanel algorithmPanel;
     private MainController controller;
@@ -63,16 +64,16 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         return name;
     }
 
-    public JComboBox<Cipher> getAlgorithms() {
+    public JComboBox<ICipherEnum> getAlgorithms() {
         return algorithms;
     }
 
     @Override
-    public void update(VAlgorithmAbs algorithmAbs, Cipher cipher) {
+    public void update(VAlgorithmAbs algorithmAbs, ICipherEnum cipher) {
         if (algorithmAbs != this) {
             return;
         }
-        switch (cipher) {
+        switch ((Cipher) cipher) {
             case Cipher.AFFINE:
                 algorithmPanel.genAffineKey();
                 break;
@@ -91,7 +92,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
             case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
                 algorithmPanel.genSymmetricKey();
                 break;
-            case Cipher.RSA, Cipher.DSA:
+            case Cipher.RSA:
                 algorithmPanel.genAsymmetricKey();
                 break;
         }

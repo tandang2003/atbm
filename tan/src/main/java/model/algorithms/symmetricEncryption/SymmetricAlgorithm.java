@@ -1,11 +1,8 @@
 package model.algorithms.symmetricEncryption;
 
 import model.algorithms.AAlgorithm;
-import model.algorithms.IAlgorithms;
+import model.common.*;
 import model.common.Cipher;
-import model.common.Mode;
-import model.common.Padding;
-import model.common.Size;
 import model.key.SymmetricKey;
 import model.key.SymmetricKeyHelper;
 
@@ -135,7 +132,7 @@ public class SymmetricAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return ((SymmetricKeyHelper) this.getKey().getKey()).getCipher();
     }
 

@@ -5,10 +5,10 @@ import model.algorithms.AAlgorithm;
 import model.common.Algorithms;
 import model.common.Alphabet;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import model.key.HillKey;
 import model.utils.MyMath;
 
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Random;
 
@@ -251,7 +251,7 @@ public class HillAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return Cipher.HILL;
     }
 
@@ -328,8 +328,6 @@ public class HillAlgorithm extends AAlgorithm {
     public static void main(String[] args) {
         HillAlgorithm algorithm = new HillAlgorithm(Alphabet.ENGLISH_CHAR_SET);
         algorithm.genKey();
-//        String input = "Nguyễn Đình Lam sinh ngày 01 tháng 01 năm 1999 1";
-//        System.out.println(input.length());
         String input = "hello.hi";
         String encrypt = algorithm.encrypt(input);
         System.out.println(encrypt);

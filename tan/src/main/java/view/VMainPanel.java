@@ -19,8 +19,8 @@ public class VMainPanel extends JPanel {
 
     private void init() {
         vConsolePanel = new VConsolePanel();
-        vToolPanel = new VToolPanel(mainController);
         vAlgorithmPanel = new VAlgorithmPanel(mainController);
+        vToolPanel = new VToolPanel(mainController);
 
         setLayout(new BorderLayout());
         add(vConsolePanel, BorderLayout.SOUTH);

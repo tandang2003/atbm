@@ -3,6 +3,7 @@ package model.algorithms.classicEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import model.key.NumberKey;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class TranspositionAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return Cipher.TRANSPOSITION;
     }
 

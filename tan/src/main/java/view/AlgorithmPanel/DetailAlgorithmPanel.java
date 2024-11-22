@@ -337,6 +337,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
     }
 
+
+
     private void createAsymmetric(Cipher algorithmName) {
         CipherSpecification cipherSpecification = CipherSpecification.findCipherSpecification(algorithmName);
         setLayout(new GridBagLayout());
@@ -346,11 +348,9 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JPanel keySizePanel = new JPanel();
         JPanel keyModePanel = new JPanel();
         JPanel keyPaddingPanel = new JPanel();
-//        JPanel IvSizePanel = new JPanel();
         keySize = new JComboBox<>();
         keyMode = new JComboBox<>();
         keyPadding = new JComboBox<>();
-//        ivSize = new JComboBox<>();
         cipherSpecification.getSupportedKeySizes().forEach((size) -> {
             keySize.addItem(size);
         });
@@ -374,17 +374,9 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyInsPanel.add(keySizePanel);
         keyInsPanel.add(keyModePanel);
         keyInsPanel.add(keyPaddingPanel);
-//        if (!cipherSpecification.getIvSizes().isEmpty()) {
-//            keyInsPanel.setLayout(new GridLayout(1, 4, 5, 5));
-//            IvSizePanel.setLayout(new BorderLayout());
-//            IvSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "IV Size"));
-//            IvSizePanel.add(ivSize, BorderLayout.CENTER);
-//            keyInsPanel.add(IvSizePanel);
-//        }
         keyMode.addActionListener(e -> {
             rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
             controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
-//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
         rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
 //         Layout for panelOne (occupies one row)
@@ -439,14 +431,19 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
     }
 
-    public void rebuildPadding(CipherSpecification specification, Mode mode) {
+    private void createHash(){
+
+    }
+
+
+    private void rebuildPadding(CipherSpecification specification, Mode mode) {
         keyPadding.removeAllItems();
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
             keyPadding.addItem(padding);
         });
     }
 
-    public synchronized void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
+    public void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
         keyPadding.removeAllItems();
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
             keyPadding.addItem(padding);
@@ -553,6 +550,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
 
     public void genVergenceKey() {
         String[] key = (String[]) controller.getAlgorithms().getKey().getKey();
+        System.out.println(key);
         for (Component c : keyPanel.getComponents()) {
             if (c instanceof JTextField textField) {
                 textField.setText(String.join("", key));
@@ -596,8 +594,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                     textField.setText(texts[index++]);
             }
         }
-
     }
+
 
     @Override
     public void update(String alphabet) {

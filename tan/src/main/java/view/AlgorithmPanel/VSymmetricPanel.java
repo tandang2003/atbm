@@ -29,8 +29,6 @@ public class VSymmetricPanel extends VAlgorithmAbs {
         algorithms.addItem(Cipher.SUBSTITUTION);
         algorithms.addItem(Cipher.VIGENERE);
 
-        algorithms.setSelectedIndex(0);
-
 //        algorithms.set
 //        algorithms.setBorder();
         algorithms.setBackground(Color.WHITE);

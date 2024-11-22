@@ -16,7 +16,8 @@ public class SymmetricKeyHelper implements Serializable {
     private Size ivSize;
     private String secretKey;
     private String ivParameterSpec;
-//    TODO FIX SYNCHRONIZED THE MODE PADDING KEY AND IV IN VIEW
+
+    //    TODO FIX SYNCHRONIZED THE MODE PADDING KEY AND IV IN VIEW
     public SymmetricKeyHelper() {
     }
 

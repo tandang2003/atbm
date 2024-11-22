@@ -3,6 +3,7 @@ package model.algorithms.classicEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import model.key.CharacterKey;
 
 import java.util.*;
@@ -83,7 +84,7 @@ public class SubstitutionAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return Cipher.SUBSTITUTION;
     }
 

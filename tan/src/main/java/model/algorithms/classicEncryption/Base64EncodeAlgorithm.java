@@ -2,7 +2,7 @@ package model.algorithms.classicEncryption;
 
 
 import model.algorithms.AAlgorithm;
-import model.common.Cipher;
+import model.common.ICipherEnum;
 
 import java.io.*;
 import java.util.Base64;
@@ -73,7 +73,7 @@ public class Base64EncodeAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return null;
     }
 

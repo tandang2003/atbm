@@ -30,7 +30,6 @@ public class VClassicPanel extends VAlgorithmAbs {
         algorithms.addItem(Cipher.TRANSPOSITION);
         algorithms.addItem(Cipher.SUBSTITUTION);
         algorithms.addItem(Cipher.VIGENERE);
-        algorithms.setSelectedIndex(0);
     }
 
 

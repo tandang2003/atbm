@@ -51,7 +51,7 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
 
     public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
         algorithms.genKey();
-        this.notifyAlgorithmObservers();
+//        this.notifyAlgorithmObservers();
     }
 
 

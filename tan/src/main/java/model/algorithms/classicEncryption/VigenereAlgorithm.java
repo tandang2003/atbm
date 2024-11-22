@@ -5,11 +5,11 @@ import model.algorithms.AAlgorithm;
 import model.algorithms.IAlgorithms;
 import model.common.Alphabet;
 import model.common.Cipher;
+import model.common.ICipherEnum;
 import model.key.VigenereKey;
 
 import javax.crypto.IllegalBlockSizeException;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class VigenereAlgorithm extends AAlgorithm {
 
@@ -26,16 +26,14 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     @Override
     public void genKey() {
-        String[] key = new String[arrChar.size()];
-        for (int i = 0; i < arrChar.size(); i++) {
-            key[i] = arrChar.get(new Random().nextInt(arrChar.size()));
-        }
-        this.key = new VigenereKey(key);
+        List<String> arrCharShuffle = new ArrayList<>(arrChar);
+        Collections.shuffle(arrCharShuffle);
+        key = new VigenereKey(arrCharShuffle.toArray(new String[0]));
     }
 
     @Override
     public String encrypt(String input) {
-        if (validation()) throw new RuntimeException("Key is not valid");
+//        if (!validation()) throw new RuntimeException("Key is not valid");
         int[] key = transformKey();
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -79,7 +77,7 @@ public class VigenereAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return Cipher.VIGENERE;
     }
 

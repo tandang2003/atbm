@@ -1,10 +1,7 @@
 package model.algorithms.symmetricEncryption;
 
 import model.algorithms.AAlgorithm;
-import model.common.Cipher;
-import model.common.Mode;
-import model.common.Padding;
-import model.common.Size;
+import model.common.*;
 import model.key.AsymmetricKey;
 import model.key.AsymmetricKeyHelper;
 
@@ -91,7 +88,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public Cipher getCipher() {
+    public ICipherEnum getCipher() {
         return ((AsymmetricKeyHelper) this.key.getKey()).getCipher();
     }
 
