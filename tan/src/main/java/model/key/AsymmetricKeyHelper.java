@@ -16,8 +16,6 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class AsymmetricKeyHelper implements Serializable {
-    //    private PublicKey publicKey;
-    //    private PrivateKey privateKey;
     private Cipher cipher;
     //    private Mode mode;
 //    private Padding padding;

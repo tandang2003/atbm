@@ -20,7 +20,6 @@ public abstract class AAlgorithm implements IAlgorithms {
     protected abstract boolean validation();
 
 
-
     @Override
     public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
         ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selectedFile));
@@ -86,11 +85,4 @@ public abstract class AAlgorithm implements IAlgorithms {
     }
 
 
-    public static void main(String[] args) {
-//        File file = new File("/home/tan/Documents/Hehe/hehe1/");
-//        if (!file.exists()) {
-//            System.out.println(file.mkdir());
-//            ;
-//        }
-    }
 }

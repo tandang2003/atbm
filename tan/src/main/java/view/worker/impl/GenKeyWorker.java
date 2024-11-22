@@ -93,6 +93,7 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
             controller.genKey();
         } catch (IllegalBlockSizeException | NoSuchPaddingException |
                  InvalidKeyException ex) {
+            dialog.dispose();
             JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         return null;

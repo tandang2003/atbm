@@ -33,6 +33,15 @@ public interface IAlgorithms {
         throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
     }
 
+    default String signOrHashFile(String fileIn) throws IOException {
+        throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
+    }
+    default boolean verifyFile(String fileIn, String sign) throws IOException {
+        throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
+    }
+    default boolean verify(String input, String sign) {
+        throw new RuntimeException(Exception.UNSUPPORTED_METHOD);
+    }
     IKey getKey();
 
     void saveKey(File selectedFile) throws IOException;

@@ -76,7 +76,6 @@ public class SymmetricAlgorithm extends AAlgorithm {
         cipherOut = javax.crypto.Cipher.getInstance(symmetricKeyHelper.getTransformation());
 
         if (symmetricKeyHelper.getSecretKey() == null || symmetricKeyHelper.getIvParameterSpec() == null) {
-            System.out.println("Key or IV is null");
             return;
         }
         if (symmetricKeyHelper.getIvSize() == 0) {
@@ -84,7 +83,6 @@ public class SymmetricAlgorithm extends AAlgorithm {
             cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, symmetricKeyHelper.getSecretKey());
             return;
         }
-        System.out.println(symmetricKeyHelper.getIvSize());
         cipherIn.init(javax.crypto.Cipher.ENCRYPT_MODE, symmetricKeyHelper.getSecretKey(), symmetricKeyHelper.getIvParameterSpec());
         cipherOut.init(javax.crypto.Cipher.DECRYPT_MODE, symmetricKeyHelper.getSecretKey(), symmetricKeyHelper.getIvParameterSpec());
 
@@ -93,15 +91,6 @@ public class SymmetricAlgorithm extends AAlgorithm {
     @Override
     public String encrypt(String input) throws IllegalBlockSizeException {
         byte[] dataEncrypt = input.getBytes();
-//        byte[] encrypted = null;
-//        try {
-//            encrypted = cipherIn.doFinal(dataEncrypt);
-//        } catch (IllegalBlockSizeException e) {
-////            throw new RuntimeException(e);
-//            throw new IllegalBlockSizeException("The block size is not suitable.Please change block size or adding padding mode");
-//        } catch (BadPaddingException e) {
-//            throw new RuntimeException(e);
-//        }
         BufferedInputStream bis = new BufferedInputStream(new CipherInputStream(new ByteArrayInputStream(dataEncrypt), cipherIn));
         int read = 0;
         byte[] encrypted = null;
@@ -232,20 +221,4 @@ public class SymmetricAlgorithm extends AAlgorithm {
     protected boolean validation() {
         return false;
     }
-
-    public static void main(String[] args) {
-        IAlgorithms algorithms = new SymmetricAlgorithm(Cipher.AES, Mode.CTR, Padding.NoPadding, Size.Size_16, Size.Size_16);
-        algorithms.genKey();
-        String encrypt = null;
-        try {
-            encrypt = algorithms.encrypt("Hello World");
-        } catch (IllegalBlockSizeException e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println(encrypt);
-//        System.out.println(algorithms.decrypt(encrypt));
-
-
-    }
-
 }

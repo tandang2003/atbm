@@ -1,13 +1,15 @@
 package model.key;
 
-import javax.crypto.Cipher;
-import java.security.MessageDigest;
+import model.common.Cipher;
 
 public class HashKeyHelper {
-    private MessageDigest messageDigest;
-    private String outputStyle;
-    public HashKeyHelper() {
-//        messageDigest.
+    private Cipher key;
+
+    public HashKeyHelper(Cipher cipher) {
+        this.key= cipher;
     }
 
+    public Cipher getKey() {
+        return key;
+    }
 }

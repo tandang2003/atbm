@@ -10,19 +10,10 @@ public class Alphabet {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
-    private static String[] VIETNAMESE_CHAR_LOWER = {
-            "a", "à", "ả", "ã", "á", "ạ",
-            "â", "ầ", "ẩ", "ẫ", "ấ", "ậ",
-            "ä", "b", "c", "d", "đ", "e", "è", "ẻ", "ẽ", "é", "ẹ",
-            "ê", "ề", "ể", "ễ", "ế", "ệ",
-            "f", "g", "h", "i", "ì", "ỉ", "ĩ", "í", "ị",
-            "j", "k", "l", "m", "n", "o", "ò", "ỏ", "õ", "ó", "ọ",
-            "ô", "ồ", "ổ", "ỗ", "ố", "ộ",
-            "ơ", "ờ", "ở", "ỡ", "ớ", "ợ",
-            "p", "q", "r", "s", "t", "u", "ù", "ủ", "ũ", "ú", "ụ",
-            "ư", "ừ", "ử", "ữ", "ứ", "ự",
-            "v", "w", "x", "y", "ỳ", "ỷ", "ỹ", "ý", "ỵ", "z"
-    };
+
+    public static void main(String[] args) {
+        System.out.println(VIETNAMESE_CHAR_SET.size());
+    }
 
     private static String[] NUMBER_CHAR = {
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
@@ -59,12 +50,5 @@ public class Alphabet {
         return r;
     }
 
-    public static Map<Integer, String> getVietnameseCharLower() {
-        Map<Integer, String> map = new HashMap<>();
-        for (int i = 0; i < VIETNAMESE_CHAR_LOWER.length; i++) {
-            map.put(i, String.valueOf(VIETNAMESE_CHAR_LOWER[i]));
-        }
-        return map;
-    }
 
 }
