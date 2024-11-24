@@ -1,4 +1,4 @@
-package model.algorithms.symmetricEncryption;
+package model.algorithms.ModernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Cipher;
@@ -36,7 +36,7 @@ public class SignAlgoriithm extends AAlgorithm {
         try {
             KeyPairGenerator generator = KeyPairGenerator.getInstance(cipher.getName(), prov);
             secureRandom = SecureRandom.getInstance(algRandom, prov);
-            generator.initialize(1024, secureRandom);
+            generator.initialize(keySize.getBit(), secureRandom);
             keyPair = generator.genKeyPair();
             signature = Signature.getInstance(cipher.getName(), prov);
             publicKey = keyPair.getPublic();
@@ -157,6 +157,6 @@ public class SignAlgoriithm extends AAlgorithm {
         signAlgoriithm.genKey();
         String encrypt = signAlgoriithm.encrypt("Hello World");
         System.out.println(encrypt);
-        System.out.println(signAlgoriithm.verify("Hello World",encrypt));
+        System.out.println(signAlgoriithm.verify("Hello World", encrypt));
     }
 }

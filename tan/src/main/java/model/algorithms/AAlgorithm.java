@@ -40,13 +40,11 @@ public abstract class AAlgorithm implements IAlgorithms {
         }
         this.key = key;
         inputStream.close();
-
     }
 
     public void setArrChar(List<String> chars) {
         this.arrChar = chars;
     }
-
 
     @Override
     public IKey getKey() {

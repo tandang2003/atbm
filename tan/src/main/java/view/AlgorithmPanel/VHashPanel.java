@@ -20,11 +20,11 @@ public class VHashPanel extends VAlgorithmAbs {
         algorithms.addItem(Hash.SHA_256);
         algorithms.addItem(Hash.SHA_384);
         algorithms.addItem(Hash.SHA_512);
-//        algorithms.addItem(Hash.SHA_512_224);
-//        algorithms.addItem(Hash.SHA_512_256);
-//        algorithms.addItem(Hash.SHA3_224);
-//        algorithms.addItem(Hash.SHA3_256);
-//        algorithms.addItem(Hash.SHA3_384);
-//        algorithms.addItem(Hash.SHA3_512);
+        algorithms.addItem(Hash.SHA_512_224);
+        algorithms.addItem(Hash.SHA_512_256);
+        algorithms.addItem(Hash.SHA3_224);
+        algorithms.addItem(Hash.SHA3_256);
+        algorithms.addItem(Hash.SHA3_384);
+        algorithms.addItem(Hash.SHA3_512);
     }
 }

@@ -32,7 +32,7 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         init();
         designLayout();
         algorithms.setSelectedIndex(0);
-        algorithmPanel.rebuildPanel((Cipher) algorithms.getSelectedItem());
+        algorithmPanel.rebuildPanel((ICipherEnum) algorithms.getSelectedItem());
     }
 
     protected abstract void init();
@@ -48,8 +48,8 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         add(algorithmPanel, BorderLayout.CENTER);
 
         algorithms.addActionListener(e -> {
-            algorithmPanel.rebuildPanel((Cipher) algorithms.getSelectedItem());
-            controller.setAlgorithm((Cipher) algorithms.getSelectedItem());
+            algorithmPanel.rebuildPanel((ICipherEnum) algorithms.getSelectedItem());
+            controller.setAlgorithm((ICipherEnum) algorithms.getSelectedItem());
         });
     }
 

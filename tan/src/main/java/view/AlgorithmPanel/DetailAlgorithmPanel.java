@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.Map;
+import java.util.Objects;
 
 import static model.common.Button.FONTSIZE_NORMAL;
 import static view.font.MyFont.ROBOTO_REGULAR;
@@ -60,32 +61,37 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         alphabetsPanel.add(alphabetField, BorderLayout.CENTER);
     }
 
-    public void rebuildPanel(Cipher algorithmName) {
+    public void rebuildPanel(ICipherEnum algorithmName) {
         removeAll();
         revalidate();
         repaint();
-        switch (algorithmName) {
-            case Cipher.AFFINE:
-                createAffinePanel();
-                break;
-            case Cipher.HILL:
-                createHillPanel();
-                break;
-            case Cipher.SUBSTITUTION:
-                createSubstitutionPanel();
-                break;
-            case Cipher.TRANSPOSITION:
-                createTransportation();
-                break;
-            case Cipher.VIGENERE:
-                createVergenerePanel();
-                break;
-            case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
-                createSymmetric(algorithmName);
-                break;
-            case Cipher.RSA:
-                createAsymmetric(algorithmName);
-                break;
+        if (algorithmName instanceof Hash) {
+            createHash();
+        } else if (algorithmName instanceof Cipher) {
+            Cipher algorithm = (Cipher) algorithmName;
+            switch (algorithm) {
+                case Cipher.AFFINE:
+                    createAffinePanel();
+                    break;
+                case Cipher.HILL:
+                    createHillPanel();
+                    break;
+                case Cipher.SUBSTITUTION:
+                    createSubstitutionPanel();
+                    break;
+                case Cipher.TRANSPOSITION:
+                    createTransportation();
+                    break;
+                case Cipher.VIGENERE:
+                    createVergenerePanel();
+                    break;
+                case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
+                    createSymmetric((Cipher) algorithmName);
+                    break;
+                case Cipher.RSA:
+                    createAsymmetric((Cipher) algorithmName);
+                    break;
+            }
         }
     }
 
@@ -338,7 +344,6 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     }
 
 
-
     private void createAsymmetric(Cipher algorithmName) {
         CipherSpecification cipherSpecification = CipherSpecification.findCipherSpecification(algorithmName);
         setLayout(new GridBagLayout());
@@ -431,7 +436,92 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
     }
 
-    private void createHash(){
+    private void createHash() {
+        keyPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH; // Fill both horizontal and vertical space
+        gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
+
+        JTextField keyField = new JTextField(20);
+        // ComboBox Section
+        JComboBox<String> isHex = new JComboBox<>();
+        isHex.addItem("Hex");
+        isHex.addItem("Base64");
+        isHex.setFont(keyFont);
+        JPanel isHexPanel = new JPanel();
+        isHexPanel.setLayout(new BorderLayout());
+        isHexPanel.add(isHex, BorderLayout.CENTER);
+        isHexPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
+
+//        isHex.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
+//        isHex.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
+        gbc.gridx = 0; // Column 0
+        gbc.gridy = 0; // Row 0
+        gbc.gridwidth = 1; // Span 1 column
+        gbc.weightx = 1.0; // Expand horizontally
+        gbc.weighty = 0.1; // Take small vertical space
+        keyPanel.add(isHexPanel, gbc);
+
+        // HMAC Radio Buttons Section
+        JRadioButton yes = new JRadioButton("Yes");
+        yes.setFont(keyFont);
+
+        JRadioButton no = new JRadioButton("No");
+        no.setFont(keyFont);
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(yes);
+        buttonGroup.add(no);
+        buttonGroup.setSelected(yes.getModel(), true); // Set default selection
+
+        // Add spacing between radio buttons
+        JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5)); // Horizontal gap: 20, Vertical gap: 5
+        radioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Use HMAC:"));
+        radioPanel.add(yes);
+        radioPanel.add(no);
+
+        gbc.gridx = 0; // Column 0
+        gbc.gridy = 1; // Row 1
+        gbc.gridwidth = 1; // Span 1 column
+        gbc.weightx = 1.0; // Expand horizontally
+        gbc.weighty = 0.1; // Take moderate vertical space
+        keyPanel.add(radioPanel, gbc);
+
+        // Key Field Section
+        gbc.gridx = 0; // Column 0
+        gbc.gridy = 2; // Row 2
+        gbc.gridwidth = 1; // Span 1 column
+        gbc.weightx = 1.0; // Expand horizontally
+        gbc.weighty = 1.0; // Take most of the vertical space
+        keyPanel.add(keyField, gbc);
+
+        add(keyPanel);
+
+        // event
+        isHex.addActionListener(e -> {
+            controller.updateKey(isHex.getSelectedItem().equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+        });
+        keyField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        yes.addActionListener(e -> {
+            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+        });
+        no.addActionListener(e -> {
+            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+        });
 
     }
 

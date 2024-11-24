@@ -1,4 +1,4 @@
-package model.algorithms.symmetricEncryption;
+package model.algorithms.ModernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Hash;
@@ -23,14 +23,13 @@ public class HashAlgorithm extends AAlgorithm {
         this.key = new HashKey(new HashKeyHelper(cipher, isHex, isHMAC, keyMac));
     }
 
-    public HashAlgorithm(Hash cipher, boolean isHex) {
-        this.key = new HashKey(new HashKeyHelper(cipher, isHex));
+    public HashAlgorithm(Hash cipher, boolean isHex, boolean isMac) {
+        this.key = new HashKey(new HashKeyHelper(cipher, isHex, isMac));
     }
 
     public HashAlgorithm(Hash cipher, boolean isHex, String provider) {
-        this.key = new HashKey(new HashKeyHelper(cipher, isHex));
+        this.key = new HashKey(new HashKeyHelper(cipher, isHex, provider));
     }
-
     @Override
     protected boolean validation() {
         return false;
@@ -161,8 +160,10 @@ public class HashAlgorithm extends AAlgorithm {
 
     @Override
     public void updateKey(Object[] key) {
-//        TODO update key not done
-
+        HashKeyHelper hashKeyHelper = (HashKeyHelper) this.key.getKey();
+        hashKeyHelper.setHex((boolean) key[0]);
+        hashKeyHelper.setHMAC((boolean) key[1]);
+        hashKeyHelper.setKeyHmac((String) key[2]);
     }
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package model.algorithms.symmetricEncryption;
+package model.algorithms.ModernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.*;

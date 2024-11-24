@@ -1,13 +1,14 @@
 package controller;
 
 import model.algorithms.IAlgorithms;
+import model.algorithms.ModernEncryption.HashAlgorithm;
 import model.algorithms.classicEncryption.SubstitutionAlgorithm;
 import model.algorithms.classicEncryption.TranspositionAlgorithm;
 import model.algorithms.classicEncryption.AffineAlgorithm;
 import model.algorithms.classicEncryption.HillAlgorithm;
 import model.algorithms.classicEncryption.VigenereAlgorithm;
-import model.algorithms.symmetricEncryption.AsymmetricAlgorithm;
-import model.algorithms.symmetricEncryption.SymmetricAlgorithm;
+import model.algorithms.ModernEncryption.AsymmetricAlgorithm;
+import model.algorithms.ModernEncryption.SymmetricAlgorithm;
 import model.common.*;
 import observer.algorithmObserver.ObserverAlgorithm;
 import observer.algorithmObserver.SubjectAlgorithm;
@@ -20,8 +21,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,39 +90,45 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         return algorithms;
     }
 
-    public void setAlgorithm(Cipher selectedItem) {
-        switch (selectedItem) {
-            case AFFINE:
-                algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-                break;
-            case HILL:
-                algorithms = new HillAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-                break;
-            case VIGENERE:
-                algorithms = new VigenereAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-                break;
-            case SUBSTITUTION:
-                algorithms = new SubstitutionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-                break;
-            case TRANSPOSITION:
-                algorithms = new TranspositionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-                break;
-            case AES, BLOWFISH, DES, DESEDE, RC2, RC4:
-                CipherSpecification specification = CipherSpecification.findCipherSpecification(selectedItem);
-                Size keySize = specification.getSupportedKeySizes().stream().findFirst().get();
-                Mode mode = specification.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
-                Padding padding = specification.getValidModePaddingCombinations().get(mode).getFirst();
-                Size ivSize = specification.getIvSizes().get(mode);
-                algorithms = new SymmetricAlgorithm(selectedItem, mode, padding, keySize, ivSize);
-                break;
-            case RSA:
-                CipherSpecification s = CipherSpecification.findCipherSpecification(selectedItem);
-                Size kz = s.getSupportedKeySizes().stream().findFirst().get();
-                Mode m = s.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
-                Padding p = s.getValidModePaddingCombinations().get(m).getFirst();
-                algorithms = new AsymmetricAlgorithm(selectedItem, m, p, kz);
-                break;
+    public void setAlgorithm(ICipherEnum selectedItem) {
 
+        if (selectedItem instanceof Cipher) {
+            Cipher cipher = (Cipher) selectedItem;
+            switch (cipher) {
+                case AFFINE:
+                    algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
+                    break;
+                case HILL:
+                    algorithms = new HillAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
+                    break;
+                case VIGENERE:
+                    algorithms = new VigenereAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
+                    break;
+                case SUBSTITUTION:
+                    algorithms = new SubstitutionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
+                    break;
+                case TRANSPOSITION:
+                    algorithms = new TranspositionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
+                    break;
+                case AES, BLOWFISH, DES, DESEDE, RC2, RC4:
+                    CipherSpecification specification = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
+                    Size keySize = specification.getSupportedKeySizes().stream().findFirst().get();
+                    Mode mode = specification.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
+                    Padding padding = specification.getValidModePaddingCombinations().get(mode).getFirst();
+                    Size ivSize = specification.getIvSizes().get(mode);
+                    algorithms = new SymmetricAlgorithm((Cipher) selectedItem, mode, padding, keySize, ivSize);
+                    break;
+                case RSA:
+                    CipherSpecification s = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
+                    Size kz = s.getSupportedKeySizes().stream().findFirst().get();
+                    Mode m = s.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
+                    Padding p = s.getValidModePaddingCombinations().get(m).getFirst();
+                    algorithms = new AsymmetricAlgorithm((Cipher) selectedItem, m, p, kz);
+                    break;
+            }
+        } else if (selectedItem instanceof Hash) {
+            Hash hash = (Hash) selectedItem;
+            algorithms = new HashAlgorithm(hash, true, true);
         }
     }
 
