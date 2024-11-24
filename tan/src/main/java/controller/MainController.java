@@ -2,6 +2,7 @@ package controller;
 
 import model.algorithms.IAlgorithms;
 import model.algorithms.ModernEncryption.HashAlgorithm;
+import model.algorithms.ModernEncryption.SignAlgorithm;
 import model.algorithms.classicEncryption.SubstitutionAlgorithm;
 import model.algorithms.classicEncryption.TranspositionAlgorithm;
 import model.algorithms.classicEncryption.AffineAlgorithm;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MainController extends AlphaSubject implements SubjectAlgorithm {
     private boolean isEnglish;
@@ -129,11 +131,21 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         } else if (selectedItem instanceof Hash) {
             Hash hash = (Hash) selectedItem;
             algorithms = new HashAlgorithm(hash, true, true);
+        } else if (selectedItem instanceof KeyPairAlgorithm) {
+            KeyPairAlgorithm keyPairAlgorithm = (KeyPairAlgorithm) selectedItem;
+            SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
+            Provider provider = specification.getProvider();
+            Signature signatures = specification.getSignatures().getFirst();
+            SecureRandom algRandoms = specification.getAlgRandoms().getFirst();
+            Size sizes = specification.getSizes().stream().findFirst().get();
+
+            algorithms = new SignAlgorithm(keyPairAlgorithm, signatures, provider, algRandoms, sizes);
         }
     }
 
     public void setTabbedPane(VAlgorithmAbs selectedIndex) {
         this.algorithmAbs = selectedIndex;
+        setAlgorithm((ICipherEnum) selectedIndex.getAlgorithms().getSelectedItem());
     }
 
     public void saveKey(File selectedFile) throws IOException {

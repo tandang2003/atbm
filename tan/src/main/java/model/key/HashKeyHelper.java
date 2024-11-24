@@ -3,10 +3,11 @@ package model.key;
 import model.common.Alphabet;
 import model.common.Hash;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class HashKeyHelper {
+public class HashKeyHelper implements Serializable {
     private Hash key;
     private byte[] state;
     private byte[] hmac;

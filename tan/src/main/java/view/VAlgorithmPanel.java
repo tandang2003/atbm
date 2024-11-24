@@ -25,6 +25,7 @@ public class VAlgorithmPanel extends JTabbedPane {
     private VHashPanel hashPanel;
     private VClassicPanel classicPanel;
     private VBlockPanel blockPanel;
+    private VSignPanel signPanel;
     private MainController controller;
 
     public VAlgorithmPanel(MainController controller) {
@@ -42,14 +43,15 @@ public class VAlgorithmPanel extends JTabbedPane {
         hashPanel = new VHashPanel(controller);
         classicPanel = new VClassicPanel(controller);
         blockPanel = new VBlockPanel(controller);
+        signPanel = new VSignPanel(controller);
         this.setFont(font);
         addTab(symmetricPanel.getName(), symmetricPanel);
         addTab(asymmetricPanel.getName(), asymmetricPanel);
         addTab(classicPanel.getName(), classicPanel);
         addTab(blockPanel.getName(), blockPanel);
         addTab(hashPanel.getName(), hashPanel);
+        addTab(signPanel.getName(), signPanel);
         controller.setTabbedPane((VAlgorithmAbs) this.getSelectedComponent());
-
         addChangeListener(e -> {
             Component selectedComponent = this.getSelectedComponent();
             controller.setAlgorithm((ICipherEnum) ((VAlgorithmAbs) selectedComponent).getAlgorithms().getSelectedItem());

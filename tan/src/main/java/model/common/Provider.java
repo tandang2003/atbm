@@ -4,11 +4,13 @@ import java.util.List;
 
 public enum Provider {
     SUN("SUN"),
+    SUN_JCE("SunJCE"),
+    SUN_JSSE("SunJSSE"),
+    SUN_RSA_SIGN("SunRsaSign"),
 
     ;
 
     String name;
-    List<String> algRandoms;
 
     Provider(String name) {
         this.name = name;

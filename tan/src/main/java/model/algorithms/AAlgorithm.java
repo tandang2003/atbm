@@ -2,6 +2,7 @@ package model.algorithms;
 
 
 import model.common.Cipher;
+import model.common.KeyPairAlgorithm;
 import model.key.AffineKey;
 import model.key.IKey;
 import observer.algorithmObserver.ObserverAlgorithm;
@@ -69,8 +70,9 @@ public abstract class AAlgorithm implements IAlgorithms {
         if (key == null) {
             throw new IOException("Key is not created");
         }
+        String nameFile = (getCipher() instanceof KeyPairAlgorithm ? "Sign_" + getCipher().getName() : getCipher().getName()) + ".tan.key";
         try {
-            File destination = new File(path + File.separator + getCipher().getName() + ".tan.key");
+            File destination = new File(path + File.separator + nameFile);
             if (!destination.exists())
                 destination.createNewFile();
             ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(destination));

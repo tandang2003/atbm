@@ -9,6 +9,7 @@ import model.key.SymmetricKeyHelper;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -30,7 +31,7 @@ public class SymmetricAlgorithm extends AAlgorithm {
     }
 
     @Override
-    public void genKey() {
+    public void genKey() throws NoSuchPaddingException, IllegalBlockSizeException, InvalidKeyException {
         SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         try {
             genKeySize(symmetricKeyHelper);
@@ -39,23 +40,20 @@ public class SymmetricAlgorithm extends AAlgorithm {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {
-//            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
-            throw new RuntimeException(e);
+            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
+//            throw new RuntimeException(e);
 
         } catch (InvalidAlgorithmParameterException e) {
-//            throw new IllegalBlockSizeException("The mode or padding is not suitable.Please change block size or adding padding mode");
-            throw new RuntimeException(e);
+            throw new IllegalBlockSizeException("The mode or padding is not suitable.Please change block size or adding padding mode");
+//            throw new RuntimeException(e);
 
         } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-//            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
+//            throw new RuntimeException(e);
+            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
         }
     }
 
     private void genIv(SymmetricKeyHelper symmetricKeyHelper) {
-//        if (symmetricKeyHelper.getIvSize() == 0) {
-//            return;
-//        }
         byte[] b = new byte[symmetricKeyHelper.getIvSize()];
         SecureRandom secureRandom = new SecureRandom();
         secureRandom.nextBytes(b);
@@ -87,17 +85,13 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public String encrypt(String input) throws IllegalBlockSizeException {
-        byte[] dataEncrypt = input.getBytes();
-        BufferedInputStream bis = new BufferedInputStream(new CipherInputStream(new ByteArrayInputStream(dataEncrypt), cipherIn));
-        int read = 0;
+        byte[] dataEncrypt = input.getBytes(StandardCharsets.UTF_8);
         byte[] encrypted = null;
-        byte[] buffered = new byte[1024];
         try {
-            while ((read = bis.read(buffered)) != -1) {
-                encrypted = expand(encrypted, buffered, read);
-            }
-        } catch (IOException e) {
+            encrypted = cipherIn.doFinal(dataEncrypt);
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
             throw new IllegalBlockSizeException("The block size is not suitable.Please change block size or adding padding mode");
+
         }
         return Base64.getEncoder().encodeToString(encrypted);
     }
@@ -117,18 +111,13 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     public String decrypt(String encryptInput) throws IllegalBlockSizeException {
         byte[] encrypted = Base64.getDecoder().decode(encryptInput);
-        BufferedInputStream bis = new BufferedInputStream(new CipherInputStream(new ByteArrayInputStream(encrypted), cipherOut));
-        int read = 0;
         byte[] decrypted = null;
-        byte[] buffered = new byte[1024];
         try {
-            while ((read = bis.read(buffered)) != -1) {
-                decrypted = expand(decrypted, buffered, read);
-            }
-        } catch (IOException e) {
+            decrypted = cipherOut.doFinal(encrypted);
+        } catch (BadPaddingException | IllegalBlockSizeException e) {
             throw new IllegalBlockSizeException("The block size is not suitable.Please change block size or adding padding mode");
         }
-        return new String(decrypted);
+        return new String(decrypted, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -176,9 +165,6 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public void updateKey(Object[] objects) {
-//        if (objects.length != 3) {
-//            return;
-//        }
         SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
         if (objects.length >= 1) {
             System.out.println(objects[0]);
@@ -194,18 +180,14 @@ public class SymmetricAlgorithm extends AAlgorithm {
             symmetricKeyHelper.setIvSize((Size) objects[2]);
         }
         try {
-//            genKeySize(symmetricKeyHelper);
-//            genIv(symmetricKeyHelper);
             genKeySize(symmetricKeyHelper);
             genCipher(symmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {
-//            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);
 
         } catch (InvalidAlgorithmParameterException e) {
-//            throw new IllegalBlockSizeException("The mode or padding is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);
 
         } catch (InvalidKeyException e) {
@@ -218,4 +200,5 @@ public class SymmetricAlgorithm extends AAlgorithm {
     protected boolean validation() {
         return false;
     }
+
 }

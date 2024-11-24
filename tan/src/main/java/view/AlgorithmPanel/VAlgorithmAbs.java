@@ -3,7 +3,9 @@ package view.AlgorithmPanel;
 
 import controller.MainController;
 import model.common.Cipher;
+import model.common.Hash;
 import model.common.ICipherEnum;
+import model.common.KeyPairAlgorithm;
 import observer.algorithmObserver.ObserverAlgorithm;
 import view.font.MyFont;
 
@@ -73,28 +75,35 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         if (algorithmAbs != this) {
             return;
         }
-        switch ((Cipher) cipher) {
-            case Cipher.AFFINE:
-                algorithmPanel.genAffineKey();
-                break;
-            case Cipher.HILL:
-                algorithmPanel.genHillKey();
-                break;
-            case Cipher.SUBSTITUTION:
-                algorithmPanel.genSubstitutionKey();
-                break;
-            case Cipher.TRANSPOSITION:
-                algorithmPanel.genTransportationKey();
-                break;
-            case Cipher.VIGENERE:
-                algorithmPanel.genVergenceKey();
-                break;
-            case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
-                algorithmPanel.genSymmetricKey();
-                break;
-            case Cipher.RSA:
-                algorithmPanel.genAsymmetricKey();
-                break;
-        }
+        if (cipher instanceof Hash) {
+            algorithmPanel.genHashKey();
+            return;
+        } else if (cipher instanceof KeyPairAlgorithm) {
+            algorithmPanel.genKeyPair();
+            return;
+        } else
+            switch ((Cipher) cipher) {
+                case Cipher.AFFINE:
+                    algorithmPanel.genAffineKey();
+                    break;
+                case Cipher.HILL:
+                    algorithmPanel.genHillKey();
+                    break;
+                case Cipher.SUBSTITUTION:
+                    algorithmPanel.genSubstitutionKey();
+                    break;
+                case Cipher.TRANSPOSITION:
+                    algorithmPanel.genTransportationKey();
+                    break;
+                case Cipher.VIGENERE:
+                    algorithmPanel.genVergenceKey();
+                    break;
+                case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
+                    algorithmPanel.genSymmetricKey();
+                    break;
+                case Cipher.RSA:
+                    algorithmPanel.genAsymmetricKey();
+                    break;
+            }
     }
 }

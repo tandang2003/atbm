@@ -30,6 +30,7 @@ public class HashAlgorithm extends AAlgorithm {
     public HashAlgorithm(Hash cipher, boolean isHex, String provider) {
         this.key = new HashKey(new HashKeyHelper(cipher, isHex, provider));
     }
+
     @Override
     protected boolean validation() {
         return false;
@@ -164,6 +165,12 @@ public class HashAlgorithm extends AAlgorithm {
         hashKeyHelper.setHex((boolean) key[0]);
         hashKeyHelper.setHMAC((boolean) key[1]);
         hashKeyHelper.setKeyHmac((String) key[2]);
+
+        if (hashKeyHelper.isHMAC()) {
+            genMessageDigest();
+        } else {
+            genHMACMessageDigest();
+        }
     }
 
     public static void main(String[] args) {

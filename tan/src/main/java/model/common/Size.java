@@ -21,6 +21,7 @@ public enum Size implements Comparator<Size> {
     Size_64(512, 64),
     Size_128(1024, 128),
     Size_256(2048, 256),
+    Size_384(3072, 384),
     Size_512(4096, 512), Size_0(0, 0);
 
     private int bit;

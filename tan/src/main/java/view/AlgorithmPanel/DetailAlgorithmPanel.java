@@ -3,10 +3,13 @@ package view.AlgorithmPanel;
 import controller.MainController;
 import model.common.*;
 import model.key.AsymmetricKeyHelper;
+import model.key.SignKeyHelper;
 import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
 import view.font.MyFont;
 
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -15,6 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
+import java.lang.Exception;
+import java.security.InvalidKeyException;
 import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Objects;
@@ -67,6 +72,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         repaint();
         if (algorithmName instanceof Hash) {
             createHash();
+        } else if (algorithmName instanceof KeyPairAlgorithm) {
+            createSignPanel((KeyPairAlgorithm) algorithmName);
         } else if (algorithmName instanceof Cipher) {
             Cipher algorithm = (Cipher) algorithmName;
             switch (algorithm) {
@@ -453,8 +460,6 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         isHexPanel.add(isHex, BorderLayout.CENTER);
         isHexPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
 
-//        isHex.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
-//        isHex.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
         gbc.gridwidth = 1; // Span 1 column
@@ -492,7 +497,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.gridy = 2; // Row 2
         gbc.gridwidth = 1; // Span 1 column
         gbc.weightx = 1.0; // Expand horizontally
-        gbc.weighty = 1.0; // Take most of the vertical space
+        gbc.weighty = 0.9; // Take most of the vertical space
         keyPanel.add(keyField, gbc);
 
         add(keyPanel);
@@ -517,14 +522,101 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             }
         });
         yes.addActionListener(e -> {
+            keyField.setEnabled(true);
             controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
         });
         no.addActionListener(e -> {
+            keyField.setEnabled(false);
             controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
         });
 
     }
 
+    private void createSignPanel(KeyPairAlgorithm algorithm) {
+        SignatureSpecification cipherSpecification = SignatureSpecification.findByKeyPairAlgorithm(algorithm);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel keyInsPanel = new JPanel();
+        keyInsPanel.setLayout(new GridLayout(1, 3, 5, 5));
+        JPanel keySizePanel = new JPanel();
+        JPanel keyModePanel = new JPanel();
+        JPanel keyPaddingPanel = new JPanel();
+        JComboBox<Size> keySize = new JComboBox<Size>();
+        JComboBox<Signature> keySignature = new JComboBox<>();
+        JComboBox<SecureRandom> keySecureRandom = new JComboBox<>();
+        cipherSpecification.getSizes().forEach(keySize::addItem);
+        keySize.setSelectedIndex(0);
+        cipherSpecification.getSignatures().forEach(keySignature::addItem);
+        cipherSpecification.getAlgRandoms().forEach(keySecureRandom::addItem);
+        keySignature.setSelectedIndex(0);
+        keySizePanel.setLayout(new BorderLayout());
+        keySizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Key Size"));
+        keySize.setFont(keyFont);
+        keySizePanel.add(keySize, BorderLayout.CENTER);
+        keyModePanel.setLayout(new BorderLayout());
+        keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Mode"));
+        keySignature.setFont(keyFont);
+        keyModePanel.add(keySignature, BorderLayout.CENTER);
+        keyPaddingPanel.setLayout(new BorderLayout());
+        keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Padding"));
+        keySecureRandom.setFont(keyFont);
+        keyPaddingPanel.add(keySecureRandom, BorderLayout.CENTER);
+        keyInsPanel.add(keySizePanel);
+        keyInsPanel.add(keyModePanel);
+        keyInsPanel.add(keyPaddingPanel);
+        keySignature.addActionListener(e -> {
+            controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
+        });
+//         Layout for panelOne (occupies one row)
+        gbc.gridx = 0; // Column 0
+        gbc.gridy = 0; // Row 0
+        gbc.gridwidth = 1; // Occupy 1 column
+        gbc.gridheight = 1; // Occupy 1 row
+        gbc.weightx = 1.0; // Horizontal weight
+        gbc.weighty = 0.5; // Vertical weight (optional)
+        gbc.fill = GridBagConstraints.BOTH; // Fill space
+        add(keyInsPanel, gbc);
+        keyPanel = new JPanel();
+        keyPanel.setLayout(new BoxLayout(keyPanel, BoxLayout.Y_AXIS));
+        JPanel keyFieldPanel = new JPanel();
+        keyFieldPanel.setLayout(new BorderLayout());
+        JTextField keyField = new JTextField();
+        keyField.setEnabled(true);
+        keyField.setEditable(false);
+        keyField.setBackground(Color.WHITE);
+        keyFieldPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Public key"));
+        keyField.setFont(keyFont);
+        keyFieldPanel.add(keyField, BorderLayout.CENTER);
+        keyPanel.add(keyFieldPanel);
+        JPanel privateKeydPanel = new JPanel();
+        privateKeydPanel.setLayout(new BorderLayout());
+        JTextField privateKeyField = new JTextField();
+        privateKeyField.setEnabled(true);
+        privateKeyField.setEditable(false);
+        privateKeyField.setBackground(Color.WHITE);
+        privateKeydPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Private key"));
+        privateKeyField.setFont(keyFont);
+        privateKeydPanel.add(privateKeyField, BorderLayout.CENTER);
+        keyPanel.add(privateKeydPanel);
+        gbc.gridx = 0; // Column 0
+        gbc.gridy = 1; // Row 1
+        gbc.gridwidth = 1; // Occupy 1 column
+        gbc.gridheight = 2; // Occupy 2 rows
+        gbc.weightx = 1.0; // Horizontal weight
+        gbc.weighty = 1.0; // Vertical weight
+        gbc.fill = GridBagConstraints.BOTH; // Fill space
+        add(keyPanel, gbc);
+        keySize.addActionListener(e -> {
+            controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
+        });
+        keySecureRandom.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
+            }
+        });
+
+    }
 
     private void rebuildPadding(CipherSpecification specification, Mode mode) {
         keyPadding.removeAllItems();
@@ -690,6 +782,21 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     @Override
     public void update(String alphabet) {
         alphabetField.setText(alphabet);
+    }
+
+    public void genHashKey() {
+    }
+
+    public void genKeyPair() {
+//        SignKeyHelper key = (SignKeyHelper) controller.getAlgorithms().getKey().getKey();
+//        String[] texts = key.getKeys();
+//        int index = 0;
+//        for (Component c : keyPanel.getComponents()) {
+//            if (c instanceof JPanel panel) {
+//                if (panel.getComponent(0) instanceof JTextField textField)
+//                    textField.setText(texts[index++]);
+//            }
+//        }
     }
 
 

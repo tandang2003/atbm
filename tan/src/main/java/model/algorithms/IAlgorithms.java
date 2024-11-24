@@ -6,12 +6,14 @@ import model.common.ICipherEnum;
 import model.key.IKey;
 
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.util.List;
 
 public interface IAlgorithms {
-    void genKey();
+    void genKey() throws NoSuchPaddingException, IllegalBlockSizeException, InvalidKeyException;
 
     void loadKey(File selectedFile) throws ClassNotFoundException, IOException;
 
