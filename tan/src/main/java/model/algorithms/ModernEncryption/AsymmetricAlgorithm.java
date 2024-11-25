@@ -19,11 +19,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 
     public AsymmetricAlgorithm(Cipher cipher, Mode mode, Padding padding, Size keySize) {
         super();
-        String transformation = cipher.getName();
-        if (mode != Mode.NONE) {
-            transformation += "/" + mode.getName() + "/" + padding.getName();
-        }
-        this.key = new AsymmetricKey(new AsymmetricKeyHelper(cipher, transformation, keySize));
+        this.key = new AsymmetricKey(new AsymmetricKeyHelper(cipher, mode,padding, keySize));
 
     }
 
@@ -96,7 +92,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public void updateKey(Object[] key) {
         AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
         asymmetricKeyHelper.setKeySize((Size) key[0]);
-        asymmetricKeyHelper.setTransformation(((String) key[1]).isEmpty() ? asymmetricKeyHelper.getCipher().getName() : asymmetricKeyHelper.getCipher().getName() + "/" + ((String) key[1]));
+//        asymmetricKeyHelper.setTransformation(((String) key[1]).isEmpty() ? asymmetricKeyHelper.getCipher().getName() : asymmetricKeyHelper.getCipher().getName() + "/" + ((String) key[1]));
 
         try {
             genCipher((AsymmetricKeyHelper) this.key.getKey());

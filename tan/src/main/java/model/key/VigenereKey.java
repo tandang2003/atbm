@@ -1,5 +1,10 @@
 package model.key;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public class VigenereKey implements IKey<String[]> {
     private String[] key;
 
@@ -9,9 +14,12 @@ public class VigenereKey implements IKey<String[]> {
 
     @Override
     public String[] getKey() {
-        System.out.println("VigenereKey getKey");
-        System.out.println(key);
         return key;
+    }
+
+    @Override
+    public void saveToFile(DataOutputStream outputStream) throws IOException {
+        outputStream.writeUTF(String.join("", key));
     }
 
 }

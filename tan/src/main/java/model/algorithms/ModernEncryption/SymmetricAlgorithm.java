@@ -22,12 +22,8 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     public SymmetricAlgorithm(Cipher cipher, Mode mode, Padding padding, Size keySize, Size ivSize) {
         super();
-        String transformation = cipher.getName() + "/" + mode.getName() + "/" + padding.getName();
 
-        if (mode == Mode.NONE) {
-            transformation = cipher.getName();
-        }
-        this.key = new SymmetricKey(new SymmetricKeyHelper(cipher, keySize, transformation, ivSize));
+        this.key = new SymmetricKey(new SymmetricKeyHelper(cipher, keySize, mode, padding, ivSize));
     }
 
     @Override
@@ -171,13 +167,17 @@ public class SymmetricAlgorithm extends AAlgorithm {
             symmetricKeyHelper.setKeySize((Size) objects[0]);
         }
         if (objects.length >= 2) {
-            System.out.println(objects[1]);
-            symmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty() ? symmetricKeyHelper.getCipher().getName() : symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
+            symmetricKeyHelper.setMode((Mode) objects[1]);
+//            symmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty() ? symmetricKeyHelper.getCipher().getName() : symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
         }
 //        symmetricKeyHelper.setTransformation(symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
         if (objects.length >= 3) {
             System.out.println(objects[2]);
-            symmetricKeyHelper.setIvSize((Size) objects[2]);
+            symmetricKeyHelper.setPadding((Padding) objects[2]);
+        }
+        if (objects.length >= 4) {
+            System.out.println(objects[3]);
+            symmetricKeyHelper.setIvSize((Size) objects[3]);
         }
         try {
             genKeySize(symmetricKeyHelper);

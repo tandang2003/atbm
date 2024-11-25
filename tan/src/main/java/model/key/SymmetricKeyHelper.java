@@ -1,6 +1,8 @@
 package model.key;
 
 import model.common.Cipher;
+import model.common.Mode;
+import model.common.Padding;
 import model.common.Size;
 
 import javax.crypto.SecretKey;
@@ -12,8 +14,20 @@ import java.util.Base64;
 public class SymmetricKeyHelper implements Serializable {
     private Cipher cipher;
     private Size keySize;
-    private String Transformation;
+    private Mode mode;
+    private Padding padding;
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public void setPadding(Padding padding) {
+        this.padding = padding;
+    }
+
+    //    private String Transformation;
     private Size ivSize;
+
     private String secretKey;
     private String ivParameterSpec;
 
@@ -24,7 +38,23 @@ public class SymmetricKeyHelper implements Serializable {
     public SymmetricKeyHelper(Cipher cipher, Size keySize, String transformation, Size ivSize) {
         this.cipher = cipher;
         this.keySize = keySize;
-        this.Transformation = transformation;
+//        this.Transformation = transformation;
+        this.ivSize = ivSize;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public Padding getPadding() {
+        return padding;
+    }
+
+    public SymmetricKeyHelper(Cipher cipher, Size keySize, Mode mode, Padding padding, Size ivSize) {
+        this.cipher = cipher;
+        this.keySize = keySize;
+        this.mode = mode;
+        this.padding = padding;
         this.ivSize = ivSize;
     }
 
@@ -37,7 +67,11 @@ public class SymmetricKeyHelper implements Serializable {
     }
 
     public String getTransformation() {
-        return Transformation;
+        String transformation = cipher.getName() + "/" + mode.getName() + "/" + padding.getName();
+        if (mode == Mode.NONE) {
+            transformation = cipher.getName();
+        }
+        return transformation;
     }
 
     public int getIvSize() {
@@ -56,7 +90,6 @@ public class SymmetricKeyHelper implements Serializable {
         if (secretKey == null) {
             return null;
         }
-        System.out.println(secretKey);
         return new SecretKeySpec(Base64.getDecoder().decode(secretKey), cipher.getName());
     }
 
@@ -74,10 +107,6 @@ public class SymmetricKeyHelper implements Serializable {
     public void setKeySize(Size keySize) {
         this.keySize = keySize;
         this.secretKey = null;
-    }
-
-    public void setTransformation(String transformation) {
-        Transformation = transformation;
     }
 
     public void setIvSize(Size ivSize) {

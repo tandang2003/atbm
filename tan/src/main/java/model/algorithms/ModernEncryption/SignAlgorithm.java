@@ -46,7 +46,9 @@ public class SignAlgorithm extends AAlgorithm {
             generator.initialize(signKeyHelper.getKeySize(), secureRandomObj);
             keyPair = generator.genKeyPair();
             publicKey = keyPair.getPublic();
+            signKeyHelper.setPublicKey(publicKey.getEncoded());
             privateKey = keyPair.getPrivate();
+            signKeyHelper.setPrivateKey(privateKey.getEncoded());
         } catch (NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new RuntimeException(e);
         }
@@ -157,18 +159,18 @@ public class SignAlgorithm extends AAlgorithm {
         return false;
     }
 
-//    public static void main(String[] args) throws IllegalBlockSizeException {
-//        SignAlgorithm signAlgoriithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
-//        signAlgoriithm.genKey();
+    public static void main(String[] args) throws IllegalBlockSizeException {
+        SignAlgorithm signAlgoriithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
+        signAlgoriithm.genKey();
+        String encrypt = signAlgoriithm.encrypt("Hello World");
+        System.out.println(encrypt);
+//        System.out.println(encrypt1);
 //        String encrypt = signAlgoriithm.encrypt("Hello World");
 //        System.out.println(encrypt);
-////        System.out.println(encrypt1);
-////        String encrypt = signAlgoriithm.encrypt("Hello World");
-////        System.out.println(encrypt);
-//        SignAlgorithm signAlgorithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
-//        signAlgorithm.genKey();
+        SignAlgorithm signAlgorithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
+        signAlgorithm.genKey();
 //        signAlgorithm.publicKey=signAlgoriithm.publicKey;
 //        signAlgorithm.privateKey=signAlgoriithm.privateKey;
-//        System.out.println(signAlgorithm.verify("Hello World", encrypt));
-//    }
+        System.out.println(signAlgorithm.verify("Hello World", encrypt));
+    }
 }

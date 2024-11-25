@@ -3,6 +3,7 @@ package view.AlgorithmPanel;
 import controller.MainController;
 import model.common.*;
 import model.key.AsymmetricKeyHelper;
+import model.key.HashKeyHelper;
 import model.key.SignKeyHelper;
 import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
@@ -71,7 +72,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         revalidate();
         repaint();
         if (algorithmName instanceof Hash) {
-            createHash();
+            createHash((Hash) algorithmName);
         } else if (algorithmName instanceof KeyPairAlgorithm) {
             createSignPanel((KeyPairAlgorithm) algorithmName);
         } else if (algorithmName instanceof Cipher) {
@@ -297,7 +298,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         }
         keyMode.addActionListener(e -> {
             rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
+//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
         rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
 //         Layout for panelOne (occupies one row)
@@ -338,13 +340,14 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
         keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
         });
         keyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (keyPadding.getSelectedItem() != null) {
-                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
+                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
+//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
                 }
             }
         });
@@ -388,10 +391,10 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyInsPanel.add(keyPaddingPanel);
         keyMode.addActionListener(e -> {
             rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
         });
         rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
-//         Layout for panelOne (occupies one row)
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
         gbc.gridwidth = 1; // Occupy 1 column
@@ -431,19 +434,20 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
         keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
         });
         keyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (keyPadding.getSelectedItem() != null) {
-                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
+//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
                 }
             }
         });
     }
 
-    private void createHash() {
+    private void createHash(Hash hash) {
         keyPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontal and vertical space
@@ -501,20 +505,25 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.add(keyField, gbc);
 
         add(keyPanel);
-
+        if (hash.equals(Hash.MD2)) {
+            yes.setEnabled(false);
+            no.setSelected(true);
+            keyField.setEnabled(false);
+            buttonGroup.setSelected(no.getModel(), true); // Set default selection
+        }
         // event
         isHex.addActionListener(e -> {
-            controller.updateKey(isHex.getSelectedItem().equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
         });
         keyField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
             }
 
             @Override
@@ -523,11 +532,11 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
         yes.addActionListener(e -> {
             keyField.setEnabled(true);
-            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
         });
         no.addActionListener(e -> {
             keyField.setEnabled(false);
-            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), ((ButtonModel) buttonGroup.getSelection()) == yes.getModel(), keyField.getText());
+            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
         });
 
     }
@@ -554,11 +563,11 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keySize.setFont(keyFont);
         keySizePanel.add(keySize, BorderLayout.CENTER);
         keyModePanel.setLayout(new BorderLayout());
-        keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Mode"));
+        keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Signature"));
         keySignature.setFont(keyFont);
         keyModePanel.add(keySignature, BorderLayout.CENTER);
         keyPaddingPanel.setLayout(new BorderLayout());
-        keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Padding"));
+        keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Secure Random Algorithm"));
         keySecureRandom.setFont(keyFont);
         keyPaddingPanel.add(keySecureRandom, BorderLayout.CENTER);
         keyInsPanel.add(keySizePanel);
@@ -630,7 +639,6 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
             keyPadding.addItem(padding);
         });
-//        keyPadding.setSelectedIndex(0);
         ivSize.removeAllItems();
         ivSize.addItem(specification.getIvSizes().get(mode));
     }
@@ -785,10 +793,20 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     }
 
     public void genHashKey() {
+
     }
 
     public void genKeyPair() {
-//        SignKeyHelper key = (SignKeyHelper) controller.getAlgorithms().getKey().getKey();
+        SignKeyHelper key = (SignKeyHelper) controller.getAlgorithms().getKey().getKey();
+        String[] texts = key.getKeys();
+        int index = 0;
+        for (Component c : keyPanel.getComponents()) {
+            if (c instanceof JPanel panel) {
+                if (panel.getComponent(0) instanceof JTextField textField)
+                    textField.setText(texts[index++]);
+            }
+        }
+    }
 //        String[] texts = key.getKeys();
 //        int index = 0;
 //        for (Component c : keyPanel.getComponents()) {
@@ -797,7 +815,4 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
 //                    textField.setText(texts[index++]);
 //            }
 //        }
-    }
-
-
 }

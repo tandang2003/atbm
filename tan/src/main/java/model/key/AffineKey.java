@@ -1,5 +1,8 @@
 package model.key;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class AffineKey implements IKey<int[]> {
     private int a, b;
 
@@ -16,6 +19,9 @@ public class AffineKey implements IKey<int[]> {
         return new int[]{a, b};
     }
 
-
-
+    @Override
+    public void saveToFile(DataOutputStream outputStream) throws IOException {
+            outputStream.writeInt(a);
+            outputStream.writeInt(b);
+    }
 }

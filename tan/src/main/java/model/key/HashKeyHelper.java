@@ -25,6 +25,7 @@ public class HashKeyHelper implements Serializable {
     public HashKeyHelper(Hash cipher, boolean isHex, boolean isMac) {
         this.key = cipher;
     }
+
     public HashKeyHelper(Hash cipher, boolean isHex, String provider) {
         this.key = cipher;
         this.isHex = isHex;
@@ -36,7 +37,6 @@ public class HashKeyHelper implements Serializable {
     public Hash getKey() {
         return key;
     }
-
 
 
     public String getHmac() {
@@ -69,22 +69,11 @@ public class HashKeyHelper implements Serializable {
     }
 
     public String getProvider() {
-        return provider;
+        return provider == null || provider.isEmpty() ? "" : provider;
     }
 
     public String getKeyHmac() {
         return keyHmac;
     }
 
-    @Override
-    public String toString() {
-        return "HashKeyHelper{" +
-                "key=" + key +
-                ", state=" + Arrays.toString(state) +
-                ", isHMAC=" + isHMAC +
-                ", isHex=" + isHex +
-                ", provider='" + provider + '\'' +
-                ", keyHmac='" + keyHmac + '\'' +
-                '}';
-    }
 }

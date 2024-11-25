@@ -17,9 +17,9 @@ import java.util.Base64;
 
 public class AsymmetricKeyHelper implements Serializable {
     private Cipher cipher;
-    //    private Mode mode;
-//    private Padding padding;
-    private String transformation;
+    private Mode mode;
+    private Padding padding;
+    //    private String transformation;
     private Size keySize;
     private String publicKey;
     private String privateKey;
@@ -28,10 +28,26 @@ public class AsymmetricKeyHelper implements Serializable {
 
     }
 
-    public AsymmetricKeyHelper(Cipher cipher, String transformation, Size keySize) {
+//    public AsymmetricKeyHelper(Cipher cipher, String transformation, Size keySize) {
+//        this.cipher = cipher;
+//        this.transformation = transformation;
+//        this.keySize = keySize;
+//    }
+
+
+    public AsymmetricKeyHelper(Cipher cipher, Mode mode, Padding padding, Size keySize) {
         this.cipher = cipher;
-        this.transformation = transformation;
+        this.mode = mode;
+        this.padding = padding;
         this.keySize = keySize;
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public Padding getPadding() {
+        return padding;
     }
 
     public Cipher getCipher() {
@@ -73,13 +89,13 @@ public class AsymmetricKeyHelper implements Serializable {
     }
 
     public String getTransformation() {
+        String transformation = cipher.getName();
+        if (mode != Mode.NONE) {
+            transformation += "/" + mode.getName() + "/" + padding.getName();
+        }
         return transformation;
     }
 
-    public void setTransformation(String transformation) {
-
-        this.transformation = transformation;
-    }
 
     public void setKeySize(Size keySize) {
         this.keySize = keySize;

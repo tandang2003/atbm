@@ -75,9 +75,8 @@ public abstract class AAlgorithm implements IAlgorithms {
             File destination = new File(path + File.separator + nameFile);
             if (!destination.exists())
                 destination.createNewFile();
-            ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(destination));
-            outputStream.writeObject(getCipher());
-            outputStream.writeObject(this.key);
+            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(destination));
+            key.saveToFile(outputStream);
             outputStream.close();
         } catch (IOException e) {
             throw new IOException("Error while saving key. Please try again");
