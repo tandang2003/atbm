@@ -11,6 +11,32 @@ public class CipherSpecification {
     private Set<Size> supportedKeySizes;  // Set to hold supported key sizes
     private Map<Mode, Size> ivSizes;  // Map to hold IV sizes for each mode
 
+    public static final CipherSpecification findCipherSpecificationWithCipherName(String cipher) {
+        CipherSpecification result = switch (cipher) {
+            case "AES" -> AES;
+            case "DES" -> DES;
+            case "DESEDE" -> TRIPLEDES;
+            case "RSA" -> RSA;
+            case "BLOWFISH" -> Blowfish;
+            case "RC2" -> RC2;
+            case "RC4" -> RC4;
+            default -> null;
+        };
+        if (result != null) {
+            result.supportedKeySizes = new TreeSet<>(result.supportedKeySizes);
+            result.ivSizes = new TreeMap<>(result.ivSizes);
+            Map<Mode, List<Padding>> sortedValidModePaddingCombinations = new TreeMap<>(new Comparator<Mode>() {
+                @Override
+                public int compare(Mode o1, Mode o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+            sortedValidModePaddingCombinations.putAll(result.validModePaddingCombinations);
+            result.validModePaddingCombinations = sortedValidModePaddingCombinations;
+        }
+        return result;
+    }
+
     public static final CipherSpecification findCipherSpecification(Cipher cipher) {
         CipherSpecification result = switch (cipher) {
             case AES -> AES;
@@ -327,5 +353,9 @@ public class CipherSpecification {
             System.out.println(cipher);
         }
 
+    }
+
+    public Cipher getAlgorithm() {
+        return algorithm;
     }
 }

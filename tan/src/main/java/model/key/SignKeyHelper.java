@@ -67,10 +67,16 @@ public class SignKeyHelper implements Serializable {
         this.publicKey = publicKey;
     }
 
+    public void setPublicKey(String publicKey) {
+        this.publicKey = Base64.getDecoder().decode(publicKey);
+    }
+
     public void setPrivateKey(byte[] privateKey) {
         this.privateKey = privateKey;
     }
-
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = Base64.getDecoder().decode(privateKey);
+    }
     public String[] getKeys() {
         return new String[]{Base64.getEncoder().encodeToString(publicKey), Base64.getEncoder().encodeToString(privateKey)};
     }

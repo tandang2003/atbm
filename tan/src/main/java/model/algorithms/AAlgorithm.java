@@ -23,24 +23,30 @@ public abstract class AAlgorithm implements IAlgorithms {
 
     @Override
     public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
-        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selectedFile));
-        Cipher cipher = null;
-        try {
-            cipher = (Cipher) inputStream.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Invalid key file");
+        if (!selectedFile.exists()) {
+            throw new IOException("File not found");
         }
-        if (cipher != getCipher()) {
-            throw new IOException("Invalid key file");
-        }
-        IKey key = null;
-        try {
-            key = (IKey) inputStream.readObject();
-        } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Invalid key file");
-        }
-        this.key = key;
+        DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
+        key.loadFromFile(inputStream);
         inputStream.close();
+//        ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(selectedFile));
+//        Cipher cipher = null;
+//        try {
+//            cipher = (Cipher) inputStream.readObject();
+//        } catch (ClassNotFoundException e) {
+//            throw new ClassNotFoundException("Invalid key file");
+//        }
+//        if (cipher != getCipher()) {
+//            throw new IOException("Invalid key file");
+//        }
+//        IKey key = null;
+//        try {
+//            key = (IKey) inputStream.readObject();
+//        } catch (ClassNotFoundException e) {
+//            throw new ClassNotFoundException("Invalid key file");
+//        }
+//        this.key = key;
+//        inputStream.close();
     }
 
     public void setArrChar(List<String> chars) {
@@ -54,6 +60,7 @@ public abstract class AAlgorithm implements IAlgorithms {
 
     @Override
     public void saveKey(File selectedFile) throws IOException {
+
         boolean isFile = selectedFile.getAbsolutePath().contains(".");
         String path = selectedFile.getAbsolutePath();
         if (isFile) {

@@ -80,6 +80,26 @@ public class AsymmetricKeyHelper implements Serializable {
         this.privateKey = Base64.getEncoder().encodeToString(privateKey.getEncoded());
     }
 
+    public void setCipher(Cipher cipher) {
+        this.cipher = cipher;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+    }
+
+    public void setPadding(Padding padding) {
+        this.padding = padding;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
     public String[] getKeys() {
         return new String[]{publicKey, privateKey};
     }

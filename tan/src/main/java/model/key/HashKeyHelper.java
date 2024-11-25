@@ -43,6 +43,10 @@ public class HashKeyHelper implements Serializable {
         return key.getHmacFormat();
     }
 
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
     public void setKeyHmac(String keyHmac) {
         this.keyHmac = keyHmac;
     }

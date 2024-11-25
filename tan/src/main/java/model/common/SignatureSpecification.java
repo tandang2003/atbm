@@ -76,6 +76,18 @@ public class SignatureSpecification {
             result.algRandoms = result.algRandoms.stream().sorted(Comparator.comparing(SecureRandom::getName)).toList();
         }
         return result;
+    }  public static SignatureSpecification findByKeyPairAlgorithm(String keyPairAlgorithm) {
+        SignatureSpecification result = switch (keyPairAlgorithm) {
+            case "RSA" -> RSA();
+            case "DSA" -> DSA();
+            default -> null;
+        };
+        if (result != null) {
+            result.sizes = new TreeSet<>(result.sizes);
+            result.signatures = result.signatures.stream().sorted(Comparator.comparing(Signature::getName)).toList();
+            result.algRandoms = result.algRandoms.stream().sorted(Comparator.comparing(SecureRandom::getName)).toList();
+        }
+        return result;
     }
 
 }

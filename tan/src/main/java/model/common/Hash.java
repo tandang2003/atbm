@@ -25,6 +25,39 @@ public enum Hash implements ICipherEnum {
         this.HmacFormat = HmacFormat;
     }
 
+    public static Hash findHashWithName(String keyName) {
+        switch (keyName) {
+            case "MD2":
+                return MD2;
+            case "MD5":
+                return MD5;
+            case "SHA-1":
+                return SHA_1;
+            case "SHA-224":
+                return SHA_224;
+            case "SHA-256":
+                return SHA_256;
+            case "SHA-384":
+                return SHA_384;
+            case "SHA-512":
+                return SHA_512;
+            case "SHA-512/224":
+                return SHA_512_224;
+            case "SHA-512/256":
+                return SHA_512_256;
+            case "SHA3-224":
+                return SHA3_224;
+            case "SHA3-256":
+                return SHA3_256;
+            case "SHA3-384":
+                return SHA3_384;
+            case "SHA3-512":
+                return SHA3_512;
+            default:
+                return null;
+        }
+    }
+
     @Override
     public String getName() {
         return name;

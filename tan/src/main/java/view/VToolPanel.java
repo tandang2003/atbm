@@ -5,6 +5,8 @@ import com.formdev.flatlaf.ui.FlatProgressBarUI;
 import controller.MainController;
 import view.font.MyFont;
 import view.worker.impl.GenKeyWorker;
+import view.worker.impl.LoadFileWorker;
+import view.worker.impl.SaveKeyWorker;
 
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -90,11 +92,12 @@ public class VToolPanel extends JPanel {
                 }
             });
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                try {
-                    controller.loadKey(fileChooser.getSelectedFile());
-                } catch (IOException | ClassNotFoundException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                new LoadFileWorker(controller, this, fileChooser.getSelectedFile()).execute();
+//                try {
+//                    controller.loadKey(fileChooser.getSelectedFile());
+//                } catch (IOException | ClassNotFoundException ex) {
+//                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//                }
             }
         });
     }
@@ -102,17 +105,10 @@ public class VToolPanel extends JPanel {
     private void genKeyEvent() {
         genKey.addActionListener(e -> {
             new GenKeyWorker(controller, this).execute();
-//            try {
-//                controller.genKey();
-//            } catch (IllegalBlockSizeException | NoSuchPaddingException |
-//                     InvalidKeyException ex) {
-//                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//            }
         });
     }
 
     private void saveKeyEvent() {
-
         saveKey.addActionListener(e -> {
 //            controller.saveKey();
             JFileChooser fileChooser = new JFileChooser();
@@ -121,11 +117,7 @@ public class VToolPanel extends JPanel {
             fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             fileChooser.setAcceptAllFileFilterUsed(false);
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                try {
-                    controller.saveKey(fileChooser.getSelectedFile());
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
+                new SaveKeyWorker(controller, this, fileChooser.getSelectedFile()).execute();
             }
         });
     }
