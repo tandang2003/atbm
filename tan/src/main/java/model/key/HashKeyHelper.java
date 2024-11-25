@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 public class HashKeyHelper implements Serializable {
     private Hash key;
     private byte[] state;
-    private byte[] hmac;
     private boolean isHMAC;
     private boolean isHex;
     private String provider;
@@ -38,14 +37,10 @@ public class HashKeyHelper implements Serializable {
         return key;
     }
 
-    public void setState(byte[] state) {
-        this.state = state;
-    }
 
 
     public String getHmac() {
-        String name = Arrays.stream(key.getName().split("")).filter(s -> Alphabet.ENGLISH_CHAR_SET.contains(s) || Alphabet.NUMBER_CHAR_SET.contains(s)).collect(Collectors.joining());
-        return "Hmac" + name;
+        return key.getHmacFormat();
     }
 
     public void setKeyHmac(String keyHmac) {
@@ -56,9 +51,6 @@ public class HashKeyHelper implements Serializable {
         this.key = key;
     }
 
-    public void setHmac(byte[] hmac) {
-        this.hmac = hmac;
-    }
 
     public void setHMAC(boolean HMAC) {
         isHMAC = HMAC;
@@ -72,10 +64,6 @@ public class HashKeyHelper implements Serializable {
         return isHex;
     }
 
-    public byte[] getState() {
-        return state;
-    }
-
     public boolean isHMAC() {
         return isHMAC;
     }
@@ -86,5 +74,17 @@ public class HashKeyHelper implements Serializable {
 
     public String getKeyHmac() {
         return keyHmac;
+    }
+
+    @Override
+    public String toString() {
+        return "HashKeyHelper{" +
+                "key=" + key +
+                ", state=" + Arrays.toString(state) +
+                ", isHMAC=" + isHMAC +
+                ", isHex=" + isHex +
+                ", provider='" + provider + '\'' +
+                ", keyHmac='" + keyHmac + '\'' +
+                '}';
     }
 }

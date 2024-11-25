@@ -39,6 +39,10 @@ public enum Hash implements ICipherEnum {
 //        return isHmac;
 //    }
 
+    public String getHmacFormat() {
+        return HmacFormat;
+    }
+
     @Override
     public String toString() {
         return displayName;

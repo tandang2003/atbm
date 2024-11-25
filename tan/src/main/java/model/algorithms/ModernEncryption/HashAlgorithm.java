@@ -38,19 +38,13 @@ public class HashAlgorithm extends AAlgorithm {
 
     @Override
     public void genKey() {
-        if (!((HashKeyHelper) key.getKey()).isHMAC()) {
-            genMessageDigest();
-        } else {
-            genHMACMessageDigest();
-        }
+
     }
 
     private void genMessageDigest() {
         try {
-            messageDigests = MessageDigest.getInstance(((HashKeyHelper) key.getKey()).getKey().getName(), "SunJCE");
+            messageDigests = MessageDigest.getInstance(((HashKeyHelper) key.getKey()).getKey().getName());
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchProviderException e) {
             throw new RuntimeException(e);
         }
     }
@@ -58,17 +52,20 @@ public class HashAlgorithm extends AAlgorithm {
 
     private void genHMACMessageDigest() {
         HashKeyHelper key = (HashKeyHelper) this.key.getKey();
+        if (key.getKeyHmac().isEmpty()) {
+//            throw new RuntimeException("Key HMAC is null");
+            return;
+        }
         try {
             SecretKeySpec secureRandom = new SecretKeySpec(key.getKeyHmac().getBytes(StandardCharsets.UTF_8), key.getHmac());
-            mac = Mac.getInstance(key.getHmac(), "SunJCE");
+            mac = Mac.getInstance(key.getHmac());
             mac.init(secureRandom);
         } catch (NoSuchAlgorithmException | InvalidKeyException e) {
             mac = null;
             throw new RuntimeException(e);
-        } catch (NoSuchProviderException e) {
-            throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public String encrypt(String input) {
@@ -78,6 +75,7 @@ public class HashAlgorithm extends AAlgorithm {
         } else {
             digest = encryptHMAC(input);
         }
+        System.out.println(((HashKeyHelper) key.getKey()).isHex());
         if (!((HashKeyHelper) key.getKey()).isHex()) {
             return Base64.getEncoder().encodeToString(digest);
         } else {
@@ -87,6 +85,7 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     private byte[] encryptHMAC(String input) {
+        genHMACMessageDigest();
         HashKeyHelper key = (HashKeyHelper) this.key.getKey();
         byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
         return mac.doFinal(bytes);
@@ -94,6 +93,7 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     private byte[] encryptNotHMAC(String input) {
+        genMessageDigest();
         HashKeyHelper key = (HashKeyHelper) this.key.getKey();
         byte[] bytes = input.getBytes(StandardCharsets.UTF_8);
         return messageDigests.digest(bytes);
@@ -101,6 +101,11 @@ public class HashAlgorithm extends AAlgorithm {
 
     @Override
     public String signOrHashFile(String fileIn) throws IOException {
+        if (!((HashKeyHelper) key.getKey()).isHMAC()) {
+            genMessageDigest();
+        } else {
+            genHMACMessageDigest();
+        }
         byte[] digest;
         if (!((HashKeyHelper) key.getKey()).isHMAC()) {
             digest = signOrHashFileNonHMAC(fileIn);
@@ -116,6 +121,7 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     private byte[] signOrHashFileNonHMAC(String fileIn) throws FileNotFoundException {
+        genMessageDigest();
         File f = new File(fileIn);
         if (!f.exists()) {
             throw new FileNotFoundException("File not found");
@@ -135,6 +141,7 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     private byte[] signOrHashFileHMAC(String fileIn) throws FileNotFoundException {
+        genHMACMessageDigest();
         File f = new File(fileIn);
         if (!f.exists()) {
             throw new FileNotFoundException("File not found");
@@ -166,7 +173,8 @@ public class HashAlgorithm extends AAlgorithm {
         hashKeyHelper.setHMAC((boolean) key[1]);
         hashKeyHelper.setKeyHmac((String) key[2]);
 
-        if (hashKeyHelper.isHMAC()) {
+        System.out.println(hashKeyHelper.toString());
+        if (!hashKeyHelper.isHMAC()) {
             genMessageDigest();
         } else {
             genHMACMessageDigest();
@@ -174,8 +182,8 @@ public class HashAlgorithm extends AAlgorithm {
     }
 
     public static void main(String[] args) {
-        HashAlgorithm algorithm = new HashAlgorithm(Hash.SHA_512, true, true, "hello");
-        algorithm.genKey();
+        HashAlgorithm algorithm = new HashAlgorithm(Hash.SHA_512_224, true, false, "hello");
+//        algorithm.genKey();
         String input = "Nguyễn Văn Á";
         String encrypt = null;
         try {
@@ -184,13 +192,5 @@ public class HashAlgorithm extends AAlgorithm {
             throw new RuntimeException(e);
         }
         System.out.println(encrypt);
-//        for (Provider provider : Security.getProviders()) {
-//            System.out.println("Provider: " + provider);
-//            Security.getProvider(provider.getName()).getServices().forEach(service -> {
-//                if (service.getType().equalsIgnoreCase("Mac")) {
-//                    System.out.println("Algorithm: " + service.getAlgorithm());
-//                }
-//            });
-//        }
     }
 }
