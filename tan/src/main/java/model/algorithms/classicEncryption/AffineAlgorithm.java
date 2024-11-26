@@ -22,6 +22,7 @@ public class AffineAlgorithm extends AAlgorithm {
         super();
         //TODO:  validation it need checking a and b
         this.arrChar = arrchar;
+        key = new AffineKey();
     }
 
     @Override
@@ -79,8 +80,6 @@ public class AffineAlgorithm extends AAlgorithm {
     @Override
     public void updateKey(Object[] key) {
         this.key = new AffineKey((int) key[0], (int) key[1]);
-        System.out.println("Updated key for Affine Algorithm");
-        System.out.println("a: " + key[0] + " b: " + key[1]);
     }
 
 

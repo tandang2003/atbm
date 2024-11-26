@@ -2,6 +2,8 @@ package model.algorithms;
 
 
 import model.common.Cipher;
+import model.common.Hash;
+import model.common.ICipherEnum;
 import model.common.KeyPairAlgorithm;
 import model.key.AffineKey;
 import model.key.IKey;
@@ -9,6 +11,7 @@ import observer.algorithmObserver.ObserverAlgorithm;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class AAlgorithm implements IAlgorithms {
@@ -22,7 +25,7 @@ public abstract class AAlgorithm implements IAlgorithms {
 
 
     @Override
-    public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
+    public void loadKey(File selectedFile) throws IOException {
         if (!selectedFile.exists()) {
             throw new IOException("File not found");
         }
@@ -60,7 +63,6 @@ public abstract class AAlgorithm implements IAlgorithms {
 
     @Override
     public void saveKey(File selectedFile) throws IOException {
-
         boolean isFile = selectedFile.getAbsolutePath().contains(".");
         String path = selectedFile.getAbsolutePath();
         if (isFile) {
@@ -73,11 +75,19 @@ public abstract class AAlgorithm implements IAlgorithms {
             if (!selectedFile.exists())
                 selectedFile.mkdirs();
         }
-
         if (key == null) {
             throw new IOException("Key is not created");
         }
-        String nameFile = (getCipher() instanceof KeyPairAlgorithm ? "Sign_" + getCipher().getName() : getCipher().getName()) + ".tan.key";
+        ICipherEnum cipher = getCipher();
+        String nameFile = getCipher().getName() + ".tan.key";
+        if (cipher instanceof KeyPairAlgorithm) {
+            nameFile = "Sign_" + getCipher().getName() + ".tan.key";
+        } else if (cipher instanceof Hash) {
+            nameFile = "hash_" + getCipher().getName() + ".tan.key";
+        }
+        nameFile = Arrays.stream(nameFile.split(""))
+                .map(ch -> ch.matches("[a-zA-Z0-9._-]") ? ch : "_")
+                .reduce("", String::concat);
         try {
             File destination = new File(path + File.separator + nameFile);
             if (!destination.exists())

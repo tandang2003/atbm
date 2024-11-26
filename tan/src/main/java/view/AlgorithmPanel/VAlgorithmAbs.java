@@ -50,8 +50,8 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         add(algorithmPanel, BorderLayout.CENTER);
 
         algorithms.addActionListener(e -> {
-            algorithmPanel.rebuildPanel((ICipherEnum) algorithms.getSelectedItem());
             controller.setAlgorithm((ICipherEnum) algorithms.getSelectedItem());
+            algorithmPanel.rebuildPanel((ICipherEnum) algorithms.getSelectedItem());
         });
     }
 

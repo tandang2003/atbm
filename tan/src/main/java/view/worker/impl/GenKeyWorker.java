@@ -16,11 +16,14 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
     private VMainPanel vMainPanel;
     private JDialog dialog;
     private JProgressBar progressBar;
+    private boolean isError;
+    private String message;
     public   GenKeyWorker(MainController controller, JPanel toolPanel) {
         this.vMainPanel = (VMainPanel) toolPanel.getParent();
         this.controller = controller;
         init();
     }
+
 
 
     @Override
@@ -82,6 +85,12 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
 
     @Override
     protected void done() {
+        if (isError) {
+            dialog.dispose();
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+            vMainPanel.setEnabled(true);
+            return;
+        }
         controller.notifyAlgorithmObservers();
         vMainPanel.setEnabled(true);
         dialog.dispose();
@@ -89,13 +98,12 @@ public class GenKeyWorker extends SwingWorker<Void, Void> implements IWorker {
 
     @Override
     protected Void doInBackground() throws Exception {
-        dialog.setVisible(true);
         try {
             controller.genKey();
         } catch (IllegalBlockSizeException | NoSuchPaddingException |
                  InvalidKeyException ex) {
-            dialog.dispose();
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            isError = true;
+            message = ex.getMessage();
         }
         return null;
     }

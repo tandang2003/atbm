@@ -35,11 +35,11 @@ public class HashKey implements IKey<HashKeyHelper> {
         if (!alg.equals("HashKey")) {
             throw new IOException("Invalid key file");
         }
+        String keyName = inputStream.readUTF();
+        if (!keyName.equals(key.getKey().getName())) {
+            throw new IOException("Invalid key file. This key is for " + keyName + " key");
+        }
         try {
-            String keyName = inputStream.readUTF();
-            if (keyName.equals(key.getKey().getName())) {
-                throw new IOException("Invalid key file. This key is for " + keyName + " key");
-            }
             String provider = inputStream.readUTF();
             String keyHmac = inputStream.readUTF();
             boolean hex = Boolean.parseBoolean(inputStream.readUTF());

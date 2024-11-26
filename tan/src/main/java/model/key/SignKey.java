@@ -37,11 +37,12 @@ public class SignKey implements IKey {
         if (!alg.equals("SignKey")) {
             throw new IOException("Invalid key file");
         }
+        String keyPairAlgorithm = inputStream.readUTF();
+        if (!keyPairAlgorithm.equals(key.getKeyPairAlgorithm().getName())) {
+            throw new IOException("Invalid key file. This key is for " + keyPairAlgorithm + " key");
+        }
         try {
-            String keyPairAlgorithm = inputStream.readUTF();
-            if (!keyPairAlgorithm.equals(key.getKeyPairAlgorithm().getName())) {
-                throw new IOException("Invalid key file. This key is for " + keyPairAlgorithm + " key");
-            }
+
             String secureRandom = inputStream.readUTF();
             String provider = inputStream.readUTF();
             String signature = inputStream.readUTF();

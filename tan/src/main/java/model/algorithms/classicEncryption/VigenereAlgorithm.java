@@ -22,6 +22,7 @@ public class VigenereAlgorithm extends AAlgorithm {
     public VigenereAlgorithm(List<String> arrChar) {
         super();
         this.arrChar = arrChar;
+        this.key = new VigenereKey();
     }
 
     @Override

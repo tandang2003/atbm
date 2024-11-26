@@ -44,11 +44,12 @@ public class SymmetricKey implements IKey<SymmetricKeyHelper> {
         if (!alg.equals("SymmetricKey")) {
             throw new IOException("Invalid key file");
         }
+        String cipher = inputStream.readUTF();
+        if (!cipher.equals(key.getCipher().getName())) {
+            throw new IOException("Invalid key file. This key is for " + cipher + " cipher");
+        }
         try {
-            String cipher = inputStream.readUTF();
-            if (!cipher.equals(key.getCipher().getName())) {
-                throw new IOException("Invalid key file. This key is for " + cipher + " cipher");
-            }
+
             int keySize = Integer.parseInt(inputStream.readUTF());
             String mode = inputStream.readUTF();
             String padding = inputStream.readUTF();

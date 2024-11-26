@@ -3,15 +3,17 @@ package model.key;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-public class CharacterKey implements IKey<Map<String, String>> {
+public class MyCharacterKey implements IKey<Map<String, String>> {
     private Map<String, String> keys;
 
-    public CharacterKey() {
+    public MyCharacterKey() {
+        keys = new HashMap<>();
     }
 
-    public CharacterKey(Map<String, String> key) {
+    public MyCharacterKey(Map<String, String> key) {
         this.keys = key;
     }
 
@@ -23,7 +25,6 @@ public class CharacterKey implements IKey<Map<String, String>> {
     @Override
     public void saveToFile(DataOutputStream outputStream) throws IOException {
         outputStream.writeUTF("CharacterKey");
-
         for (Map.Entry<String, String> entry : keys.entrySet()) {
             outputStream.writeUTF(entry.getKey());
             outputStream.writeUTF(entry.getValue());
@@ -43,7 +44,7 @@ public class CharacterKey implements IKey<Map<String, String>> {
                     keys.put(inputStream.readUTF(), inputStream.readUTF());
                 }
             } catch (Exception e) {
-                System.out.println("End of file");
+                // do nothing
             }
         } catch (Exception e) {
             throw new IOException("Invalid key file");

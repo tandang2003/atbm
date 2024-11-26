@@ -28,10 +28,14 @@ public class HillAlgorithm extends AAlgorithm {
         super();
         //TODO check key can inverse
         this.arrChar = arrChar;
+        this.key = new HillKey(new double[2][2]);
     }
 
     @Override
     public void genKey() {
+//        if (key.getKey() != null) {
+//            return;
+//        }
         int defaultKeyLength = Algorithms.HILL_ALGORITHM_DEFAULT_KEY_LENGTH;
         double[][] key = new double[defaultKeyLength][defaultKeyLength];
         Random random = new Random();

@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
     private MainController controller;
@@ -16,31 +17,42 @@ public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
     private JDialog dialog;
     private JProgressBar progressBar;
     private File key;
+    private boolean isError;
+    private String message;
 
     public LoadFileWorker(MainController controller, JPanel toolPanel, File key) {
         this.vMainPanel = (VMainPanel) toolPanel.getParent();
         this.controller = controller;
         this.key = key;
         init();
+
     }
 
     @Override
     protected Void doInBackground() throws Exception {
-        dialog.setVisible(true);
         try {
             controller.loadKey(key);
+            isError = false;
         } catch (IOException ex) {
-            dialog.dispose();
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            isError = true;
+            message = ex.getMessage();
         }
         return null;
     }
 
+
     @Override
     protected void done() {
+        if (isError) {
+            dialog.dispose();
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+            controller.notifyAlgorithmObservers();
+            vMainPanel.setEnabled(true);
+            return;
+        }
+        dialog.dispose();
         controller.notifyAlgorithmObservers();
         vMainPanel.setEnabled(true);
-        dialog.dispose();
     }
 
     @Override

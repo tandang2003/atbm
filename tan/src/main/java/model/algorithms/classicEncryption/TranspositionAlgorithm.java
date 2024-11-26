@@ -20,6 +20,7 @@ public class TranspositionAlgorithm extends AAlgorithm {
     public TranspositionAlgorithm(List<String> chars) {
         super();
         this.arrChar = chars;
+        this.key = new NumberKey();
     }
 
     public void genKey() {

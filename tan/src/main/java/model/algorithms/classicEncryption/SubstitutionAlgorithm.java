@@ -4,7 +4,7 @@ package model.algorithms.classicEncryption;
 import model.algorithms.AAlgorithm;
 import model.common.Cipher;
 import model.common.ICipherEnum;
-import model.key.CharacterKey;
+import model.key.MyCharacterKey;
 
 import java.util.*;
 
@@ -15,12 +15,13 @@ public class SubstitutionAlgorithm extends AAlgorithm {
         super();
         //TODO:  validation it need checking key to fill or cancel it and unique
         this.arrChar = chars;
-        this.key = validationKey(keys);
+//        this.key = validationKey(keys);
     }
 
     public SubstitutionAlgorithm(List<String> chars) {
         super();
         this.arrChar = chars;
+        this.key = new MyCharacterKey();
     }
 
     @Override
@@ -30,23 +31,32 @@ public class SubstitutionAlgorithm extends AAlgorithm {
         Map<String, String> keys = new HashMap<>();
         for (int i = 0; i < arrChar.size(); i++)
             keys.put(this.arrChar.get(i), arrChar.get(i));
-        this.key = new CharacterKey(keys);
+        this.key = new MyCharacterKey(keys);
     }
 
-    private CharacterKey validationKey(String loadKey) {
+    private MyCharacterKey validationKey(String loadKey) {
         String k = uniqueString(loadKey);
         List<String> arChar = new ArrayList<>(this.arrChar);
         Map<String, String> keys = new HashMap<>();
-        if (k.length() < arChar.size()) {
+        for (String s : k.split("")) {
+            arChar.remove(s.toUpperCase());
+        }
+        if (arChar.isEmpty()) {
             for (int i = 0; i < k.length(); i++) {
-                keys.put(arChar.getFirst(), String.valueOf(k.charAt(i)).toUpperCase());
-                arChar.removeFirst();
+                keys.put(String.valueOf(this.arrChar.get(i)).toUpperCase(), String.valueOf(k.charAt(i)).toUpperCase());
             }
+            return new MyCharacterKey(keys);
+        }
+
+
+        for (int i = 0; i < k.length(); i++) {
+            keys.put(arChar.getFirst(), String.valueOf(k.charAt(i)).toUpperCase());
+            arChar.removeFirst();
         }
         for (String s : arChar) {
             keys.put(s, s);
         }
-        return new CharacterKey(keys);
+        return new MyCharacterKey(keys);
     }
 
     @Override

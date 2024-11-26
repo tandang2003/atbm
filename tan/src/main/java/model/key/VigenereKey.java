@@ -13,6 +13,9 @@ public class VigenereKey implements IKey<String[]> {
         this.key = key;
     }
 
+    public VigenereKey() {
+        this.key = new String[0];
+    }
     @Override
     public String[] getKey() {
         return key;

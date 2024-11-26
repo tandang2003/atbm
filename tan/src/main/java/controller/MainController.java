@@ -137,7 +137,7 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
             Provider provider = specification.getProvider();
             Signature signatures = specification.getSignatures().getFirst();
             SecureRandom algRandoms = specification.getAlgRandoms().getFirst();
-            Size sizes = specification.getSizes().stream().findFirst().get();
+            Size sizes = specification.getSizes().stream().toList().getFirst();
 
             algorithms = new SignAlgorithm(keyPairAlgorithm, signatures, provider, algRandoms, sizes);
         }
@@ -152,9 +152,8 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         algorithms.saveKey(selectedFile);
     }
 
-    public void loadKey(File selectedFile) throws IOException, ClassNotFoundException {
+    public void loadKey(File selectedFile) throws IOException {
         algorithms.loadKey(selectedFile);
-        notifyAlgorithmObservers();
     }
 
     public void updateKey(Object... objects) {

@@ -43,11 +43,12 @@ public class AsymmetricKey implements IKey<AsymmetricKeyHelper> {
         if (!alg.equals("AsymmetricKey")) {
             throw new IOException("Invalid key file");
         }
+        String cipher = inputStream.readUTF();
+        if (!cipher.equals(key.getCipher().getName())) {
+            throw new IOException("Invalid key file. This key is for " + cipher + " cipher");
+        }
         try {
-            String cipher = inputStream.readUTF();
-            if (!cipher.equals(key.getCipher().getName())) {
-                throw new IOException("Invalid key file. This key is for " + cipher + " cipher");
-            }
+
             String mode = inputStream.readUTF();
             String padding = inputStream.readUTF();
             int keySize = Integer.parseInt(inputStream.readUTF());

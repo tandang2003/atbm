@@ -15,7 +15,7 @@ import java.util.List;
 public interface IAlgorithms {
     void genKey() throws NoSuchPaddingException, IllegalBlockSizeException, InvalidKeyException;
 
-    void loadKey(File selectedFile) throws ClassNotFoundException, IOException;
+    void loadKey(File selectedFile) throws IOException;
 
     String encrypt(String input) throws IllegalBlockSizeException;
 

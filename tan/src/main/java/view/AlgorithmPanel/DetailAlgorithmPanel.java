@@ -22,6 +22,8 @@ import java.awt.event.ItemEvent;
 import java.lang.Exception;
 import java.security.InvalidKeyException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,15 +32,34 @@ import static view.font.MyFont.ROBOTO_REGULAR;
 
 public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private JPanel keyPanel, foreignPanel, alphabetsPanel;
-    private JButton back;
     private Font keyFont;
-    //    private JComboBox<String> mode, padding, keySize;
     private JTextField alphabetField;
-    private JComboBox<Size> keySize, ivSize;
-    private JComboBox<Mode> keyMode;
-    private JComboBox<Padding> keyPadding;
     private JComboBox<String> hillKeySize;
     private MainController controller;
+
+
+    //symmetric
+    private JComboBox<Size> symmetricKeySize, symmetricIvSize;
+    private JComboBox<Mode> symmetricKeyMode;
+    private JComboBox<Padding> symmetricKeyPadding;
+    private JTextField symmetricKeyField, symmetricIvField;
+
+    //asymmetric
+    private JComboBox<Size> asymmetricKeySize;
+    private JComboBox<Mode> asymmetricKeyMode;
+    private JComboBox<Padding> asymmetricKeyPadding;
+    private JTextField asymmetricPublic, asymmetricPrivate;
+
+    //hash
+    private JComboBox<String> hashOutputFormat;
+    private JRadioButton hashYes, hashNo;
+    private JTextField hashKeyField;
+
+    //sign
+    private JComboBox<Size> signKeySize;
+    private JComboBox<Signature> signKeySignature;
+    private JComboBox<SecureRandom> signKeySecureRandom;
+    private JTextField signPublicKey, signPrivateKey;
 
     public DetailAlgorithmPanel(MainController controller) {
         this.controller = controller;
@@ -127,6 +148,19 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         hillKeySize.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 rebuildHillPanel((String) hillKeySize.getSelectedItem());
+                double[][] key = new double[0][];
+                switch ((String) hillKeySize.getSelectedItem()) {
+                    case "2x2":
+                        key = new double[2][2];
+                        break;
+                    case "3x3":
+                        key = new double[3][3];
+                        break;
+                    case "4x4":
+                        key = new double[4][4];
+                        break;
+                }
+                controller.updateKey(key);
             }
         });
         rebuildHillPanel((String) hillKeySize.getSelectedItem());
@@ -147,6 +181,9 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JSpinner keyField = new JSpinner();
         keyField.setPreferredSize(new Dimension(200, 100));
         keyField.setBorder(BorderFactory.createTitledBorder("Shift"));
+        keyField.addChangeListener(e -> {
+            controller.updateKey(keyField.getValue());
+        });
         keyField.setFont(keyFont);
         keyPanel.setLayout(new BorderLayout());
         keyPanel.add(keyField, BorderLayout.CENTER);
@@ -262,30 +299,30 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JPanel keyModePanel = new JPanel();
         JPanel keyPaddingPanel = new JPanel();
         JPanel IvSizePanel = new JPanel();
-        keySize = new JComboBox<>();
-        keyMode = new JComboBox<>();
-        keyPadding = new JComboBox<>();
-        ivSize = new JComboBox<>();
+        symmetricIvSize = new JComboBox<>();
+        symmetricKeyMode = new JComboBox<>();
+        symmetricKeyPadding = new JComboBox<>();
+        symmetricKeySize = new JComboBox<>();
         cipherSpecification.getSupportedKeySizes().forEach((size) -> {
-            keySize.addItem(size);
+            symmetricKeySize.addItem(size);
         });
-        keySize.setSelectedIndex(0);
+        symmetricKeySize.setSelectedIndex(0);
         cipherSpecification.getValidModePaddingCombinations().forEach((mode, paddings) -> {
-            keyMode.addItem(mode);
+            symmetricKeyMode.addItem(mode);
         });
-        keyMode.setSelectedIndex(0);
+        symmetricKeyMode.setSelectedIndex(0);
         keySizePanel.setLayout(new BorderLayout());
         keySizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Key Size"));
-        keySize.setFont(keyFont);
-        keySizePanel.add(keySize, BorderLayout.CENTER);
+        symmetricKeySize.setFont(keyFont);
+        keySizePanel.add(symmetricKeySize, BorderLayout.CENTER);
         keyModePanel.setLayout(new BorderLayout());
         keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Mode"));
-        keyMode.setFont(keyFont);
-        keyModePanel.add(keyMode, BorderLayout.CENTER);
+        symmetricKeyMode.setFont(keyFont);
+        keyModePanel.add(symmetricKeyMode, BorderLayout.CENTER);
         keyPaddingPanel.setLayout(new BorderLayout());
         keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Padding"));
-        keyPadding.setFont(keyFont);
-        keyPaddingPanel.add(keyPadding, BorderLayout.CENTER);
+        symmetricKeyPadding.setFont(keyFont);
+        keyPaddingPanel.add(symmetricKeyPadding, BorderLayout.CENTER);
         keyInsPanel.add(keySizePanel);
         keyInsPanel.add(keyModePanel);
         keyInsPanel.add(keyPaddingPanel);
@@ -293,15 +330,15 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             keyInsPanel.setLayout(new GridLayout(1, 4, 5, 5));
             IvSizePanel.setLayout(new BorderLayout());
             IvSizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "IV Size"));
-            IvSizePanel.add(ivSize, BorderLayout.CENTER);
+            IvSizePanel.add(symmetricIvSize, BorderLayout.CENTER);
             keyInsPanel.add(IvSizePanel);
         }
-        keyMode.addActionListener(e -> {
-            rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
+        symmetricKeyMode.addActionListener(e -> {
+            rebuildPaddingAndIVSize(cipherSpecification, (Mode) symmetricKeyMode.getSelectedItem());
+            controller.updateKey(symmetricKeySize.getSelectedItem(), ((Mode) symmetricKeyMode.getSelectedItem()), symmetricKeyPadding.getSelectedItem(), symmetricIvSize.getSelectedItem());
 //            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
         });
-        rebuildPaddingAndIVSize(cipherSpecification, (Mode) keyMode.getSelectedItem());
+        rebuildPaddingAndIVSize(cipherSpecification, (Mode) symmetricKeyMode.getSelectedItem());
 //         Layout for panelOne (occupies one row)
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
@@ -339,14 +376,16 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.weighty = 1.0; // Vertical weight
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
-        keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
+        symmetricKeySize.addActionListener(e -> {
+            controller.updateKey(symmetricKeySize.getSelectedItem(), ((Mode) symmetricKeyMode.getSelectedItem()), symmetricKeyPadding.getSelectedItem(), symmetricIvSize.getSelectedItem());
+//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
         });
-        keyPadding.addActionListener(new ActionListener() {
+        symmetricKeyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (keyPadding.getSelectedItem() != null) {
-                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
+                if (symmetricKeyPadding.getSelectedItem() != null) {
+                    controller.updateKey(symmetricKeySize.getSelectedItem(), ((Mode) symmetricKeyMode.getSelectedItem()), symmetricKeyPadding.getSelectedItem(), symmetricIvSize.getSelectedItem());
+//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
 //                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
                 }
             }
@@ -363,38 +402,38 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JPanel keySizePanel = new JPanel();
         JPanel keyModePanel = new JPanel();
         JPanel keyPaddingPanel = new JPanel();
-        keySize = new JComboBox<>();
-        keyMode = new JComboBox<>();
-        keyPadding = new JComboBox<>();
+        asymmetricKeySize = new JComboBox<>();
+        asymmetricKeyMode = new JComboBox<>();
+        asymmetricKeyPadding = new JComboBox<>();
         cipherSpecification.getSupportedKeySizes().forEach((size) -> {
-            keySize.addItem(size);
+            asymmetricKeySize.addItem(size);
         });
-        keySize.setSelectedIndex(0);
+        asymmetricKeySize.setSelectedIndex(0);
         cipherSpecification.getValidModePaddingCombinations().forEach((mode, paddings) -> {
-            keyMode.addItem(mode);
+            asymmetricKeyMode.addItem(mode);
         });
-        keyMode.setSelectedIndex(0);
+        asymmetricKeyMode.setSelectedIndex(0);
         keySizePanel.setLayout(new BorderLayout());
         keySizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Key Size"));
-        keySize.setFont(keyFont);
-        keySizePanel.add(keySize, BorderLayout.CENTER);
+        asymmetricKeySize.setFont(keyFont);
+        keySizePanel.add(asymmetricKeySize, BorderLayout.CENTER);
         keyModePanel.setLayout(new BorderLayout());
         keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Mode"));
-        keyMode.setFont(keyFont);
-        keyModePanel.add(keyMode, BorderLayout.CENTER);
+        asymmetricKeyMode.setFont(keyFont);
+        keyModePanel.add(asymmetricKeyMode, BorderLayout.CENTER);
         keyPaddingPanel.setLayout(new BorderLayout());
         keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Padding"));
-        keyPadding.setFont(keyFont);
-        keyPaddingPanel.add(keyPadding, BorderLayout.CENTER);
+        asymmetricKeyPadding.setFont(keyFont);
+        keyPaddingPanel.add(asymmetricKeyPadding, BorderLayout.CENTER);
         keyInsPanel.add(keySizePanel);
         keyInsPanel.add(keyModePanel);
         keyInsPanel.add(keyPaddingPanel);
-        keyMode.addActionListener(e -> {
-            rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
-//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
+        asymmetricKeyMode.addActionListener(e -> {
+            rebuildPadding(cipherSpecification, (Mode) asymmetricKeyMode.getSelectedItem());
+//            controller.updateKey(asymmetricKeySize.getSelectedItem(), ((Mode) asymmetricKeyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) asymmetricKeyMode.getSelectedItem()).getName() + "/" + ((Padding) asymmetricKeySize.getSelectedItem()).getName());
+            controller.updateKey(asymmetricKeySize.getSelectedItem(), ((Mode) asymmetricKeyMode.getSelectedItem()), ((Padding) asymmetricKeyPadding.getSelectedItem()));
         });
-        rebuildPadding(cipherSpecification, (Mode) keyMode.getSelectedItem());
+        rebuildPadding(cipherSpecification, (Mode) asymmetricKeyMode.getSelectedItem());
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
         gbc.gridwidth = 1; // Occupy 1 column
@@ -433,15 +472,15 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.weighty = 1.0; // Vertical weight
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
-        keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
+        asymmetricKeySize.addActionListener(e -> {
+            controller.updateKey(asymmetricKeySize.getSelectedItem(), ((Mode) asymmetricKeyMode.getSelectedItem()), ((Padding) asymmetricKeyPadding.getSelectedItem()));
         });
-        keyPadding.addActionListener(new ActionListener() {
+        asymmetricKeyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (keyPadding.getSelectedItem() != null) {
-                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), ((Padding) keyPadding.getSelectedItem()) );
-//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName());
+                if (asymmetricKeyPadding.getSelectedItem() != null) {
+                    controller.updateKey(asymmetricKeySize.getSelectedItem(), ((Mode) asymmetricKeyMode.getSelectedItem()), ((Padding) asymmetricKeyPadding.getSelectedItem()));
+//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isEmpty() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) asymmetricKeySize.getSelectedItem()).getName());
                 }
             }
         });
@@ -453,15 +492,15 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.fill = GridBagConstraints.BOTH; // Fill both horizontal and vertical space
         gbc.insets = new Insets(5, 5, 5, 5); // Padding between components
 
-        JTextField keyField = new JTextField(20);
+        hashKeyField = new JTextField(20);
         // ComboBox Section
-        JComboBox<String> isHex = new JComboBox<>();
-        isHex.addItem("Hex");
-        isHex.addItem("Base64");
-        isHex.setFont(keyFont);
+        hashOutputFormat = new JComboBox<>();
+        hashOutputFormat.addItem("Hex");
+        hashOutputFormat.addItem("Base64");
+        hashOutputFormat.setFont(keyFont);
         JPanel isHexPanel = new JPanel();
         isHexPanel.setLayout(new BorderLayout());
-        isHexPanel.add(isHex, BorderLayout.CENTER);
+        isHexPanel.add(hashOutputFormat, BorderLayout.CENTER);
         isHexPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Output Format"));
 
         gbc.gridx = 0; // Column 0
@@ -472,22 +511,22 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.add(isHexPanel, gbc);
 
         // HMAC Radio Buttons Section
-        JRadioButton yes = new JRadioButton("Yes");
-        yes.setFont(keyFont);
+        hashYes = new JRadioButton("Yes");
+        hashYes.setFont(keyFont);
 
-        JRadioButton no = new JRadioButton("No");
-        no.setFont(keyFont);
+        hashNo = new JRadioButton("No");
+        hashNo.setFont(keyFont);
 
         ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(yes);
-        buttonGroup.add(no);
-        buttonGroup.setSelected(yes.getModel(), true); // Set default selection
+        buttonGroup.add(hashYes);
+        buttonGroup.add(hashNo);
+        buttonGroup.setSelected(hashYes.getModel(), true); // Set default selection
 
         // Add spacing between radio buttons
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5)); // Horizontal gap: 20, Vertical gap: 5
         radioPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Use HMAC:"));
-        radioPanel.add(yes);
-        radioPanel.add(no);
+        radioPanel.add(hashYes);
+        radioPanel.add(hashNo);
 
         gbc.gridx = 0; // Column 0
         gbc.gridy = 1; // Row 1
@@ -502,41 +541,43 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.gridwidth = 1; // Span 1 column
         gbc.weightx = 1.0; // Expand horizontally
         gbc.weighty = 0.9; // Take most of the vertical space
-        keyPanel.add(keyField, gbc);
+        keyPanel.add(hashKeyField, gbc);
 
         add(keyPanel);
         if (hash.equals(Hash.MD2)) {
-            yes.setEnabled(false);
-            no.setSelected(true);
-            keyField.setEnabled(false);
-            buttonGroup.setSelected(no.getModel(), true); // Set default selection
+            hashYes.setEnabled(false);
+            hashNo.setSelected(true);
+            hashKeyField.setEnabled(false);
+            buttonGroup.setSelected(hashNo.getModel(), true); // Set default selection
         }
         // event
-        isHex.addActionListener(e -> {
-            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
+        hashKeyField.addActionListener(e -> {
+            controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), hashKeyField.getText());
         });
-        keyField.getDocument().addDocumentListener(new DocumentListener() {
+        hashKeyField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
+//                controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), keyField.getText());
+                controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), hashKeyField.getText());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
+                controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), hashKeyField.getText());
+//                controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
             }
         });
-        yes.addActionListener(e -> {
-            keyField.setEnabled(true);
-            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
+        hashYes.addActionListener(e -> {
+            hashKeyField.setEnabled(true);
+            controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), hashKeyField.getText());
         });
-        no.addActionListener(e -> {
-            keyField.setEnabled(false);
-            controller.updateKey(Objects.requireNonNull(isHex.getSelectedItem()).equals("Hex"), yes.isSelected(), keyField.getText());
+        hashNo.addActionListener(e -> {
+            hashKeyField.setEnabled(false);
+            controller.updateKey(Objects.requireNonNull(hashOutputFormat.getSelectedItem()).equals("Hex"), hashYes.isSelected(), hashKeyField.getText());
         });
 
     }
@@ -550,32 +591,30 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         JPanel keySizePanel = new JPanel();
         JPanel keyModePanel = new JPanel();
         JPanel keyPaddingPanel = new JPanel();
-        JComboBox<Size> keySize = new JComboBox<Size>();
-        JComboBox<Signature> keySignature = new JComboBox<>();
-        JComboBox<SecureRandom> keySecureRandom = new JComboBox<>();
-        cipherSpecification.getSizes().forEach(keySize::addItem);
-        keySize.setSelectedIndex(0);
-        cipherSpecification.getSignatures().forEach(keySignature::addItem);
-        cipherSpecification.getAlgRandoms().forEach(keySecureRandom::addItem);
-        keySignature.setSelectedIndex(0);
+        signKeySize = new JComboBox<>();
+        signKeySignature = new JComboBox<>();
+        signKeySecureRandom = new JComboBox<>();
+        cipherSpecification.getSizes().forEach(signKeySize::addItem);
+        signKeySize.setSelectedIndex(0);
+        cipherSpecification.getSignatures().forEach(signKeySignature::addItem);
+        cipherSpecification.getAlgRandoms().forEach(signKeySecureRandom::addItem);
+        signKeySignature.setSelectedIndex(0);
         keySizePanel.setLayout(new BorderLayout());
         keySizePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Key Size"));
-        keySize.setFont(keyFont);
-        keySizePanel.add(keySize, BorderLayout.CENTER);
+        signKeySize.setFont(keyFont);
+        keySizePanel.add(signKeySize, BorderLayout.CENTER);
         keyModePanel.setLayout(new BorderLayout());
         keyModePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Signature"));
-        keySignature.setFont(keyFont);
-        keyModePanel.add(keySignature, BorderLayout.CENTER);
+        signKeySignature.setFont(keyFont);
+        keyModePanel.add(signKeySignature, BorderLayout.CENTER);
         keyPaddingPanel.setLayout(new BorderLayout());
         keyPaddingPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Secure Random Algorithm"));
-        keySecureRandom.setFont(keyFont);
-        keyPaddingPanel.add(keySecureRandom, BorderLayout.CENTER);
+        signKeySecureRandom.setFont(keyFont);
+        keyPaddingPanel.add(signKeySecureRandom, BorderLayout.CENTER);
         keyInsPanel.add(keySizePanel);
         keyInsPanel.add(keyModePanel);
         keyInsPanel.add(keyPaddingPanel);
-        keySignature.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
-        });
+        signKeySignature.addActionListener(signListener);
 //         Layout for panelOne (occupies one row)
         gbc.gridx = 0; // Column 0
         gbc.gridy = 0; // Row 0
@@ -615,32 +654,33 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         gbc.weighty = 1.0; // Vertical weight
         gbc.fill = GridBagConstraints.BOTH; // Fill space
         add(keyPanel, gbc);
-        keySize.addActionListener(e -> {
-            controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
-        });
-        keySecureRandom.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                controller.updateKey(keySize.getSelectedItem(), keySignature.getSelectedItem(), keySecureRandom.getSelectedItem());
-            }
-        });
+        signKeySize.addActionListener(signListener);
+        signKeySecureRandom.addActionListener(signListener);
 
     }
 
+    private ActionListener signListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.updateKey(signKeySize.getSelectedItem(), signKeySignature.getSelectedItem(), signKeySecureRandom.getSelectedItem());
+        }
+    };
+
+
     private void rebuildPadding(CipherSpecification specification, Mode mode) {
-        keyPadding.removeAllItems();
+        asymmetricKeyPadding.removeAllItems();
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
-            keyPadding.addItem(padding);
+            asymmetricKeyPadding.addItem(padding);
         });
     }
 
     public void rebuildPaddingAndIVSize(CipherSpecification specification, Mode mode) {
-        keyPadding.removeAllItems();
+        symmetricKeyPadding.removeAllItems();
         specification.getValidModePaddingCombinations().get(mode).forEach(padding -> {
-            keyPadding.addItem(padding);
+            symmetricKeyPadding.addItem(padding);
         });
-        ivSize.removeAllItems();
-        ivSize.addItem(specification.getIvSizes().get(mode));
+        symmetricIvSize.removeAllItems();
+        symmetricIvSize.addItem(specification.getIvSizes().get(mode));
     }
 
     public void rebuildHillPanel(String size) {
@@ -656,7 +696,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                 keyPanel.setLayout(new GridLayout(2, 2, 5, 5));
                 for (int i = 0; i < 4; i++) {
                     JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
-                    numberField.addActionListener(hillListener);
+                    numberField.getDocument().addDocumentListener(hillListener);
+                    numberField.setValue(0);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -665,7 +706,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                 keyPanel.setLayout(new GridLayout(3, 3, 5, 5));
                 for (int i = 0; i < 9; i++) {
                     JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
-                    numberField.addActionListener(hillListener);
+                    numberField.getDocument().addDocumentListener(hillListener);
+                    numberField.setValue(0);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -674,7 +716,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                 keyPanel.setLayout(new GridLayout(4, 4, 5, 5));
                 for (int i = 0; i < 16; i++) {
                     JFormattedTextField numberField = new JFormattedTextField(numberFormatter);
-                    numberField.addActionListener(hillListener);
+                    numberField.getDocument().addDocumentListener(hillListener);
+                    numberField.setValue(0);
                     numberField.setFont(keyFont);
                     keyPanel.add(numberField);
                 }
@@ -682,34 +725,72 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         }
     }
 
-    private ActionListener hillListener = e -> {
-        double[][] key = new double[0][];
-        switch ((String) hillKeySize.getSelectedItem()) {
-            case "2x2":
-                key = new double[2][2];
-                break;
-            case "3x3":
-                key = new double[3][3];
-                break;
-            case "4x4":
-                key = new double[4][4];
-                break;
-        }
-        int index = 0;
-        for (Component c : keyPanel.getComponents()) {
-            if (c instanceof JFormattedTextField textField) {
-                key[index / key.length][index % key.length] = Double.parseDouble(textField.getText());
-                index++;
+    private DocumentListener hillListener = new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            double[][] key = new double[0][];
+            switch ((String) hillKeySize.getSelectedItem()) {
+                case "2x2":
+                    key = new double[2][2];
+                    break;
+                case "3x3":
+                    key = new double[3][3];
+                    break;
+                case "4x4":
+                    key = new double[4][4];
+                    break;
             }
+            int index = 0;
+            for (Component c : keyPanel.getComponents()) {
+                if (c instanceof JFormattedTextField textField) {
+                    key[index / key.length][index % key.length] = Double.parseDouble(textField.getText().isEmpty() ? "0" : textField.getText());
+                    index++;
+                }
+            }
+            controller.updateKey(key);
         }
-        controller.updateKey(key);
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            double[][] key = new double[0][];
+            switch ((String) hillKeySize.getSelectedItem()) {
+                case "2x2":
+                    key = new double[2][2];
+                    break;
+                case "3x3":
+                    key = new double[3][3];
+                    break;
+                case "4x4":
+                    key = new double[4][4];
+                    break;
+            }
+            int index = 0;
+            for (Component c : keyPanel.getComponents()) {
+                if (c instanceof JFormattedTextField textField) {
+                    key[index / key.length][index % key.length] = Double.parseDouble(textField.getText().isEmpty() ? "0" : textField.getText());
+                    index++;
+                }
+            }
+            controller.updateKey(key);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+
+        }
     };
 
     public void genSubstitutionKey() {
         Map<String, String> key = (Map<String, String>) controller.getAlgorithms().getKey().getKey();
+        Collection<String> values = key.values();
+        StringBuilder sb = new StringBuilder();
+        for (String value : values) {
+            sb.append(value);
+        }
         for (Component c : keyPanel.getComponents()) {
-            if (c instanceof JTextField textField) {
-                textField.setText(String.join("", key.values()));
+            if (c instanceof JTextField) {
+                JTextField textField = (JTextField) c;
+                textField.setText(sb.toString());
             }
         }
     }
@@ -724,8 +805,9 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     }
 
     public void genHillKey() {
-        this.hillKeySize.setSelectedIndex(0);
-        rebuildHillPanel((String) hillKeySize.getSelectedItem());
+//        TODO: Implement hill key
+//        this.hillKeySize.setSelectedIndex(0);
+//        rebuildHillPanel((String) hillKeySize.getSelectedItem());
         double[][] key = (double[][]) controller.getAlgorithms().getKey().getKey();
         int index = 0;
         for (double[] doubles : key) {
@@ -793,11 +875,30 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     }
 
     public void genHashKey() {
-
+        HashKeyHelper key = (HashKeyHelper) controller.getAlgorithms().getKey().getKey();
+        hashYes.setSelected(key.isHMAC());
+        hashNo.setSelected(!key.isHMAC());
+        hashKeyField.setEnabled(key.isHMAC());
+        hashKeyField.setText(key.getKeyHmac());
+        hashOutputFormat.setSelectedItem(key.isHex() ? "Hex" : "Base64");
     }
 
     public void genKeyPair() {
         SignKeyHelper key = (SignKeyHelper) controller.getAlgorithms().getKey().getKey();
+        SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(key.getKeyPairAlgorithm());
+        signKeySize = new JComboBox<>();
+        signKeySize.addActionListener(signListener);
+        specification.getSizes().forEach(signKeySize::addItem);
+        signKeySignature = new JComboBox<>();
+        signKeySignature.addActionListener(signListener);
+        specification.getSignatures().forEach(signKeySignature::addItem);
+        signKeySecureRandom = new JComboBox<>();
+        signKeySecureRandom.addActionListener(signListener);
+        specification.getAlgRandoms().forEach(signKeySecureRandom::addItem);
+        signKeySize.setSelectedItem(key.getKeySize());
+        signKeySignature.setSelectedItem(key.getSignature());
+        signKeySecureRandom.setSelectedItem(key.getSecureRandom());
+
         String[] texts = key.getKeys();
         int index = 0;
         for (Component c : keyPanel.getComponents()) {
@@ -807,12 +908,4 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
             }
         }
     }
-//        String[] texts = key.getKeys();
-//        int index = 0;
-//        for (Component c : keyPanel.getComponents()) {
-//            if (c instanceof JPanel panel) {
-//                if (panel.getComponent(0) instanceof JTextField textField)
-//                    textField.setText(texts[index++]);
-//            }
-//        }
 }

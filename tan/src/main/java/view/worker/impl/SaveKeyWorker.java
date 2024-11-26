@@ -19,6 +19,8 @@ public class SaveKeyWorker extends SwingWorker<Void, Void> implements IWorker {
     private JDialog dialog;
     private JProgressBar progressBar;
     private File key;
+    private boolean isError;
+    private String message;
 
     public SaveKeyWorker(MainController controller, JPanel toolPanel, File key) {
         this.vMainPanel = (VMainPanel) toolPanel.getParent();
@@ -29,17 +31,20 @@ public class SaveKeyWorker extends SwingWorker<Void, Void> implements IWorker {
 
     @Override
     protected Void doInBackground() throws Exception {
-        dialog.setVisible(true);
         try {
             controller.saveKey(key);
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            isError = true;
+            message = ex.getMessage();
         }
         return null;
     }
 
     @Override
     protected void done() {
+        if (isError) {
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
 //        controller.notifyAlgorithmObservers();
         vMainPanel.setEnabled(true);
         dialog.dispose();
