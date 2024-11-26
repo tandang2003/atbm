@@ -84,7 +84,8 @@ public class SymmetricKeyHelper implements Serializable {
 
     public void setIvParameterSpec(IvParameterSpec ivParameterSpec) {
         this.ivParameterSpec = Base64.getEncoder().encodeToString(ivParameterSpec.getIV());
-    }   public void setSecretKey(String secretKey) {
+    }
+    public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }
 

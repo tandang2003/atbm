@@ -185,12 +185,10 @@ public class HashAlgorithm extends AAlgorithm {
         HashAlgorithm algorithm = new HashAlgorithm(Hash.SHA_512_224, true, false, "hello");
 //        algorithm.genKey();
         String input = "Nguyễn Văn Á";
-        String encrypt = null;
-        try {
-            encrypt = algorithm.signOrHashFile("/home/tan/Documents/doanweb/atbm/tan/src/main/resources/Roboto.zip");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(encrypt);
+        String encrypt = algorithm.encrypt(input);
+
+        algorithm = new HashAlgorithm(Hash.SHA_512_224, true, false, "hello");
+        System.out.println(algorithm.encrypt(input).equals(encrypt));
+
     }
 }

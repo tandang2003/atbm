@@ -9,8 +9,6 @@ import model.key.SymmetricKeyHelper;
 import observer.alphabetObserver.AlphaObserver;
 import view.font.MyFont;
 
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -19,10 +17,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.lang.Exception;
-import java.security.InvalidKeyException;
+import java.sql.SQLOutput;
 import java.text.NumberFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -378,15 +375,12 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         add(keyPanel, gbc);
         symmetricKeySize.addActionListener(e -> {
             controller.updateKey(symmetricKeySize.getSelectedItem(), ((Mode) symmetricKeyMode.getSelectedItem()), symmetricKeyPadding.getSelectedItem(), symmetricIvSize.getSelectedItem());
-//            controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
         });
         symmetricKeyPadding.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (symmetricKeyPadding.getSelectedItem() != null) {
                     controller.updateKey(symmetricKeySize.getSelectedItem(), ((Mode) symmetricKeyMode.getSelectedItem()), symmetricKeyPadding.getSelectedItem(), symmetricIvSize.getSelectedItem());
-//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()), keyPadding.getSelectedItem(), ivSize.getSelectedItem());
-//                    controller.updateKey(keySize.getSelectedItem(), ((Mode) keyMode.getSelectedItem()).getName().isBlank() ? "" : ((Mode) keyMode.getSelectedItem()).getName() + "/" + ((Padding) keyPadding.getSelectedItem()).getName(), ivSize.getSelectedItem());
                 }
             }
         });
@@ -681,6 +675,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         });
         symmetricIvSize.removeAllItems();
         symmetricIvSize.addItem(specification.getIvSizes().get(mode));
+        symmetricKeyPadding.repaint();
+        symmetricIvSize.repaint();
     }
 
     public void rebuildHillPanel(String size) {
@@ -846,18 +842,138 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
 
     public void genSymmetricKey() {
         SymmetricKeyHelper key = (SymmetricKeyHelper) controller.getAlgorithms().getKey().getKey();
+
+        ActionListener kSizeAL = symmetricKeySize.getActionListeners()[0];
+        ActionListener mAL = symmetricKeyMode.getActionListeners()[0];
+        ActionListener pAl = symmetricKeyPadding.getActionListeners()[0];
+
+        for (ActionListener actionListener : symmetricKeySize.getActionListeners()) {
+            symmetricKeySize.removeActionListener(actionListener);
+        }
+        for (ActionListener actionListener : symmetricKeyMode.getActionListeners()) {
+            symmetricKeyMode.removeActionListener(actionListener);
+        }
+        for (ActionListener actionListener : symmetricKeyPadding.getActionListeners()) {
+            symmetricKeyPadding.removeActionListener(actionListener);
+        }
+
+        int sizIV = 0, m = 0, ksiz = 0, p = 0;
+        ComboBoxModel<Size> modelSize = symmetricKeySize.getModel();
+        for (int i = 0; i < modelSize.getSize(); i++) {
+            Size size = (Size) modelSize.getElementAt(i);
+            if (size.getBit() == key.getKeySize()) {
+                ksiz = i;
+                break;
+            }
+        }
+
+        ComboBoxModel<Mode> modelMode = symmetricKeyMode.getModel();
+        for (int i = 0; i < modelMode.getSize(); i++) {
+            Mode mode = (Mode) modelMode.getElementAt(i);
+            if (mode.getName().equals(key.getMode().getName())) {
+                m = i;
+                break;
+            }
+        }
+        ComboBoxModel<Padding> modelPadding = symmetricKeyPadding.getModel();
+        for (int i = 0; i < modelPadding.getSize(); i++) {
+            Padding padding = (Padding) modelPadding.getElementAt(i);
+            if (padding.getName().equals(key.getPadding().getName())) {
+                p = i;
+                break;
+            }
+        }
+        ComboBoxModel<Size> modeKeySize = symmetricIvSize.getModel();
+        for (int i = 0; i < modeKeySize.getSize(); i++) {
+            Size size = (Size) modeKeySize.getElementAt(i);
+            if (size.getByteFormat() == key.getIvSize()) {
+                sizIV = i;
+                break;
+            }
+        }
+        symmetricKeySize.setSelectedIndex(ksiz);
+        symmetricKeyMode.setSelectedIndex(m);
+        symmetricKeyPadding.setSelectedIndex(p);
+        symmetricIvSize.setSelectedIndex(sizIV);
+
+        symmetricKeySize.addActionListener(kSizeAL);
+        symmetricKeyMode.addActionListener(mAL);
+        symmetricKeyPadding.addActionListener(pAl);
+
+        symmetricIvSize.repaint();
+        symmetricKeySize.repaint();
+        symmetricKeyPadding.repaint();
+        symmetricKeyMode.repaint();
+
         String[] texts = key.getStringKeyAndIv();
         int index = 0;
         for (Component c : keyPanel.getComponents()) {
             if (c instanceof JPanel panel) {
-                if (panel.getComponent(0) instanceof JTextField textField)
-                    textField.setText(texts[index++]);
+                for (Component component : panel.getComponents()) {
+                    if (component instanceof JTextField textField)
+                        textField.setText(texts[index++]);
+                }
             }
         }
     }
 
     public void genAsymmetricKey() {
         AsymmetricKeyHelper key = (AsymmetricKeyHelper) controller.getAlgorithms().getKey().getKey();
+
+        ActionListener sAl = asymmetricKeySize.getActionListeners()[0];
+        ActionListener mAl = asymmetricKeyMode.getActionListeners()[0];
+        ActionListener pAl = asymmetricKeyPadding.getActionListeners()[0];
+
+        for (ActionListener actionListener : asymmetricKeySize.getActionListeners())
+            asymmetricKeySize.removeActionListener(actionListener);
+
+        for (ActionListener actionListener : asymmetricKeyMode.getActionListeners())
+            asymmetricKeyMode.removeActionListener(actionListener);
+
+        for (ActionListener actionListener : asymmetricKeyPadding.getActionListeners())
+            asymmetricKeyPadding.removeActionListener(actionListener);
+
+
+        int m = 0, ksiz = 0, p = 0;
+        ComboBoxModel<Size> modelSize = asymmetricKeySize.getModel();
+        for (int i = 0; i < modelSize.getSize(); i++) {
+            Size size = (Size) modelSize.getElementAt(i);
+            if (size.getBit() == key.getKeySize().getBit()) {
+                ksiz = i;
+                break;
+            }
+        }
+
+        ComboBoxModel<Mode> modelMode = asymmetricKeyMode.getModel();
+        for (int i = 0; i < modelMode.getSize(); i++) {
+            Mode mode = (Mode) modelMode.getElementAt(i);
+            if (mode.getName().equals(key.getMode().getName())) {
+                m = i;
+                break;
+            }
+        }
+        ComboBoxModel<Padding> modelPadding = asymmetricKeyPadding.getModel();
+        for (int i = 0; i < modelPadding.getSize(); i++) {
+            Padding padding = (Padding) modelPadding.getElementAt(i);
+            if (padding.getName().equals(key.getPadding().getName())) {
+                p = i;
+                break;
+            }
+        }
+
+
+        asymmetricKeySize.setSelectedIndex(ksiz);
+        asymmetricKeyMode.setSelectedIndex(m);
+        asymmetricKeyPadding.setSelectedIndex(p);
+
+        asymmetricKeySize.addActionListener(sAl);
+        asymmetricKeyMode.addActionListener(mAl);
+        asymmetricKeyPadding.addActionListener(pAl);
+
+        asymmetricKeySize.repaint();
+        asymmetricKeyPadding.repaint();
+        asymmetricKeyMode.repaint();
+
         String[] texts = key.getKeys();
         int index = 0;
         for (Component c : keyPanel.getComponents()) {
@@ -866,6 +982,8 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                     textField.setText(texts[index++]);
             }
         }
+
+
     }
 
 
@@ -881,23 +999,65 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         hashKeyField.setEnabled(key.isHMAC());
         hashKeyField.setText(key.getKeyHmac());
         hashOutputFormat.setSelectedItem(key.isHex() ? "Hex" : "Base64");
+
     }
 
     public void genKeyPair() {
         SignKeyHelper key = (SignKeyHelper) controller.getAlgorithms().getKey().getKey();
+
+        ActionListener kAl = signKeySize.getActionListeners()[0];
+        ActionListener sAl = signKeySignature.getActionListeners()[0];
+        ActionListener seAl = signKeySecureRandom.getActionListeners()[0];
+
+        for (ActionListener actionListener : signKeySize.getActionListeners())
+            signKeySize.removeActionListener(actionListener);
+
+        for (ActionListener actionListener : signKeySignature.getActionListeners())
+            signKeySignature.removeActionListener(actionListener);
+
+        for (ActionListener actionListener : signKeySecureRandom.getActionListeners())
+            signKeySecureRandom.removeActionListener(actionListener);
+
         SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(key.getKeyPairAlgorithm());
-        signKeySize = new JComboBox<>();
-        signKeySize.addActionListener(signListener);
-        specification.getSizes().forEach(signKeySize::addItem);
-        signKeySignature = new JComboBox<>();
-        signKeySignature.addActionListener(signListener);
-        specification.getSignatures().forEach(signKeySignature::addItem);
-        signKeySecureRandom = new JComboBox<>();
-        signKeySecureRandom.addActionListener(signListener);
-        specification.getAlgRandoms().forEach(signKeySecureRandom::addItem);
-        signKeySize.setSelectedItem(key.getKeySize());
-        signKeySignature.setSelectedItem(key.getSignature());
-        signKeySecureRandom.setSelectedItem(key.getSecureRandom());
+        int siz = 0, sig = 0, ser = 0;
+        ComboBoxModel<Size> modelSize = signKeySize.getModel();
+        for (int i = 0; i < modelSize.getSize(); i++) {
+            Size size = (Size) modelSize.getElementAt(i);
+            if (size.getBit() == key.getKeySize()) {
+                siz = i;
+                break;
+            }
+        }
+
+        ComboBoxModel<Signature> modelSignature = signKeySignature.getModel();
+        for (int i = 0; i < modelSignature.getSize(); i++) {
+            Signature sign = (Signature) modelSignature.getElementAt(i);
+            if (sign.getName().equals(key.getSignature())) {
+                sig = i;
+                break;
+            }
+        }
+
+        ComboBoxModel<SecureRandom> modelSecureRandom = signKeySecureRandom.getModel();
+        for (int i = 0; i < modelSecureRandom.getSize(); i++) {
+            SecureRandom secureRandom = (SecureRandom) modelSecureRandom.getElementAt(i);
+            if (secureRandom.getDisplayName().equals(key.getSecureRandom())) {
+                ser = i;
+                break;
+            }
+        }
+        signKeySize.setSelectedIndex(siz);
+        signKeySignature.setSelectedIndex(sig);
+        signKeySecureRandom.setSelectedIndex(ser);
+
+        signKeySize.addActionListener(kAl);
+        signKeySignature.addActionListener(sAl);
+        signKeySecureRandom.addActionListener(seAl);
+
+        signKeySize.repaint();
+        signKeySignature.repaint();
+        signKeySecureRandom.repaint();
+
 
         String[] texts = key.getKeys();
         int index = 0;

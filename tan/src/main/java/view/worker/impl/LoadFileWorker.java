@@ -46,7 +46,6 @@ public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
         if (isError) {
             dialog.dispose();
             JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-            controller.notifyAlgorithmObservers();
             vMainPanel.setEnabled(true);
             return;
         }

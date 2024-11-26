@@ -131,14 +131,12 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         } else if (selectedItem instanceof Hash) {
             Hash hash = (Hash) selectedItem;
             algorithms = new HashAlgorithm(hash, true, true);
-        } else if (selectedItem instanceof KeyPairAlgorithm) {
-            KeyPairAlgorithm keyPairAlgorithm = (KeyPairAlgorithm) selectedItem;
+        } else if (selectedItem instanceof KeyPairAlgorithm keyPairAlgorithm) {
             SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
             Provider provider = specification.getProvider();
             Signature signatures = specification.getSignatures().getFirst();
             SecureRandom algRandoms = specification.getAlgRandoms().getFirst();
             Size sizes = specification.getSizes().stream().toList().getFirst();
-
             algorithms = new SignAlgorithm(keyPairAlgorithm, signatures, provider, algRandoms, sizes);
         }
     }

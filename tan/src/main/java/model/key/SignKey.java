@@ -49,7 +49,7 @@ public class SignKey implements IKey {
             int keySize = Integer.parseInt(inputStream.readUTF());
             String publicKey = inputStream.readUTF();
             String privateKey = inputStream.readUTF();
-            SignatureSpecification signatureSpecification = SignatureSpecification.findByKeyPairAlgorithm(signature);
+            SignatureSpecification signatureSpecification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
             key.setKeyPairAlgorithm(signatureSpecification.getKeyPairAlgorithm());
             key.setProvider(signatureSpecification.getProvider());
             signatureSpecification.getAlgRandoms().forEach((k) -> {

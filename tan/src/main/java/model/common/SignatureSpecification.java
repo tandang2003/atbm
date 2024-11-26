@@ -57,7 +57,10 @@ public class SignatureSpecification {
                         Signature.SHA3_384withRSA,
                         Signature.SHA3_512withRSA),
                 List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
-                Set.of(Size.Size_128, Size.Size_256, Size.Size_384));
+                Set.of(Size.Size_128
+                        ,Size.Size_256,
+                        Size.Size_384
+                ));
     }
 
     public static SignatureSpecification DSA() {
@@ -76,7 +79,9 @@ public class SignatureSpecification {
                         Signature.SHA3_512withDSA
                 ),
                 List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
-                Set.of(Size.Size_64, Size.Size_128, Size.Size_256, Size.Size_384, Size.Size_512));
+                Set.of(Size.Size_64, Size.Size_128
+//                        , Size.Size_256, Size.Size_384, Size.Size_512
+                ));
     }
 
     public static SignatureSpecification findByKeyPairAlgorithm(KeyPairAlgorithm keyPairAlgorithm) {
@@ -91,7 +96,9 @@ public class SignatureSpecification {
             result.algRandoms = result.algRandoms.stream().sorted(Comparator.comparing(SecureRandom::getName)).toList();
         }
         return result;
-    }  public static SignatureSpecification findByKeyPairAlgorithm(String keyPairAlgorithm) {
+    }
+
+    public static SignatureSpecification findByKeyPairAlgorithm(String keyPairAlgorithm) {
         SignatureSpecification result = switch (keyPairAlgorithm) {
             case "RSA" -> RSA();
             case "DSA" -> DSA();

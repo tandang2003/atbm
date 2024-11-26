@@ -182,6 +182,7 @@ public class SymmetricAlgorithm extends AAlgorithm {
         try {
             genKeySize(symmetricKeyHelper);
             genCipher(symmetricKeyHelper);
+            genIv(symmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchPaddingException e) {

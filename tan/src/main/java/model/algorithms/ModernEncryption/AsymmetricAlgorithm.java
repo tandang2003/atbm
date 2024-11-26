@@ -4,6 +4,7 @@ import model.algorithms.AAlgorithm;
 import model.common.*;
 import model.key.AsymmetricKey;
 import model.key.AsymmetricKeyHelper;
+import org.bouncycastle.math.raw.Mod;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -19,7 +20,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 
     public AsymmetricAlgorithm(Cipher cipher, Mode mode, Padding padding, Size keySize) {
         super();
-        this.key = new AsymmetricKey(new AsymmetricKeyHelper(cipher, mode,padding, keySize));
+        this.key = new AsymmetricKey(new AsymmetricKeyHelper(cipher, mode, padding, keySize));
 
     }
 
@@ -27,11 +28,7 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public void genKey() {
         AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
         try {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(asymmetricKeyHelper.getCipher().getName());
-            keyPairGenerator.initialize(asymmetricKeyHelper.getKeySize().getBit());
-            KeyPair keyPair = keyPairGenerator.generateKeyPair();
-            asymmetricKeyHelper.setPrivateKey(keyPair.getPrivate());
-            asymmetricKeyHelper.setPublicKey(keyPair.getPublic());
+            genkey(asymmetricKeyHelper);
             genCipher(asymmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
 //            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
@@ -45,6 +42,14 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 //            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);
         }
+    }
+
+    private void genkey(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(asymmetricKeyHelper.getCipher().getName());
+        keyPairGenerator.initialize(asymmetricKeyHelper.getKeySize().getBit());
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        asymmetricKeyHelper.setPrivateKey(keyPair.getPrivate());
+        asymmetricKeyHelper.setPublicKey(keyPair.getPublic());
     }
 
     private void genCipher(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
@@ -92,10 +97,12 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public void updateKey(Object[] key) {
         AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
         asymmetricKeyHelper.setKeySize((Size) key[0]);
-//        asymmetricKeyHelper.setTransformation(((String) key[1]).isEmpty() ? asymmetricKeyHelper.getCipher().getName() : asymmetricKeyHelper.getCipher().getName() + "/" + ((String) key[1]));
+        asymmetricKeyHelper.setMode((Mode) key[1]);
+        asymmetricKeyHelper.setPadding((Padding) key[2]);
 
         try {
-            genCipher((AsymmetricKeyHelper) this.key.getKey());
+            genkey(asymmetricKeyHelper);
+            genCipher(asymmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
 //            throw new NoSuchPaddingException("The padding is not suitable.Please change block size or adding padding mode");
             throw new RuntimeException(e);

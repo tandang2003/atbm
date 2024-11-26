@@ -12,6 +12,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.security.Signature;
 import java.security.*;
 
@@ -38,12 +39,12 @@ public class SignAlgorithm extends AAlgorithm {
         try {
 
             KeyPairGenerator generator = KeyPairGenerator.getInstance(signKeyHelper.getKeyPairAlgorithm().getName(), signKeyHelper.getProvider());
-            if (Provider.SUN_RSA_SIGN.getName().equals(signKeyHelper.getProvider())) {
-                secureRandomObj = java.security.SecureRandom.getInstance(signKeyHelper.getSecureRandom(), Provider.SUN.getName());
-            } else
+            if (!Provider.SUN_RSA_SIGN.getName().equals(signKeyHelper.getProvider())) {
                 secureRandomObj = java.security.SecureRandom.getInstance(signKeyHelper.getSecureRandom(), signKeyHelper.getProvider());
-
-            generator.initialize(signKeyHelper.getKeySize(), secureRandomObj);
+                generator.initialize(signKeyHelper.getKeySize(), secureRandomObj);
+            } else {
+                generator.initialize(signKeyHelper.getKeySize());
+            }
             keyPair = generator.genKeyPair();
             publicKey = keyPair.getPublic();
             signKeyHelper.setPublicKey(publicKey.getEncoded());
@@ -149,7 +150,6 @@ public class SignAlgorithm extends AAlgorithm {
         signKeyHelper.setKeySize((Size) key[0]);
         signKeyHelper.setSignature((model.common.Signature) key[1]);
         signKeyHelper.setSecureRandom((SecureRandom) key[2]);
-
         genKeyPair();
         genSignature();
     }
@@ -160,17 +160,11 @@ public class SignAlgorithm extends AAlgorithm {
     }
 
     public static void main(String[] args) throws IllegalBlockSizeException {
-        SignAlgorithm signAlgoriithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
+        SignAlgorithm signAlgoriithm = new SignAlgorithm(KeyPairAlgorithm.DSA, model.common.Signature.SHA512withDSA, Provider.SUN, SecureRandom.DRBG, Size.Size_384);
         signAlgoriithm.genKey();
         String encrypt = signAlgoriithm.encrypt("Hello World");
         System.out.println(encrypt);
-//        System.out.println(encrypt1);
-//        String encrypt = signAlgoriithm.encrypt("Hello World");
-//        System.out.println(encrypt);
         SignAlgorithm signAlgorithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
         signAlgorithm.genKey();
-//        signAlgorithm.publicKey=signAlgoriithm.publicKey;
-//        signAlgorithm.privateKey=signAlgoriithm.privateKey;
-        System.out.println(signAlgorithm.verify("Hello World", encrypt));
     }
 }

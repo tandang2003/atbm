@@ -34,8 +34,7 @@ public class SymmetricKey implements IKey<SymmetricKeyHelper> {
         outputStream.writeUTF(key.getMode().getName());
         outputStream.writeUTF(key.getPadding().getName());
         for (String s : key.getStringKeyAndIv())
-            outputStream.writeUTF(s);
-
+            outputStream.writeUTF(s == null ? "" : s);
     }
 
     @Override
@@ -55,7 +54,8 @@ public class SymmetricKey implements IKey<SymmetricKeyHelper> {
             String padding = inputStream.readUTF();
             String[] keyAndIv = new String[2];
             for (int i = 0; i < 2; i++) {
-                keyAndIv[i] = inputStream.readUTF();
+                var a = inputStream.readUTF();
+                keyAndIv[i] = a.isEmpty() ? null : a;
             }
             CipherSpecification cipherSpecification = CipherSpecification.findCipherSpecificationWithCipherName(cipher);
             key.setCipher(cipherSpecification.getAlgorithm());
@@ -82,6 +82,7 @@ public class SymmetricKey implements IKey<SymmetricKeyHelper> {
             key.setSecretKey(keyAndIv[0]);
             key.setIvParameterSpec(keyAndIv[1]);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw new IOException("Invalid key file");
         }
     }

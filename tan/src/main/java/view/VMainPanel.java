@@ -18,7 +18,7 @@ public class VMainPanel extends JPanel {
     }
 
     private void init() {
-        vConsolePanel = new VConsolePanel();
+        vConsolePanel = new VConsolePanel(mainController);
         vAlgorithmPanel = new VAlgorithmPanel(mainController);
         vToolPanel = new VToolPanel(mainController);
 

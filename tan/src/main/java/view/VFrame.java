@@ -14,6 +14,7 @@ public class VFrame extends JFrame {
 
     VMainPanel vMainPanel;
     VMenuBar vMenuBar;
+
     public VFrame(MainController controller) {
 //        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
         FlatLightLaf laf = new FlatLightLaf();
@@ -51,6 +52,7 @@ public class VFrame extends JFrame {
         UIManager.put("Label.font", MyFont.loadCustomFont(MyFont.ROBOTO_REGULAR, 18));
 //
         UIManager.put("TextField.font", MyFont.loadCustomFont(MyFont.ROBOTO_REGULAR, 18));
+        UIManager.put("TextField.font", MyFont.loadCustomFont(MyFont.ROBOTO_REGULAR, 14));
 
 //        UIManager.put("ScrollBar.thumb", new Color(200, 200, 200));
 

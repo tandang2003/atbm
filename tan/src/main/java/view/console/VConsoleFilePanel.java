@@ -1,5 +1,7 @@
 package view.console;
 
+import controller.MainController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -14,7 +16,7 @@ public class VConsoleFilePanel extends JPanel {
     private JButton start;
     private JTextArea inputArea, outputArea;
 
-    public VConsoleFilePanel() {
+    public VConsoleFilePanel(MainController controller) {
         inputArea = new JTextArea();
         init();
     }
