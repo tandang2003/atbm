@@ -66,7 +66,7 @@ public class VigenereAlgorithm extends AAlgorithm {
 
     @Override
     public String decrypt(String input) {
-        if (validation()) throw new RuntimeException("Key is not valid");
+//        if (validation()) throw new RuntimeException("Key is not valid");
         int[] key = transformKey();
         StringBuilder sb = new StringBuilder();
         int i = 0;

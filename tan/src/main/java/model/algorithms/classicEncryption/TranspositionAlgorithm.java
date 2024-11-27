@@ -2,10 +2,13 @@ package model.algorithms.classicEncryption;
 
 
 import model.algorithms.AAlgorithm;
+import model.algorithms.IAlgorithms;
+import model.common.Alphabet;
 import model.common.Cipher;
 import model.common.ICipherEnum;
 import model.key.NumberKey;
 
+import javax.crypto.IllegalBlockSizeException;
 import java.util.List;
 import java.util.Random;
 
@@ -79,9 +82,15 @@ public class TranspositionAlgorithm extends AAlgorithm {
         int crr = this.arrChar.indexOf(c);
         if (!isUpperCase) {
             crr = this.arrChar.indexOf(c.toUpperCase());
-            return this.arrChar.get((crr - move - this.arrChar.size()) % this.arrChar.size() + this.arrChar.size()).toLowerCase();
+            int r = ((crr - move - this.arrChar.size())
+                    % this.arrChar.size() + this.arrChar.size());
+
+            return this.arrChar.get(r == this.arrChar.size() ? this.arrChar.size() - 1 : r).toLowerCase();
         }
-        return this.arrChar.get((crr - move - this.arrChar.size()) % this.arrChar.size() + this.arrChar.size());
+        int r = ((crr - move - this.arrChar.size())
+                % this.arrChar.size() + this.arrChar.size());
+        return this.arrChar.get(r == this.arrChar.size() ? this.arrChar.size() - 1 : r);
+
     }
 
     @Override
@@ -90,14 +99,26 @@ public class TranspositionAlgorithm extends AAlgorithm {
     }
 
     public static void main(String[] args) {
-//        IAlgorithms algorithms = new SubstitutionAlgorithm(Alphabet.VIETNAMESE_CHAR_SET);
-//        algorithms.genKey();
+//        System.out.println((-26) % 26);
+//        hiwxxhdlgsihcasknaobsfoihsdasd
+        IAlgorithms algorithms = new TranspositionAlgorithm(Alphabet.ENGLISH_CHAR_SET);
+        ((NumberKey) algorithms.getKey()).setKey(20);
 //
-//        String input = "Nguyễn Văn Á";
-//        String encrypt = algorithms.encrypt(input);
-//        System.out.println(encrypt);
-//        String decrypt = algorithms.decrypt(encrypt);
-//        System.out.println(decrypt);
+        String input = "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz";
+        String encrypt = null;
+        try {
+            encrypt = algorithms.encrypt(input);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(encrypt);
+        String decrypt = null;
+        try {
+            decrypt = algorithms.decrypt(encrypt);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(decrypt);
 
     }
 }

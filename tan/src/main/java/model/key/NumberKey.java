@@ -15,6 +15,10 @@ public class NumberKey implements IKey<Integer> {
         this.key = 0;
     }
 
+    public void setKey(int key) {
+        this.key = key;
+    }
+
     @Override
     public Integer getKey() {
         return key;

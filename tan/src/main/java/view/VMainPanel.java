@@ -28,4 +28,7 @@ public class VMainPanel extends JPanel {
         add(vAlgorithmPanel, BorderLayout.CENTER);
     }
 
+    public VConsolePanel getvConsolePanel() {
+        return vConsolePanel;
+    }
 }

@@ -15,9 +15,9 @@ public class CipherSpecification {
         CipherSpecification result = switch (cipher) {
             case "AES" -> AES;
             case "DES" -> DES;
-            case "DESEDE" -> TRIPLEDES;
+            case "DESede" -> TRIPLEDES;
             case "RSA" -> RSA;
-            case "BLOWFISH" -> Blowfish;
+            case "Blowfish" -> Blowfish;
             case "RC2" -> RC2;
             case "RC4" -> RC4;
             default -> null;

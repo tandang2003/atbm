@@ -40,9 +40,9 @@ public class HillKey implements IKey<double[][]> {
             key = new double[2][2];
         }
         int size = inputStream.readInt();
-        if (size != key.length) {
-            throw new IOException("Invalid key file. This key is for " + size + " key size but the current key is " + key.length);
-        }
+//        if (size != key.length) {
+//            throw new IOException("Invalid key file. This key is for " + size + " key size but the current key is " + key.length);
+//        }
         try {
             key = new double[size][size];
             for (int i = 0; i < size; i++) {

@@ -93,7 +93,6 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     }
 
     public void setAlgorithm(ICipherEnum selectedItem) {
-
         if (selectedItem instanceof Cipher) {
             Cipher cipher = (Cipher) selectedItem;
             switch (cipher) {

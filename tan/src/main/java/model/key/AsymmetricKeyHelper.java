@@ -28,12 +28,6 @@ public class AsymmetricKeyHelper implements Serializable {
 
     }
 
-//    public AsymmetricKeyHelper(Cipher cipher, String transformation, Size keySize) {
-//        this.cipher = cipher;
-//        this.transformation = transformation;
-//        this.keySize = keySize;
-//    }
-
 
     public AsymmetricKeyHelper(Cipher cipher, Mode mode, Padding padding, Size keySize) {
         this.cipher = cipher;

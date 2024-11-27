@@ -9,9 +9,11 @@ import org.bouncycastle.math.raw.Mod;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
+import java.sql.SQLOutput;
 import java.util.Base64;
 
 public class AsymmetricAlgorithm extends AAlgorithm {
@@ -53,7 +55,6 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     }
 
     private void genCipher(AsymmetricKeyHelper asymmetricKeyHelper) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidKeySpecException {
-        System.out.println(asymmetricKeyHelper.getTransformation());
         cipherPublic = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         cipherPrivate = javax.crypto.Cipher.getInstance(asymmetricKeyHelper.getTransformation());
         if (asymmetricKeyHelper.getPublicKey() == null || asymmetricKeyHelper.getPrivateKey() == null) {
@@ -66,6 +67,10 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public String encrypt(String input) throws IllegalBlockSizeException {
+        AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
+        String[] keys = asymmetricKeyHelper.getKeys();
+        System.out.println(keys[0]);
+        System.out.println(keys[1]);
         byte[] encrypted;
         try {
             encrypted = cipherPublic.doFinal(input.getBytes(StandardCharsets.UTF_8));
@@ -95,7 +100,24 @@ public class AsymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public void updateKey(Object[] key) {
+
         AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
+
+        if (key.length == 4) {
+            try {
+                genCipher(asymmetricKeyHelper);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchPaddingException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeyException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeySpecException e) {
+                throw new RuntimeException(e);
+            }
+            return;
+        }
+
         asymmetricKeyHelper.setKeySize((Size) key[0]);
         asymmetricKeyHelper.setMode((Mode) key[1]);
         asymmetricKeyHelper.setPadding((Padding) key[2]);

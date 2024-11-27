@@ -56,7 +56,7 @@ public class VAlgorithmPanel extends JTabbedPane {
             Component selectedComponent = this.getSelectedComponent();
             controller.setAlgorithm((ICipherEnum) ((VAlgorithmAbs) selectedComponent).getAlgorithms().getSelectedItem());
             controller.setTabbedPane((VAlgorithmAbs) selectedComponent);
-
+            ((VMainPanel) this.getParent()).getvConsolePanel().repaintPanel((ICipherEnum) ((VAlgorithmAbs) selectedComponent).getAlgorithms().getSelectedItem());
         });
     }
 

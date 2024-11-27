@@ -63,6 +63,8 @@ public class SymmetricKeyHelper implements Serializable {
     }
 
     public int getKeySize() {
+        if (keySize == null)
+            return Size.Size_0.getBit();
         return keySize.getBit();
     }
 
@@ -75,6 +77,8 @@ public class SymmetricKeyHelper implements Serializable {
     }
 
     public int getIvSize() {
+        if (ivSize == null)
+            return Size.Size_0.getByteFormat();
         return ivSize.getByteFormat();
     }
 
@@ -85,6 +89,7 @@ public class SymmetricKeyHelper implements Serializable {
     public void setIvParameterSpec(IvParameterSpec ivParameterSpec) {
         this.ivParameterSpec = Base64.getEncoder().encodeToString(ivParameterSpec.getIV());
     }
+
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
     }

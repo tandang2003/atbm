@@ -9,6 +9,7 @@ import model.key.SymmetricKeyHelper;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
+import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -161,39 +162,34 @@ public class SymmetricAlgorithm extends AAlgorithm {
 
     @Override
     public void updateKey(Object[] objects) {
+
+
         SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
-        if (objects.length >= 1) {
-            System.out.println(objects[0]);
-            symmetricKeyHelper.setKeySize((Size) objects[0]);
+
+        if (objects.length == 5) {
+            try {
+                genCipher(symmetricKeyHelper);
+            } catch (NoSuchPaddingException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchAlgorithmException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidAlgorithmParameterException e) {
+                throw new RuntimeException(e);
+            } catch (InvalidKeyException e) {
+                throw new RuntimeException(e);
+            }
+            return;
         }
-        if (objects.length >= 2) {
-            symmetricKeyHelper.setMode((Mode) objects[1]);
-//            symmetricKeyHelper.setTransformation(((String) objects[1]).isEmpty() ? symmetricKeyHelper.getCipher().getName() : symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
-        }
-//        symmetricKeyHelper.setTransformation(symmetricKeyHelper.getCipher().getName() + "/" + ((String) objects[1]));
-        if (objects.length >= 3) {
-            System.out.println(objects[2]);
-            symmetricKeyHelper.setPadding((Padding) objects[2]);
-        }
-        if (objects.length >= 4) {
-            System.out.println(objects[3]);
-            symmetricKeyHelper.setIvSize((Size) objects[3]);
-        }
+        symmetricKeyHelper.setKeySize((Size) objects[0]);
+        symmetricKeyHelper.setMode((Mode) objects[1]);
+        symmetricKeyHelper.setPadding((Padding) objects[2]);
+        symmetricKeyHelper.setIvSize((Size) objects[3]);
         try {
             genKeySize(symmetricKeyHelper);
-            genCipher(symmetricKeyHelper);
             genIv(symmetricKeyHelper);
+//            genCipher(symmetricKeyHelper);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
-        } catch (NoSuchPaddingException e) {
-            throw new RuntimeException(e);
-
-        } catch (InvalidAlgorithmParameterException e) {
-            throw new RuntimeException(e);
-
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-//            throw new InvalidKeyException("The key is not suitable.Please change block size or adding padding mode");
         }
     }
 

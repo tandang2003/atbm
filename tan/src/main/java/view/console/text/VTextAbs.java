@@ -1,18 +1,20 @@
 package view.console.text;
 
+import controller.MainController;
+import view.console.VConsolePanelAbs;
 import view.custom.TextAreaCus;
 
 import javax.swing.*;
 
-public abstract class VTextAbs extends JPanel{
+public abstract class VTextAbs extends VConsolePanelAbs {
     protected TextAreaCus planText, cipherText, decryptText;
+    protected JScrollPane planScroll, cipherScroll, decryptScroll;
 
-    public VTextAbs() {
-        initPlanText();
-        initCipherText();
-        initDecryptText();
-        init();
+    public VTextAbs(MainController controller) {
+        super(controller);
     }
+
+
 
     protected void initPlanText() {
         planText = new TextAreaCus("Plain Text");
@@ -21,6 +23,8 @@ public abstract class VTextAbs extends JPanel{
         planText.setLineWrap(true);
         planText.setWrapStyleWord(true);
         planText.setToolTipText("Enter the text you want to encrypt here");
+        planScroll = new JScrollPane(planText);
+
     }
 
     protected void initCipherText() {
@@ -30,27 +34,35 @@ public abstract class VTextAbs extends JPanel{
         cipherText.setLineWrap(true);
         cipherText.setWrapStyleWord(true);
         cipherText.setToolTipText("Encrypted text will be displayed here");
+        cipherScroll = new JScrollPane(cipherText);
     }
 
     protected void initDecryptText() {
+
         decryptText = new TextAreaCus("Decrypted Text");
         decryptText.setRows(5);
         decryptText.setColumns(20);
         decryptText.setLineWrap(true);
         decryptText.setWrapStyleWord(true);
         decryptText.setToolTipText("Decrypted text will be displayed here");
+        decryptScroll = new JScrollPane(decryptText);
+
     }
 
-    protected void init() {
-        // Arrange components with BorderLayout and BoxLayout for simplicity
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(planText);
-        add(Box.createVerticalStrut(10));
-        add(cipherText);
-        add(Box.createVerticalStrut(10));
-        add(decryptText);
+    @Override
+    protected void initInputPanel() {
+        initPlanText();
+        initCipherText();
+        initDecryptText();
+
+        inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.add(planScroll);
+        inputPanel.add(Box.createVerticalStrut(10));
+        inputPanel.add(cipherScroll);
+        inputPanel.add(Box.createVerticalStrut(10));
+        inputPanel.add(decryptScroll);
     }
 
-    ;
 
 }

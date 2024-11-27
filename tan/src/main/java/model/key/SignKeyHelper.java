@@ -3,6 +3,13 @@ package model.key;
 import model.common.*;
 
 import java.io.Serializable;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 public class SignKeyHelper implements Serializable {
@@ -79,5 +86,18 @@ public class SignKeyHelper implements Serializable {
     }
     public String[] getKeys() {
         return new String[]{Base64.getEncoder().encodeToString(publicKey), Base64.getEncoder().encodeToString(privateKey)};
+    }
+
+    public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (privateKey == null) {
+            return null;
+        }
+        return KeyFactory.getInstance(keyPairAlgorithm.getName()).generatePublic(new X509EncodedKeySpec(publicKey));
+    }
+    public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+        if (privateKey == null) {
+            return null;
+        }
+        return KeyFactory.getInstance(keyPairAlgorithm.getName()).generatePrivate(new PKCS8EncodedKeySpec(privateKey));
     }
 }

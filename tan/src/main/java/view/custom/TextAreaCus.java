@@ -56,23 +56,5 @@ public class TextAreaCus extends JTextArea {
         repaint();
     }
 
-    public static void main(String[] args) {
-        // Test the TextAreaCus
-        JFrame frame = new JFrame("Placeholder JTextArea Example");
-        TextAreaCus textArea = new TextAreaCus("Type something here...");
-        textArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        textArea.setRows(5);
-        textArea.setColumns(30);
-        TextAreaCus textArea1 = new TextAreaCus("Type something here...");
-        textArea.setFont(new Font("Arial", Font.PLAIN, 16));
-        textArea.setRows(5);
-        textArea.setColumns(30);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new GridLayout(2,1));
-        frame.add((textArea));
-        frame.add((textArea1));
-        frame.pack();
-        frame.setVisible(true);
-    }
 
 }

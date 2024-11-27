@@ -70,12 +70,13 @@ public class HashAlgorithm extends AAlgorithm {
     @Override
     public String encrypt(String input) {
         byte[] digest;
+        System.out.println("ISHMAC "+((HashKeyHelper) key.getKey()).isHMAC());
         if (!((HashKeyHelper) key.getKey()).isHMAC()) {
             digest = encryptNotHMAC(input);
         } else {
             digest = encryptHMAC(input);
         }
-        System.out.println(((HashKeyHelper) key.getKey()).isHex());
+        System.out.println("ISHEX "+((HashKeyHelper) key.getKey()).isHex());
         if (!((HashKeyHelper) key.getKey()).isHex()) {
             return Base64.getEncoder().encodeToString(digest);
         } else {

@@ -33,11 +33,9 @@ public class HillAlgorithm extends AAlgorithm {
 
     @Override
     public void genKey() {
-//        if (key.getKey() != null) {
-//            return;
-//        }
-        int defaultKeyLength = Algorithms.HILL_ALGORITHM_DEFAULT_KEY_LENGTH;
-        double[][] key = new double[defaultKeyLength][defaultKeyLength];
+        double[][] key = (double[][]) this.key.getKey();
+        int defaultKeyLength = key.length;
+        key = new double[defaultKeyLength][defaultKeyLength];
         Random random = new Random();
         while (!MyMath.isInvertibleMatrix(key, arrChar.size())) {
             for (int i = 0; i < defaultKeyLength; i++) {
@@ -47,6 +45,7 @@ public class HillAlgorithm extends AAlgorithm {
             }
         }
         this.key = new HillKey(key);
+
     }
 
     @Override
@@ -97,73 +96,6 @@ public class HillAlgorithm extends AAlgorithm {
         return sb.toString();
     }
 
-
-//    public String encrypt(String input) {
-//        double[][] key = (double[][]) this.key.getKey();
-//        StringBuilder sb = new StringBuilder();
-//        int padding = 0;
-//        for (int i = 0; i < input.length(); i++) {
-//            if (this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase()))
-//                padding++;
-//        }
-//        padding = (key.length - padding % key.length) % key.length;
-//        int i = 0;
-//        String[] arr = input.split("");
-//        StringBuilder encrypted = new StringBuilder();
-//        for (String s : arr) {
-//            if (this.arrChar.contains(s.toUpperCase())) i++;
-//            encrypted.append(s);
-//            if (i == key.length) {
-//                sb.append(encryptArrChar(encrypted.toString(), key));
-//                i = 0;
-//                encrypted.setLength(0);
-//            }
-//        }
-//        if (i > 0) {
-//            sb.append(encryptArrChar(encrypted.toString(), key));
-//            for (int j = 0; j < padding; j++) {
-//                sb.append(HILL_DEFAULT_PADDING);
-//            }
-//        }
-//        return sb.toString();
-//    }
-
-
-//    public String encryptArrChar(String input, double[][] key) {
-//        StringBuilder sb = new StringBuilder();
-//        StringBuilder temp = new StringBuilder();
-//        for (String s : input.split("")) {
-//            if (this.arrChar.contains(s.toUpperCase())) {
-//                temp.append(s);
-//            }
-//        }
-//
-//        int j = 0;
-//        while (sb.length() < temp.length()) {
-//            j = Math.min(temp.length() - sb.length(), key.length);
-//            String cut = temp.substring(sb.length(), sb.length() + j);
-//            double[] inputArr = transformInput(cut, key.length);
-//            double[] multiplyMatrices = MyMath.multiplyMatrices(inputArr, key);
-//            double[] result = new double[multiplyMatrices.length];
-//            for (int i = 0; i < result.length; i++) {
-//                result[i] = (multiplyMatrices[i] % arrChar.size() + arrChar.size()) % arrChar.size();
-//            }
-//            String s = reverseTransformInput(result, multiplyMatrices.length);
-//            for (int i = 0; i < input.length(); i++) {
-//                if (!this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase())) {
-//                    sb.append(input.charAt(i));
-//                } else {
-//                    sb.append(s.charAt(0));
-//                    s = s.substring(1);
-//                }
-//            }
-//            if (!s.isEmpty()) {
-//                sb.append(s);
-//            }
-//        }
-//        return sb.toString();
-//    }
-
     public String encryptArrChar(String input, double[][] key) {
         // Chuỗi lưu kết quả mã hóa
         StringBuilder sb = new StringBuilder();
@@ -204,7 +136,9 @@ public class HillAlgorithm extends AAlgorithm {
                 if (!this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase())) {
                     sb.append(input.charAt(i)); // Ký tự không mã hóa
                 } else {
-                    sb.append(transformed.charAt(0)); // Ký tự đã mã hóa
+                    if (Character.isUpperCase(input.charAt(i)))
+                        sb.append(transformed.charAt(0)); // Ký tự đã mã hóa
+                    else sb.append(String.valueOf(transformed.charAt(0)).toLowerCase());
                     transformed = transformed.substring(1);
                 }
             }
@@ -289,7 +223,9 @@ public class HillAlgorithm extends AAlgorithm {
                 if (!this.arrChar.contains(String.valueOf(input.charAt(i)).toUpperCase())) {
                     sb.append(input.charAt(i));
                 } else {
-                    sb.append(s.charAt(0));
+                    if (Character.isUpperCase(input.charAt(i)))
+                        sb.append(s.charAt(0)); // Ký tự đã mã hóa
+                    else sb.append(String.valueOf(s.charAt(0)).toLowerCase());
                     s = s.substring(1);
                 }
             }
@@ -313,17 +249,6 @@ public class HillAlgorithm extends AAlgorithm {
         return result;
     }
 
-//    private int[][] transformKey() {
-//        int[][] key = ((HillKey) this.key).getKey();
-//        int[][] result = new int[key.length][key.length];
-//        for (int i = 0; i < key.length; i++) {
-//            for (int j = 0; j < key.length; j++) {
-//                result[i][j] = Integer.parseInt(key[i][j]);
-//            }
-//        }
-//        return result;
-//    }
-
     @Override
     protected boolean validation() {
         return false;
@@ -332,7 +257,7 @@ public class HillAlgorithm extends AAlgorithm {
     public static void main(String[] args) {
         HillAlgorithm algorithm = new HillAlgorithm(Alphabet.ENGLISH_CHAR_SET);
         algorithm.genKey();
-        String input = "hello.hi";
+        String input = "hEllo.Hi";
         String encrypt = algorithm.encrypt(input);
         System.out.println(encrypt);
         String decrypt = algorithm.decrypt(encrypt);
