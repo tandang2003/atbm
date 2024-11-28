@@ -1,4 +1,4 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 import controller.MainController;
 import model.common.*;
@@ -6,7 +6,7 @@ import model.key.AsymmetricKeyHelper;
 import model.key.HashKeyHelper;
 import model.key.SignKeyHelper;
 import model.key.SymmetricKeyHelper;
-import observer.alphabetObserver.AlphaObserver;
+import observer.alphabet.AlphaObserver;
 import view.font.MyFont;
 
 import javax.swing.*;
@@ -17,9 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.sql.SQLOutput;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;

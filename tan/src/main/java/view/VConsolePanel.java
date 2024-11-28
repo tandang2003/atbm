@@ -2,9 +2,7 @@ package view;
 
 
 import controller.MainController;
-import model.algorithms.classicEncryption.*;
-import model.common.Cipher;
-import view.AlgorithmPanel.*;
+import view.algorithmPanel.*;
 import view.console.VConsolePanelAbs;
 import view.console.file.VEncryptFilePanel;
 import view.console.file.VHashFilePanel;

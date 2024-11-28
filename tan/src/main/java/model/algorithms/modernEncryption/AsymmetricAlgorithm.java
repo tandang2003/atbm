@@ -1,19 +1,16 @@
-package model.algorithms.ModernEncryption;
+package model.algorithms.modernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.*;
 import model.key.AsymmetricKey;
 import model.key.AsymmetricKeyHelper;
-import org.bouncycastle.math.raw.Mod;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.SQLOutput;
 import java.util.Base64;
 
 public class AsymmetricAlgorithm extends AAlgorithm {

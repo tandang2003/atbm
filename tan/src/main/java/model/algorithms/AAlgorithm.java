@@ -1,16 +1,12 @@
 package model.algorithms;
 
 
-import model.common.Cipher;
 import model.common.Hash;
 import model.common.ICipherEnum;
 import model.common.KeyPairAlgorithm;
-import model.key.AffineKey;
 import model.key.IKey;
-import observer.algorithmObserver.ObserverAlgorithm;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

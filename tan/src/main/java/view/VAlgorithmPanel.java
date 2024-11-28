@@ -1,16 +1,12 @@
 package view;
 
 
-import com.sun.tools.javac.Main;
 import controller.MainController;
-import model.common.Cipher;
 import model.common.ICipherEnum;
-import view.AlgorithmPanel.*;
+import view.algorithmPanel.*;
 import view.font.MyFont;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 import static model.common.Button.FONTSIZE_NORMAL;

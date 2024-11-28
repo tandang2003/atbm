@@ -1,4 +1,4 @@
-package observer.alphabetObserver;
+package observer.alphabet;
 
 import java.util.List;
 

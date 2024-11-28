@@ -1,21 +1,21 @@
 package controller;
 
 import model.algorithms.IAlgorithms;
-import model.algorithms.ModernEncryption.HashAlgorithm;
-import model.algorithms.ModernEncryption.SignAlgorithm;
+import model.algorithms.modernEncryption.HashAlgorithm;
+import model.algorithms.modernEncryption.SignAlgorithm;
 import model.algorithms.classicEncryption.SubstitutionAlgorithm;
 import model.algorithms.classicEncryption.TranspositionAlgorithm;
 import model.algorithms.classicEncryption.AffineAlgorithm;
 import model.algorithms.classicEncryption.HillAlgorithm;
 import model.algorithms.classicEncryption.VigenereAlgorithm;
-import model.algorithms.ModernEncryption.AsymmetricAlgorithm;
-import model.algorithms.ModernEncryption.SymmetricAlgorithm;
+import model.algorithms.modernEncryption.AsymmetricAlgorithm;
+import model.algorithms.modernEncryption.SymmetricAlgorithm;
 import model.common.*;
-import observer.algorithmObserver.ObserverAlgorithm;
-import observer.algorithmObserver.SubjectAlgorithm;
-import observer.alphabetObserver.AlphaSubject;
+import observer.algorithm.ObserverAlgorithm;
+import observer.algorithm.SubjectAlgorithm;
+import observer.alphabet.AlphaSubject;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import view.AlgorithmPanel.VAlgorithmAbs;
+import view.algorithmPanel.VAlgorithmAbs;
 import view.VFrame;
 
 import javax.crypto.IllegalBlockSizeException;
@@ -27,7 +27,6 @@ import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MainController extends AlphaSubject implements SubjectAlgorithm {
     private boolean isEnglish;
@@ -86,7 +85,7 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     @Override
     public void notifyObservers() {
         algorithms.setArrChar(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
-        for (observer.alphabetObserver.AlphaObserver observer : observers) {
+        for (observer.alphabet.AlphaObserver observer : observers) {
             observer.update(getAlphabet());
         }
     }

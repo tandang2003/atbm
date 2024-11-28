@@ -2,7 +2,6 @@ package view;
 
 
 import controller.MainController;
-import observer.alphabetObserver.AlphaSubject;
 
 import javax.swing.*;
 import java.awt.*;

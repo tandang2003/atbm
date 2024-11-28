@@ -1,4 +1,4 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 
 import controller.MainController;
@@ -6,7 +6,7 @@ import model.common.Cipher;
 import model.common.Hash;
 import model.common.ICipherEnum;
 import model.common.KeyPairAlgorithm;
-import observer.algorithmObserver.ObserverAlgorithm;
+import observer.algorithm.ObserverAlgorithm;
 import view.font.MyFont;
 
 import javax.swing.*;

@@ -1,7 +1,6 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 import controller.MainController;
-import model.common.Hash;
 import model.common.KeyPairAlgorithm;
 
 public class VSignPanel extends VAlgorithmAbs {

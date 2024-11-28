@@ -1,4 +1,4 @@
-package model.algorithms.ModernEncryption;
+package model.algorithms.modernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Hash;

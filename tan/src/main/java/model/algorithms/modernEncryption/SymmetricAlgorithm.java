@@ -1,4 +1,4 @@
-package model.algorithms.ModernEncryption;
+package model.algorithms.modernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.*;
@@ -9,7 +9,6 @@ import model.key.SymmetricKeyHelper;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
-import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.SecureRandom;

@@ -1,7 +1,4 @@
-package observer.algorithmObserver;
-
-import java.util.ArrayList;
-import java.util.List;
+package observer.algorithm;
 
 public interface SubjectAlgorithm {
 //    List<ObserverAlgorithm> observers = new ArrayList<>();

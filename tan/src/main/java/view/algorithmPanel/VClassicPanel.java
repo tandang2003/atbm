@@ -1,4 +1,4 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 
 import controller.MainController;

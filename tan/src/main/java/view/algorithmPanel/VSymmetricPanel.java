@@ -1,11 +1,9 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 
 import controller.MainController;
-import model.common.Algorithms;
 import model.common.Cipher;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class VSymmetricPanel extends VAlgorithmAbs {

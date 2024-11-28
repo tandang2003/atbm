@@ -1,4 +1,4 @@
-package model.algorithms.ModernEncryption;
+package model.algorithms.modernEncryption;
 
 import model.algorithms.AAlgorithm;
 import model.common.Provider;
@@ -8,13 +8,10 @@ import model.key.SignKey;
 import model.key.SignKeyHelper;
 
 import javax.crypto.IllegalBlockSizeException;
-import javax.imageio.metadata.IIOMetadataFormat;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.Exception;
-import java.net.SocketTimeoutException;
 import java.security.Signature;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;

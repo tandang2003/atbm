@@ -1,8 +1,7 @@
-package view.AlgorithmPanel;
+package view.algorithmPanel;
 
 
 import controller.MainController;
-import model.common.Cipher;
 import model.common.Hash;
 
 public class VHashPanel extends VAlgorithmAbs {
