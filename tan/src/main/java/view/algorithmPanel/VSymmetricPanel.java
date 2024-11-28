@@ -25,6 +25,8 @@ public class VSymmetricPanel extends VAlgorithmAbs {
         algorithms.addItem(Cipher.RC2);
         algorithms.addItem(Cipher.RC4);
         algorithms.addItem(Cipher.Camellia);
+        algorithms.addItem(Cipher.Twofish);
+        algorithms.addItem(Cipher.Serpent);
 //        algorithms.addItem(Cipher.SUBSTITUTION);
 //        algorithms.addItem(Cipher.VIGENERE);
         algorithms.setBackground(Color.WHITE);

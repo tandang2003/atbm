@@ -15,6 +15,8 @@ public enum Cipher implements ICipherEnum {
     RC2("RC2", "RC2", Provider.SUN_JCE),
     RC4("RC4", "RC4", Provider.SUN_JCE),
     Camellia("Camellia", "Camellia", Provider.BC),
+    Twofish("Twofish", "Twofish", Provider.BC),
+    Serpent("Serpent", "Serpent", Provider.BC),
 //    //    MessageDigest
 //    MD2("MD2", "MD2"),
 //    MD5("MD5", "MD5"),

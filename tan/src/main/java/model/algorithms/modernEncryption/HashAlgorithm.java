@@ -18,7 +18,9 @@ public class HashAlgorithm extends AAlgorithm {
 
     private MessageDigest messageDigests;
     private Mac mac;
+    public HashAlgorithm(){
 
+    }
     public HashAlgorithm(Hash cipher, boolean isHex, boolean isHMAC, String keyMac) {
         this.key = new HashKey(new HashKeyHelper(cipher, isHex, isHMAC, keyMac));
     }
@@ -54,7 +56,6 @@ public class HashAlgorithm extends AAlgorithm {
     private void genHMACMessageDigest() {
         HashKeyHelper key = (HashKeyHelper) this.key.getKey();
         if (key.getKeyHmac().isEmpty()) {
-//            throw new RuntimeException("Key HMAC is null");
             return;
         }
         try {

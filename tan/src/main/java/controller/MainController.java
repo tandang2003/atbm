@@ -113,21 +113,13 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
                 case TRANSPOSITION:
                     algorithms = new TranspositionAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
                     break;
-                case AES, BLOWFISH, DES, DESEDE, RC2, RC4:
+                case AES, BLOWFISH, DES, DESEDE, RC2, RC4, Camellia, Twofish, Serpent:
                     CipherSpecification specification = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
                     Size keySize = specification.getSupportedKeySizes().stream().findFirst().get();
                     Mode mode = specification.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
                     Padding padding = specification.getValidModePaddingCombinations().get(mode).get(0);
                     Size ivSize = specification.getIvSizes().get(mode);
                     algorithms = new SymmetricAlgorithm((Cipher) selectedItem, mode, padding, keySize, ivSize);
-                    break;
-                case Camellia:
-                    CipherSpecification specification_modern = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
-                    Size keySize_modern = specification_modern.getSupportedKeySizes().stream().findFirst().get();
-                    Mode mode_modern = specification_modern.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
-                    Padding padding_modern = specification_modern.getValidModePaddingCombinations().get(mode_modern).get(0);
-                    Size ivSize_modern = specification_modern.getIvSizes().get(mode_modern);
-                    algorithms = new SymmetricAlgorithm((Cipher) selectedItem, mode_modern, padding_modern, keySize_modern, ivSize_modern);
                     break;
                 case RSA:
                     CipherSpecification s = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
@@ -139,7 +131,10 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
             }
         } else if (selectedItem instanceof Hash) {
             Hash hash = (Hash) selectedItem;
-            algorithms = new HashAlgorithm(hash, true, true);
+            if (hash == Hash.BCrypt) {
+                algorithms = new HashAlgorithm(hash, true, false);
+            } else
+                algorithms = new HashAlgorithm(hash, true, true);
         } else if (selectedItem instanceof KeyPairAlgorithm keyPairAlgorithm) {
             SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
             Provider provider = specification.getProvider();

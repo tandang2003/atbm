@@ -1,6 +1,8 @@
 package model.common;
 
 
+import org.bouncycastle.jcajce.provider.asymmetric.GOST;
+
 import java.security.Provider;
 import java.security.Security;
 import java.util.*;
@@ -21,6 +23,8 @@ public class CipherSpecification {
             case "RC2" -> RC2;
             case "RC4" -> RC4;
             case "Camellia" -> CAMELLIA;
+            case "Twofish" -> Twofish;
+            case "LEA" -> Serpent;
 
             default -> null;
         };
@@ -49,6 +53,8 @@ public class CipherSpecification {
             case RC2 -> RC2;
             case RC4 -> RC4;
             case Camellia -> CAMELLIA;
+            case Twofish -> Twofish;
+            case Serpent -> Serpent;
             default -> null;
         };
         if (result != null) {
@@ -84,8 +90,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 
             ),
             Set.of(Size.Size_16, Size.Size_24, Size.Size_32),
@@ -109,6 +115,93 @@ public class CipherSpecification {
                     Map.entry(Mode.CTS, Size.Size_16)
             )
     );
+    private static final CipherSpecification Twofish = new CipherSpecification(
+            Cipher.Twofish,
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, List.of(Padding.NoPadding)),
+                    Map.entry(Mode.ECB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CBC, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
+
+            ),
+            Set.of(Size.Size_16, Size.Size_24, Size.Size_32),
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, Size.Size_0),
+                    Map.entry(Mode.ECB, Size.Size_0),
+                    Map.entry(Mode.CBC, Size.Size_16),
+                    Map.entry(Mode.CFB, Size.Size_16),
+                    Map.entry(Mode.CFB8, Size.Size_16),
+                    Map.entry(Mode.CFB16, Size.Size_16),
+                    Map.entry(Mode.CFB48, Size.Size_16),
+                    Map.entry(Mode.CFB64, Size.Size_16),
+                    Map.entry(Mode.CFB128, Size.Size_16),
+                    Map.entry(Mode.OFB, Size.Size_16),
+                    Map.entry(Mode.OFB8, Size.Size_16),
+                    Map.entry(Mode.OFB16, Size.Size_16),
+                    Map.entry(Mode.OFB48, Size.Size_16),
+                    Map.entry(Mode.OFB64, Size.Size_16),
+                    Map.entry(Mode.OFB128, Size.Size_16),
+                    Map.entry(Mode.CTR, Size.Size_16),
+                    Map.entry(Mode.CTS, Size.Size_16)
+            )
+    );
+    private static final CipherSpecification Serpent = new CipherSpecification(
+            Cipher.Serpent,
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, List.of(Padding.NoPadding)),
+                    Map.entry(Mode.ECB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CBC, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
+
+            ),
+            Set.of(Size.Size_16, Size.Size_24, Size.Size_32),
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, Size.Size_0),
+                    Map.entry(Mode.ECB, Size.Size_0),
+                    Map.entry(Mode.CBC, Size.Size_16),
+                    Map.entry(Mode.CFB, Size.Size_16),
+                    Map.entry(Mode.CFB8, Size.Size_16),
+                    Map.entry(Mode.CFB16, Size.Size_16),
+                    Map.entry(Mode.CFB48, Size.Size_16),
+                    Map.entry(Mode.CFB64, Size.Size_16),
+                    Map.entry(Mode.CFB128, Size.Size_16),
+                    Map.entry(Mode.OFB, Size.Size_16),
+                    Map.entry(Mode.OFB8, Size.Size_16),
+                    Map.entry(Mode.OFB16, Size.Size_16),
+                    Map.entry(Mode.OFB48, Size.Size_16),
+                    Map.entry(Mode.OFB64, Size.Size_16),
+                    Map.entry(Mode.OFB128, Size.Size_16),
+                    Map.entry(Mode.CTR, Size.Size_16),
+                    Map.entry(Mode.CTS, Size.Size_16)
+            )
+    );
+
     private static final CipherSpecification AES = new CipherSpecification(
             Cipher.AES,
             Map.ofEntries(
@@ -128,8 +221,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 //                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_16, Size.Size_24, Size.Size_32),  // Supported key sizes for AES
@@ -173,8 +266,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 //                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_7),  // Supported key size for DES (56-bit)
@@ -216,8 +309,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 //                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_14, Size.Size_21),  // Supported key sizes for DESede (112-bit, 168-bit)
@@ -271,8 +364,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 //                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_4, Size.Size_12, Size.Size_24, Size.Size_32, Size.Size_56),  // Blowfish supports key sizes of 128-bit, 192-bit, and 256-bit
@@ -315,8 +408,8 @@ public class CipherSpecification {
                     Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
                     Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
-                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
-                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding))
 //                    Map.entry(Mode.GCM, List.of(Padding.NoPadding))
             ),
             Set.of(Size.Size_5, Size.Size_8, Size.Size_16),  // RC2 supports key sizes from 40 bits to 128 bits

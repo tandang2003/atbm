@@ -25,5 +25,6 @@ public class VHashPanel extends VAlgorithmAbs {
         algorithms.addItem(Hash.SHA3_256);
         algorithms.addItem(Hash.SHA3_384);
         algorithms.addItem(Hash.SHA3_512);
+        algorithms.addItem(Hash.BCrypt);
     }
 }

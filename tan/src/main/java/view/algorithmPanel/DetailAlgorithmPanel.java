@@ -109,7 +109,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                 case VIGENERE:
                     createVergenerePanel();
                     break;
-                case AES, BLOWFISH, DES, DESEDE, RC2, RC4,Camellia:
+                case AES, BLOWFISH, DES, DESEDE, RC2, RC4, Camellia, Twofish, Serpent:
                     createSymmetric((Cipher) algorithmName);
                     break;
                 case RSA:
@@ -532,7 +532,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.add(hashKeyField, gbc);
 
         add(keyPanel);
-        if (hash.equals(Hash.MD2)) {
+        if (hash.equals(Hash.MD2) || hash.equals(Hash.BCrypt)) {
             hashYes.setEnabled(false);
             hashNo.setSelected(true);
             hashKeyField.setEnabled(false);
