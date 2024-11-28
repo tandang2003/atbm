@@ -2,6 +2,7 @@ package view;
 
 
 import controller.MainController;
+import model.algorithms.modernEncryption.BcryptHashAlgorithm;
 import view.algorithmPanel.*;
 import view.console.VConsolePanelAbs;
 import view.console.file.VEncryptFilePanel;
@@ -63,12 +64,9 @@ public class VConsolePanel extends JTabbedPane {
     }
 
     private void filePanel(VAlgorithmAbs cipher) {
-
-//        if (cipher instanceof Hash) {
-//            consoleFilePanel = new VFileAbs(c);
-//        } else
         if (cipher instanceof VClassicPanel ||
-                cipher instanceof VAsymmetricPanel) {
+                cipher instanceof VAsymmetricPanel ||
+                (cipher instanceof VHashPanel && c.getAlgorithms() instanceof BcryptHashAlgorithm)) {
             if (getTabCount() == 2) {
                 removeTabAt(1);
             }

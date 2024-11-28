@@ -6,13 +6,24 @@ import org.bouncycastle.jcajce.provider.asymmetric.GOST;
 import java.security.Provider;
 import java.security.Security;
 import java.util.*;
-
+/**
+ * Lớp này đại diện cho đặc tả thuật toán mã hóa (Cipher Specification), cung cấp thông tin
+ * về các chế độ (Mode), kiểu đệm (Padding), kích thước khóa (Key Size) được hỗ trợ
+ * và kích thước vector khởi tạo (IV Size).
+ */
 public class CipherSpecification {
-    private Cipher algorithm;
-    private Map<Mode, List<Padding>> validModePaddingCombinations;
-    private Set<Size> supportedKeySizes;  // Set to hold supported key sizes
-    private Map<Mode, Size> ivSizes;  // Map to hold IV sizes for each mode
 
+    private Cipher algorithm; // Thuật toán mã hóa
+    private Map<Mode, List<Padding>> validModePaddingCombinations; // Kết hợp chế độ và kiểu đệm hợp lệ
+    private Set<Size> supportedKeySizes;  // Tập hợp kích thước khóa được hỗ trợ
+    private Map<Mode, Size> ivSizes;  // Bản đồ kích thước IV theo từng chế độ
+
+    /**
+     * Phương thức tìm kiếm đặc tả thuật toán mã hóa dựa trên tên thuật toán mã hóa.
+     *
+     * @param cipher Tên thuật toán mã hóa (ví dụ: "AES", "DES", "RSA", v.v.)
+     * @return Đối tượng {@code CipherSpecification} tương ứng, hoặc {@code null} nếu không tìm thấy.
+     */
     public static final CipherSpecification findCipherSpecificationWithCipherName(String cipher) {
         CipherSpecification result = switch (cipher) {
             case "AES" -> AES;
@@ -25,10 +36,11 @@ public class CipherSpecification {
             case "Camellia" -> CAMELLIA;
             case "Twofish" -> Twofish;
             case "LEA" -> Serpent;
-
             default -> null;
         };
+
         if (result != null) {
+            // Khởi tạo các tập hợp dữ liệu được sắp xếp
             result.supportedKeySizes = new TreeSet<>(result.supportedKeySizes);
             result.ivSizes = new TreeMap<>(result.ivSizes);
             Map<Mode, List<Padding>> sortedValidModePaddingCombinations = new TreeMap<>(new Comparator<Mode>() {
@@ -43,6 +55,12 @@ public class CipherSpecification {
         return result;
     }
 
+    /**
+     * Phương thức tìm kiếm đặc tả thuật toán mã hóa dựa trên đối tượng {@code Cipher}.
+     *
+     * @param cipher Đối tượng thuật toán mã hóa {@code Cipher}.
+     * @return Đối tượng {@code CipherSpecification} tương ứng, hoặc {@code null} nếu không tìm thấy.
+     */
     public static final CipherSpecification findCipherSpecification(Cipher cipher) {
         CipherSpecification result = switch (cipher) {
             case AES -> AES;
@@ -57,7 +75,9 @@ public class CipherSpecification {
             case Serpent -> Serpent;
             default -> null;
         };
+
         if (result != null) {
+            // Khởi tạo các tập hợp dữ liệu được sắp xếp
             result.supportedKeySizes = new TreeSet<>(result.supportedKeySizes);
             result.ivSizes = new TreeMap<>(result.ivSizes);
             Map<Mode, List<Padding>> sortedValidModePaddingCombinations = new TreeMap<>(new Comparator<Mode>() {
@@ -71,6 +91,7 @@ public class CipherSpecification {
         }
         return result;
     }
+
 
     private static final CipherSpecification CAMELLIA = new CipherSpecification(
             Cipher.Camellia,

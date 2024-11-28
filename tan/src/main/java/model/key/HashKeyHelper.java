@@ -24,6 +24,8 @@ public class HashKeyHelper implements Serializable {
 
     public HashKeyHelper(Hash cipher, boolean isHex, boolean isMac) {
         this.key = cipher;
+        this.isHex = isHex;
+        this.isHMAC = isMac;
     }
 
     public HashKeyHelper(Hash cipher, boolean isHex, String provider) {

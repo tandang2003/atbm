@@ -1,6 +1,7 @@
 package view.console.text;
 
 import controller.MainController;
+import model.algorithms.modernEncryption.BcryptHashAlgorithm;
 import view.custom.TextAreaCus;
 
 import javax.crypto.IllegalBlockSizeException;
@@ -49,10 +50,13 @@ public class VHashTextPanel extends VTextAbs {
     @Override
     protected void decrypt() {
         super.decrypt();
-        encrypt();
         String hashedText = cipherText.getText();
-        String plainText = decryptText.getText();
-        boolean isMatch = hashedText.equals(plainText);
+        String plainedText = decryptText.getText();
+        boolean isMatch = hashedText.equals(plainedText);
+        if (controller.getAlgorithms() instanceof BcryptHashAlgorithm) {
+            String plainText = planText.getText();
+            isMatch = controller.getAlgorithms().verify(plainText, plainedText);
+        }
         if (isMatch) {
             JOptionPane.showMessageDialog(controller.getFrame(), "Match", "Result", JOptionPane.INFORMATION_MESSAGE);
         } else {

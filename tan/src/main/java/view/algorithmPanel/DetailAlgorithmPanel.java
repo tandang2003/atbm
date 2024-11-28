@@ -31,7 +31,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private JTextField alphabetField;
     private JComboBox<String> hillKeySize;
     private MainController controller;
-
+    private JComboBox<String> foreignCharacters;
 
     //symmetric
     private JComboBox<Size> symmetricKeySize, symmetricIvSize;
@@ -56,6 +56,10 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
     private JComboBox<SecureRandom> signKeySecureRandom;
     private JTextField signPublicKey, signPrivateKey;
 
+    //affine
+    private JSpinner affineAField, affineBField;
+
+
     public DetailAlgorithmPanel(MainController controller) {
         this.controller = controller;
         controller.register((AlphaObserver) this);
@@ -65,7 +69,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         foreignPanel = new JPanel();
         foreignPanel.setLayout(new BorderLayout());
         foreignPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Foreign Characters"));
-        JComboBox<String> foreignCharacters = new JComboBox<>();
+     foreignCharacters = new JComboBox<>();
         foreignCharacters.setFont(keyFont);
         foreignCharacters.addItem("Include");
         foreignCharacters.addItem("Ignore");
@@ -117,6 +121,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                     break;
             }
         }
+
     }
 
 
@@ -155,10 +160,35 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                         key = new double[4][4];
                         break;
                 }
-                controller.updateKey(key);
+                controller.updateKey(key,((String) foreignCharacters.getSelectedItem()).equals("Include"));
             }
         });
         rebuildHillPanel((String) hillKeySize.getSelectedItem());
+        for (ActionListener ac: foreignCharacters.getActionListeners()) {
+            foreignCharacters.removeActionListener(ac);
+        }
+        foreignCharacters.addActionListener(e->{
+            double[][] key = new double[0][];
+            switch ((String) hillKeySize.getSelectedItem()) {
+                case "2x2":
+                    key = new double[2][2];
+                    break;
+                case "3x3":
+                    key = new double[3][3];
+                    break;
+                case "4x4":
+                    key = new double[4][4];
+                    break;
+            }
+            int index = 0;
+            for (Component c : keyPanel.getComponents()) {
+                if (c instanceof JFormattedTextField textField) {
+                    key[index / key.length][index % key.length] = Double.parseDouble(textField.getText().isEmpty() ? "0" : textField.getText());
+                    index++;
+                }
+            }
+            controller.updateKey(key,((String) foreignCharacters.getSelectedItem()).equals("Include"));
+        });
         inputKeyPanel.add(keyPanel, BorderLayout.CENTER);
         add(inputKeyPanel);
 
@@ -177,11 +207,17 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyField.setPreferredSize(new Dimension(200, 100));
         keyField.setBorder(BorderFactory.createTitledBorder("Shift"));
         keyField.addChangeListener(e -> {
-            controller.updateKey(keyField.getValue());
+            controller.updateKey(keyField.getValue(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
         });
         keyField.setFont(keyFont);
         keyPanel.setLayout(new BorderLayout());
         keyPanel.add(keyField, BorderLayout.CENTER);
+        for (ActionListener ac: foreignCharacters.getActionListeners()) {
+            foreignCharacters.removeActionListener(ac);
+        }
+        foreignCharacters.addActionListener(e->{
+            controller.updateKey(keyField.getValue(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
+        });
         add(keyPanel);
         add(alphabetsPanel);
         add(foreignPanel);
@@ -196,12 +232,12 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                controller.updateKey(keyField.getText());
+                controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                controller.updateKey(keyField.getText());
+                controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
             }
 
             @Override
@@ -211,6 +247,12 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyField.setFont(keyFont);
         keyPanel.setLayout(new BorderLayout());
         keyPanel.add(keyField, BorderLayout.CENTER);
+        for (ActionListener ac: foreignCharacters.getActionListeners()) {
+            foreignCharacters.removeActionListener(ac);
+        }
+        foreignCharacters.addActionListener(e->{
+            controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
+        });
         add(keyPanel);
         add(alphabetsPanel);
         add(foreignPanel);
@@ -222,23 +264,30 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyPanel.setLayout(new GridLayout(1, 2));
         JPanel aPanel = new JPanel();
         JPanel bPanel = new JPanel();
-        JSpinner aField = new JSpinner();
-        aField.setPreferredSize(new Dimension(200, 100));
+        affineAField = new JSpinner();
+        affineAField.setPreferredSize(new Dimension(200, 100));
         aPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Slope / A"));
-        aField.setFont(keyFont);
+        affineAField.setFont(keyFont);
         aPanel.setLayout(new BorderLayout());
-        aPanel.add(aField, BorderLayout.CENTER);
-        JSpinner bField = new JSpinner();
-        bField.setPreferredSize(new Dimension(200, 100));
+        aPanel.add(affineAField, BorderLayout.CENTER);
+         affineBField = new JSpinner();
+        affineBField.setPreferredSize(new Dimension(200, 100));
         bPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Intercept / B"));
-        bField.setFont(keyFont);
+        affineBField.setFont(keyFont);
         bPanel.setLayout(new BorderLayout());
-        bPanel.add(bField, BorderLayout.CENTER);
-        aField.addChangeListener(e -> {
-            controller.updateKey(aField.getValue(), bField.getValue());
+        bPanel.add(affineBField, BorderLayout.CENTER);
+        affineAField.addChangeListener(e -> {
+            controller.updateKey(affineAField.getValue(), affineBField.getValue(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
         });
-        bField.addChangeListener(e -> {
-            controller.updateKey(aField.getValue(), bField.getValue());
+        affineBField.addChangeListener(e -> {
+            controller.updateKey(affineAField.getValue(), affineBField.getValue(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
+        });
+        foreignCharacters.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            controller.updateKey(affineAField.getValue(), affineBField.getValue(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
+
+            }
         });
         keyPanel.add(aPanel);
         keyPanel.add(bPanel);
@@ -261,18 +310,24 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         keyField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                controller.updateKey(keyField.getText());
+                controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                controller.updateKey(keyField.getText());
+                controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
 
             }
+        });
+        for (ActionListener ac: foreignCharacters.getActionListeners()) {
+            foreignCharacters.removeActionListener(ac);
+        }
+        foreignCharacters.addActionListener(e->{
+            controller.updateKey(keyField.getText(),((String) foreignCharacters.getSelectedItem()).equals("Include"));
         });
         add(keyPanel);
 
@@ -737,7 +792,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                     index++;
                 }
             }
-            controller.updateKey(key);
+            controller.updateKey(key,((String) foreignCharacters.getSelectedItem()).equals("Include"));
         }
 
         @Override
@@ -761,7 +816,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
                     index++;
                 }
             }
-            controller.updateKey(key);
+            controller.updateKey(key,((String) foreignCharacters.getSelectedItem()).equals("Include"));
         }
 
         @Override

@@ -1,15 +1,12 @@
 package controller;
 
 import model.algorithms.IAlgorithms;
-import model.algorithms.modernEncryption.HashAlgorithm;
-import model.algorithms.modernEncryption.SignAlgorithm;
+import model.algorithms.modernEncryption.*;
 import model.algorithms.classicEncryption.SubstitutionAlgorithm;
 import model.algorithms.classicEncryption.TranspositionAlgorithm;
 import model.algorithms.classicEncryption.AffineAlgorithm;
 import model.algorithms.classicEncryption.HillAlgorithm;
 import model.algorithms.classicEncryption.VigenereAlgorithm;
-import model.algorithms.modernEncryption.AsymmetricAlgorithm;
-import model.algorithms.modernEncryption.SymmetricAlgorithm;
 import model.common.*;
 import observer.algorithm.ObserverAlgorithm;
 import observer.algorithm.SubjectAlgorithm;
@@ -132,9 +129,9 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         } else if (selectedItem instanceof Hash) {
             Hash hash = (Hash) selectedItem;
             if (hash == Hash.BCrypt) {
-                algorithms = new HashAlgorithm(hash, true, false);
+                algorithms = new BcryptHashAlgorithm();
             } else
-                algorithms = new HashAlgorithm(hash, true, true);
+                algorithms = new HashAlgorithm(hash, true, false);
         } else if (selectedItem instanceof KeyPairAlgorithm keyPairAlgorithm) {
             SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
             Provider provider = specification.getProvider();

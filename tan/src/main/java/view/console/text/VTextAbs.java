@@ -65,6 +65,11 @@ public abstract class VTextAbs extends VConsolePanelAbs {
 
     @Override
     protected void encrypt() {
+        if (planText.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(controller.getFrame(), "Please enter the text you want to encrypt", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         try {
             controller.getAlgorithms().validation();
         } catch (ClassNotFoundException e) {

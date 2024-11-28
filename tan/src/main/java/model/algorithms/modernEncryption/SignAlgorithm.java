@@ -15,7 +15,10 @@ import java.io.IOException;
 import java.security.Signature;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
-
+/**
+ * Lớp này cung cấp các thuật toán ký số (digital signature) sử dụng các thuật toán mã hóa khóa công khai (public key encryption).
+ * Nó hỗ trợ việc tạo cặp khóa (public/private key), tạo chữ ký số và ký chuỗi hoặc tệp.
+ */
 public class SignAlgorithm extends AAlgorithm {
     Signature signatureObj;
     KeyPair keyPair;
@@ -23,11 +26,23 @@ public class SignAlgorithm extends AAlgorithm {
     PrivateKey privateKey;
     java.security.SecureRandom secureRandomObj;
 
+    /**
+     * Khởi tạo đối tượng `SignAlgorithm` với các tham số liên quan đến thuật toán cặp khóa, chữ ký và các tham số khác.
+     *
+     * @param keyPairAlgorithm Thuật toán tạo cặp khóa.
+     * @param signature Thuật toán chữ ký.
+     * @param provider Nhà cung cấp (provider) sử dụng cho các thuật toán.
+     * @param secureRandom Đối tượng SecureRandom để sinh các số ngẫu nhiên.
+     * @param size Kích thước khóa.
+     */
     public SignAlgorithm(KeyPairAlgorithm keyPairAlgorithm, model.common.Signature signature, Provider provider, SecureRandom secureRandom, Size size) {
         SignKeyHelper signKeyHelper = new SignKeyHelper(keyPairAlgorithm, signature, provider, secureRandom, size);
         this.key = new SignKey(signKeyHelper);
     }
 
+    /**
+     * Tạo cặp khóa và chữ ký mới, sau đó cập nhật thông tin cặp khóa.
+     */
     @Override
     public void genKey() {
         genKeyPair();
@@ -35,6 +50,10 @@ public class SignAlgorithm extends AAlgorithm {
         genKeyPair((SignKeyHelper) this.key.getKey());
     }
 
+    /**
+     * Tạo cặp khóa (public key và private key) sử dụng các thông số trong `SignKeyHelper`.
+     * Nếu sử dụng thuật toán khác với `SUN_RSA_SIGN`, SecureRandom sẽ được khởi tạo.
+     */
     private void genKeyPair() {
         SignKeyHelper signKeyHelper = (SignKeyHelper) this.key.getKey();
         try {
@@ -54,6 +73,9 @@ public class SignAlgorithm extends AAlgorithm {
         }
     }
 
+    /**
+     * Tạo đối tượng `Signature` sử dụng thuật toán và nhà cung cấp đã được cấu hình trong `SignKeyHelper`.
+     */
     private void genSignature() {
         SignKeyHelper signKeyHelper = (SignKeyHelper) this.key.getKey();
         try {
@@ -65,6 +87,11 @@ public class SignAlgorithm extends AAlgorithm {
         }
     }
 
+    /**
+     * Cập nhật khóa công khai và khóa riêng từ thông tin trong `SignKeyHelper`.
+     *
+     * @param signKeyHelper Đối tượng chứa các thông tin khóa công khai và khóa riêng.
+     */
     private void genKeyPair(SignKeyHelper signKeyHelper) {
         try {
             if (signKeyHelper.getPublicKey() == null || signKeyHelper.getPrivateKey() == null)
@@ -76,10 +103,15 @@ public class SignAlgorithm extends AAlgorithm {
         } catch (InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
+    /**
+     * Mã hóa (ký số) chuỗi đầu vào bằng khóa riêng và trả về chữ ký số dưới dạng Base64.
+     *
+     * @param input Chuỗi cần được ký.
+     * @return Chữ ký số của chuỗi đầu vào dưới dạng Base64.
+     * @throws IllegalBlockSizeException Nếu kích thước khối không hợp lệ khi ký.
+     */
     @Override
     public String encrypt(String input) throws IllegalBlockSizeException {
         try {
@@ -98,6 +130,13 @@ public class SignAlgorithm extends AAlgorithm {
         }
     }
 
+    /**
+     * Ký số tệp đầu vào và trả về chữ ký số dưới dạng Base64.
+     *
+     * @param fileIn Đường dẫn tới tệp cần ký.
+     * @return Chữ ký số của tệp dưới dạng Base64.
+     * @throws IOException Nếu có lỗi khi đọc tệp.
+     */
     @Override
     public String signOrHashFile(String fileIn) throws IOException {
         try {
@@ -118,7 +157,14 @@ public class SignAlgorithm extends AAlgorithm {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Verifies the signature of a file against the provided signature.
+     *
+     * @param fileIn The path to the file to be verified.
+     * @param sign   The signature to verify against, encoded in Base64 format.
+     * @return {@code true} if the signature is valid, {@code false} otherwise.
+     * @throws IOException If an I/O error occurs while reading the file.
+     */
     @Override
     public boolean verifyFile(String fileIn, String sign) throws IOException {
         try {
@@ -126,20 +172,25 @@ public class SignAlgorithm extends AAlgorithm {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(fileIn));
             byte[] buffer = new byte[1024];
             int read = 0;
+            // Reading the file and updating the signature verification object
             while ((read = bufferedInputStream.read(buffer)) != -1) {
                 signatureObj.update(buffer, 0, read);
             }
             bufferedInputStream.close();
+            // Verifying the signature using the provided Base64-encoded signature
             return signatureObj.verify(java.util.Base64.getDecoder().decode(sign));
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (SignatureException e) {
-            throw new RuntimeException(e);
-        } catch (FileNotFoundException e) {
+        } catch (InvalidKeyException | SignatureException | FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Verifies the signature of an input string against the provided signature.
+     *
+     * @param input The input string to be verified.
+     * @param sign  The signature to verify against, encoded in Base64 format.
+     * @return {@code true} if the signature is valid, {@code false} otherwise.
+     */
     @Override
     public boolean verify(String input, String sign) {
         try {
@@ -147,19 +198,36 @@ public class SignAlgorithm extends AAlgorithm {
             byte[] data = input.getBytes();
             signatureObj.update(data);
             byte[] signByte = java.util.Base64.getDecoder().decode(sign);
+            // Verifying the signature using the provided Base64-encoded signature
             return signatureObj.verify(signByte);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (SignatureException e) {
+        } catch (InvalidKeyException | SignatureException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Retrieves the cipher algorithm associated with this signing operation.
+     *
+     * @return The cipher algorithm used for key pair generation.
+     */
     @Override
     public ICipherEnum getCipher() {
         return ((SignKeyHelper) this.key.getKey()).getKeyPairAlgorithm();
     }
 
+    /**
+     * Updates the key parameters for this signing algorithm.
+     *
+     * If the key length is 4, it regenerates the key pair using the existing key helper.
+     * Otherwise, it updates the key size, signature algorithm, and secure random object, and regenerates the key pair and signature.
+     *
+     * @param key An array of objects containing the new key parameters. The expected values are:
+     *            <ul>
+     *            <li>0: Size</li>
+     *            <li>1: Signature</li>
+     *            <li>2: SecureRandom</li>
+     *            </ul>
+     */
     @Override
     public void updateKey(Object[] key) {
         SignKeyHelper signKeyHelper = (SignKeyHelper) this.key.getKey();
@@ -167,7 +235,6 @@ public class SignAlgorithm extends AAlgorithm {
             genKeyPair(signKeyHelper);
             return;
         }
-
 
         signKeyHelper.setKeySize((Size) key[0]);
         signKeyHelper.setSignature((model.common.Signature) key[1]);
@@ -177,22 +244,21 @@ public class SignAlgorithm extends AAlgorithm {
         genSignature();
     }
 
+    /**
+     * Validates if the key is correctly initialized.
+     *
+     * @return {@code true} if the key is valid (not null), {@code false} otherwise.
+     */
     @Override
-    public boolean validation() {
-        return key != null;
-
+    public boolean validation() throws ClassNotFoundException {
+        if (key == null) {
+            throw new ClassNotFoundException("Key is not initialized");
+        }
+        return true;
     }
 
     public static void main(String[] args) throws IllegalBlockSizeException {
-        SignAlgorithm signAlgoriithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.MD5withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_384);
-        signAlgoriithm.genKey();
-        String encrypt = signAlgoriithm.encrypt("Hello World");
-        System.out.println(encrypt);
-//        SignAlgorithm signAlgorithm = new SignAlgorithm(KeyPairAlgorithm.RSA, model.common.Signature.SHA224withRSA, Provider.SUN_RSA_SIGN, SecureRandom.DRBG, Size.Size_128);
-//        signAlgorithm.genKey();
-        encrypt = signAlgoriithm.encrypt("Hello World");
-        System.out.println(encrypt);
-
-//        System.out.println(signAlgoriithm.verify("Hello World", encrypt));
+        String userHome = System.getProperty("user.home");
+        System.out.println(userHome);
     }
 }

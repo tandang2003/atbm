@@ -7,6 +7,8 @@ import model.common.Hash;
 import model.common.ICipherEnum;
 import model.common.KeyPairAlgorithm;
 import observer.algorithm.ObserverAlgorithm;
+import view.VAlgorithmPanel;
+import view.VMainPanel;
 import view.font.MyFont;
 
 import javax.swing.*;
@@ -52,6 +54,11 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
         algorithms.addActionListener(e -> {
             controller.setAlgorithm((ICipherEnum) algorithms.getSelectedItem());
             algorithmPanel.rebuildPanel((ICipherEnum) algorithms.getSelectedItem());
+            try {
+                ((VMainPanel)(getParent().getParent())).getvConsolePanel().repaintPanel((VAlgorithmAbs) ((VAlgorithmPanel) getParent()).getSelectedComponent());
+            }catch (Exception ex){
+                System.out.println("Error");
+            }
         });
     }
 
