@@ -94,8 +94,8 @@ public class TranspositionAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() {
+        return (int) this.key.getKey() != 0;
     }
 
     public static void main(String[] args) {

@@ -250,8 +250,11 @@ public class HillAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() throws ClassNotFoundException {
+        if (!MyMath.isInvertibleMatrix((double[][]) key.getKey(), arrChar.size())) {
+            throw new ClassNotFoundException("Key is not valid. Key must be invertible matrix");
+        }
+        return true;
     }
 
     public static void main(String[] args) {

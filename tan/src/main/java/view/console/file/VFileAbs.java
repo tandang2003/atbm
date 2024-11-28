@@ -10,12 +10,12 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.io.File;
 
-public class VFileAbs extends VConsolePanelAbs {
+public abstract class VFileAbs extends VConsolePanelAbs {
     protected DragHereIcon dragHereIcon;
     protected DropTarget dropTarget;
-    private JTextField inputFile, outputFile;
-    private JButton browseInput, browseOutput;
-    private JPanel dragHerePanel;
+    protected JTextField inputFile, outputFile;
+    protected JButton browseInput, browseOutput;
+    protected JPanel dragHerePanel;
 
     public VFileAbs(MainController controller) {
         super(controller);
@@ -62,6 +62,7 @@ public class VFileAbs extends VConsolePanelAbs {
         dragHereLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
         dragHereLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         dragHereLabel.setForeground(Color.GRAY);
+        dragHereLabel.setBorder(BorderFactory.createTitledBorder("Drag and Drop"));
         dragHereLabel.setFont(new Font("Monospace", Font.PLAIN, 14));
         dragHereLabel.setHorizontalAlignment(SwingConstants.CENTER);
         dropTarget = new DropTarget(dragHerePanel, new DropTargetAdapter() {
@@ -94,73 +95,74 @@ public class VFileAbs extends VConsolePanelAbs {
 
         // Initialize input and output file fields and buttons
 
-        dragHereIcon = new DragHereIcon();
-//        // Create a label with DragHereIcon
-//        JLabel dragHereLabel = new JLabel(new DragHereIcon());
-//        dragHereLabel.setText("<html>Drag <b>Files</b> Here</html>");
-//        dragHereLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-//        dragHereLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-//        dragHereLabel.setForeground(Color.GRAY);
-//        dragHereLabel.setFont(new Font("Monospace", Font.PLAIN, 14));
-//        dragHereLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-
-        // Set up input panel with GridBagLayout
-        inputPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Add dragHereLabel at the top
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 3; // Span across columns
-        gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        inputPanel.add(dragHerePanel, gbc);
-
-        // Add input file row
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.weightx = 0.1;
-        gbc.anchor = GridBagConstraints.LINE_START;
-        inputPanel.add(new JLabel("Input File:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        inputPanel.add(inputFile, gbc);
-
-        gbc.gridx = 2;
-        gbc.weightx = 0.1;
-        inputPanel.add(browseInput, gbc);
-
-        // Add output file row
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.weightx = 0.1;
-        inputPanel.add(new JLabel("Output File:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1.0;
-        inputPanel.add(outputFile, gbc);
-
-        gbc.gridx = 2;
-        gbc.weightx = 0.1;
-        inputPanel.add(browseOutput, gbc);
-
-        // Add inputPanel to the main container (JFrame or parent panel)
-        add(inputPanel, BorderLayout.CENTER);
+//        dragHereIcon = new DragHereIcon();
+//
+//
+//        // Set up input panel with GridBagLayout
+//        inputPanel = new JPanel(new GridBagLayout());
+//        GridBagConstraints gbc = new GridBagConstraints();
+//        gbc.insets = new Insets(10, 10, 10, 10);
+//        gbc.fill = GridBagConstraints.HORIZONTAL;
+//
+//        // Add dragHereLabel at the top
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        gbc.gridwidth = 3; // Span across columns
+//        gbc.weightx = 1.0;
+//        gbc.anchor = GridBagConstraints.CENTER;
+//        inputPanel.add(dragHerePanel, gbc);
+//
+//        // Add input file row
+//        gbc.gridx = 0;
+//        gbc.gridy = 1;
+//        gbc.gridwidth = 1;
+//        gbc.weightx = 0.1;
+//        gbc.anchor = GridBagConstraints.LINE_START;
+//        inputPanel.add(new JLabel("Input File:"), gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.weightx = 1.0;
+//        inputPanel.add(inputFile, gbc);
+//
+//        gbc.gridx = 2;
+//        gbc.weightx = 0.1;
+//        inputPanel.add(browseInput, gbc);
+//
+//        // Add output file row
+//        gbc.gridx = 0;
+//        gbc.gridy = 2;
+//        gbc.weightx = 0.1;
+//        inputPanel.add(new JLabel("Output File:"), gbc);
+//
+//        gbc.gridx = 1;
+//        gbc.weightx = 1.0;
+//        inputPanel.add(outputFile, gbc);
+//
+//        gbc.gridx = 2;
+//        gbc.weightx = 0.1;
+//        inputPanel.add(browseOutput, gbc);
+//
+//        // Add inputPanel to the main container (JFrame or parent panel)
+//        add(inputPanel, BorderLayout.CENTER);
     }
 
     @Override
     protected void encrypt() {
-
+        try {
+            controller.getAlgorithms().validation();
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }
 
     @Override
     protected void decrypt() {
-
+        try {
+            controller.getAlgorithms().validation();
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
     }
-
 }

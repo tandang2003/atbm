@@ -117,9 +117,15 @@ public class VigenereAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        if (this.key == null) return false;
-        return true;
+    public boolean validation() throws ClassNotFoundException {
+        String[] k = (String[]) key.getKey();
+        if (k == null || k.length == 0)
+            throw new ClassNotFoundException("Key is not valid");
+        for (String s : k) {
+            if (!arrChar.contains(s))
+                throw new ClassNotFoundException("Key is not valid. Key must be in alphabet");
+        }
+            return true;
     }
 
     public static void main(String[] args) {

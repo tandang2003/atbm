@@ -14,6 +14,7 @@ import model.common.*;
 import observer.algorithmObserver.ObserverAlgorithm;
 import observer.algorithmObserver.SubjectAlgorithm;
 import observer.alphabetObserver.AlphaSubject;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import view.AlgorithmPanel.VAlgorithmAbs;
 import view.VFrame;
 
@@ -22,6 +23,8 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +38,7 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
 
     public MainController() {
         setLanguage(true);
+        Security.addProvider(new BouncyCastleProvider());
         observerAlgorithms = new ArrayList<>();
         algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
         frame = new VFrame(this);
@@ -50,9 +54,8 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         System.out.println("Language set to " + (isEnglish ? "English" : "Vietnamese"));
     }
 
-    public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException {
+    public void genKey() throws IllegalBlockSizeException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         algorithms.genKey();
-//        this.notifyAlgorithmObservers();
     }
 
 
@@ -115,15 +118,23 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
                     CipherSpecification specification = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
                     Size keySize = specification.getSupportedKeySizes().stream().findFirst().get();
                     Mode mode = specification.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
-                    Padding padding = specification.getValidModePaddingCombinations().get(mode).getFirst();
+                    Padding padding = specification.getValidModePaddingCombinations().get(mode).get(0);
                     Size ivSize = specification.getIvSizes().get(mode);
                     algorithms = new SymmetricAlgorithm((Cipher) selectedItem, mode, padding, keySize, ivSize);
+                    break;
+                case Camellia:
+                    CipherSpecification specification_modern = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
+                    Size keySize_modern = specification_modern.getSupportedKeySizes().stream().findFirst().get();
+                    Mode mode_modern = specification_modern.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
+                    Padding padding_modern = specification_modern.getValidModePaddingCombinations().get(mode_modern).get(0);
+                    Size ivSize_modern = specification_modern.getIvSizes().get(mode_modern);
+                    algorithms = new SymmetricAlgorithm((Cipher) selectedItem, mode_modern, padding_modern, keySize_modern, ivSize_modern);
                     break;
                 case RSA:
                     CipherSpecification s = CipherSpecification.findCipherSpecification((Cipher) selectedItem);
                     Size kz = s.getSupportedKeySizes().stream().findFirst().get();
                     Mode m = s.getValidModePaddingCombinations().entrySet().stream().findFirst().get().getKey();
-                    Padding p = s.getValidModePaddingCombinations().get(m).getFirst();
+                    Padding p = s.getValidModePaddingCombinations().get(m).get(0);
                     algorithms = new AsymmetricAlgorithm((Cipher) selectedItem, m, p, kz);
                     break;
             }
@@ -133,9 +144,9 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
         } else if (selectedItem instanceof KeyPairAlgorithm keyPairAlgorithm) {
             SignatureSpecification specification = SignatureSpecification.findByKeyPairAlgorithm(keyPairAlgorithm);
             Provider provider = specification.getProvider();
-            Signature signatures = specification.getSignatures().getFirst();
-            SecureRandom algRandoms = specification.getAlgRandoms().getFirst();
-            Size sizes = specification.getSizes().stream().toList().getFirst();
+            Signature signatures = specification.getSignatures().get(0);
+            SecureRandom algRandoms = specification.getAlgRandoms().get(0);
+            Size sizes = specification.getSizes().stream().toList().get(0);
             algorithms = new SignAlgorithm(keyPairAlgorithm, signatures, provider, algRandoms, sizes);
         }
     }

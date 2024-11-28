@@ -48,6 +48,7 @@ public class VHashTextPanel extends VTextAbs {
 
     @Override
     protected void decrypt() {
+        super.decrypt();
         encrypt();
         String hashedText = cipherText.getText();
         String plainText = decryptText.getText();
@@ -68,6 +69,7 @@ public class VHashTextPanel extends VTextAbs {
 
     @Override
     protected void encrypt() {
+        super.encrypt();
         String plainText = planText.getText();
         String cipherText = "";
         try {

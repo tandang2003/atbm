@@ -98,11 +98,10 @@ public class AffineAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() throws ClassNotFoundException {
+        if (!(MyMath.greatestCommonDivisor(((int[]) key.getKey())[0], this.arrChar.size()) == 1))
+            throw new ClassNotFoundException("Invalid key. A and size of arrChar must be coprime");
+        return true;
     }
 
-    public static void main(String[] args) {
-
-    }
 }

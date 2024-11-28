@@ -13,6 +13,7 @@ public class VClassicTextPanel extends VTextAbs {
 
     @Override
     protected void encrypt() {
+        super.encrypt();
         String plainText = planText.getText();
         String cipherText = "";
         try {
@@ -25,6 +26,7 @@ public class VClassicTextPanel extends VTextAbs {
 
     @Override
     protected void decrypt() {
+        super.decrypt();
         String cipherText = this.cipherText.getText();
         String decryptText = "";
         try {

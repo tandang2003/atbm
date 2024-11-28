@@ -69,8 +69,6 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     public String encrypt(String input) throws IllegalBlockSizeException {
         AsymmetricKeyHelper asymmetricKeyHelper = (AsymmetricKeyHelper) this.key.getKey();
         String[] keys = asymmetricKeyHelper.getKeys();
-        System.out.println(keys[0]);
-        System.out.println(keys[1]);
         byte[] encrypted;
         try {
             encrypted = cipherPublic.doFinal(input.getBytes(StandardCharsets.UTF_8));
@@ -140,8 +138,8 @@ public class AsymmetricAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() {
+        return key != null;
     }
 
     public static void main(String[] args) {

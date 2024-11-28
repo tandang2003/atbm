@@ -181,8 +181,9 @@ public class SignAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() {
+        return key != null;
+
     }
 
     public static void main(String[] args) throws IllegalBlockSizeException {

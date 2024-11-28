@@ -15,7 +15,6 @@ public abstract class VTextAbs extends VConsolePanelAbs {
     }
 
 
-
     protected void initPlanText() {
         planText = new TextAreaCus("Plain Text");
         planText.setRows(5);
@@ -64,5 +63,23 @@ public abstract class VTextAbs extends VConsolePanelAbs {
         inputPanel.add(decryptScroll);
     }
 
+    @Override
+    protected void encrypt() {
+        try {
+            controller.getAlgorithms().validation();
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
 
+    @Override
+    protected void decrypt() {
+        try {
+            controller.getAlgorithms().validation();
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    }
 }

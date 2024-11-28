@@ -7,7 +7,7 @@ public enum Provider {
     SUN_JCE("SunJCE"),
     SUN_JSSE("SunJSSE"),
     SUN_RSA_SIGN("SunRsaSign"),
-
+    BC("BC"),
     ;
 
     String name;

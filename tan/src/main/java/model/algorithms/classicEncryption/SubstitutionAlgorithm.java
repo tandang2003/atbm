@@ -48,10 +48,9 @@ public class SubstitutionAlgorithm extends AAlgorithm {
             return new MyCharacterKey(keys);
         }
 
-
         for (int i = 0; i < k.length(); i++) {
-            keys.put(arChar.getFirst(), String.valueOf(k.charAt(i)).toUpperCase());
-            arChar.removeFirst();
+            keys.put(arChar.get(0), String.valueOf(k.charAt(i)).toUpperCase());
+            arChar.remove(0);
         }
         for (String s : arChar) {
             keys.put(s, s);
@@ -68,7 +67,6 @@ public class SubstitutionAlgorithm extends AAlgorithm {
                 sb.append(c);
             else
                 sb.append(encryptToken(c, Character.isUpperCase(c)));
-
         return sb.toString();
     }
 
@@ -128,19 +126,10 @@ public class SubstitutionAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
-        return false;
+    public boolean validation() throws ClassNotFoundException {
+        if (key.getKey() == null||((Map<String, String>) key.getKey()).isEmpty())
+            throw new ClassNotFoundException("Key is not set");
+        return true;
     }
 
-//    public static void main(String[] args) {
-//        TranspositionAlgorithm1 algorithm = new TranspositionAlgorithm1(Alphabet.VIETNAMESE_CHAR_SET);
-//        algorithm.genKey();
-//
-//        String input = "Nguyễn Văn Á";
-//        String encrypt = algorithm.encrypt(input);
-//        System.out.println(encrypt);
-//        String decrypt = algorithm.decrypt(encrypt);
-//        System.out.println(decrypt);
-//
-//    }
 }

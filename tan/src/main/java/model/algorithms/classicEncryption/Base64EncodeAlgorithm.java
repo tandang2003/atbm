@@ -165,7 +165,7 @@ public class Base64EncodeAlgorithm extends AAlgorithm {
     }
 
     @Override
-    protected boolean validation() {
+    public boolean validation() {
         return false;
     }
 

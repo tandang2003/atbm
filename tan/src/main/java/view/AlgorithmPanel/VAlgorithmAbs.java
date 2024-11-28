@@ -83,25 +83,25 @@ public abstract class VAlgorithmAbs extends JPanel implements ObserverAlgorithm 
             return;
         } else
             switch ((Cipher) cipher) {
-                case Cipher.AFFINE:
+                case AFFINE:
                     algorithmPanel.genAffineKey();
                     break;
-                case Cipher.HILL:
+                case HILL:
                     algorithmPanel.genHillKey();
                     break;
-                case Cipher.SUBSTITUTION:
+                case SUBSTITUTION:
                     algorithmPanel.genSubstitutionKey();
                     break;
-                case Cipher.TRANSPOSITION:
+                case TRANSPOSITION:
                     algorithmPanel.genTransportationKey();
                     break;
-                case Cipher.VIGENERE:
+                case VIGENERE:
                     algorithmPanel.genVergenceKey();
                     break;
-                case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
+                case AES, BLOWFISH, DES, DESEDE, RC2, RC4, Camellia:
                     algorithmPanel.genSymmetricKey();
                     break;
-                case Cipher.RSA:
+                case RSA:
                     algorithmPanel.genAsymmetricKey();
                     break;
             }

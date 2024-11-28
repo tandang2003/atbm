@@ -21,7 +21,6 @@ public abstract class AAlgorithm implements IAlgorithms {
     protected AAlgorithm() {
     }
 
-    protected abstract boolean validation();
 
 
     @Override

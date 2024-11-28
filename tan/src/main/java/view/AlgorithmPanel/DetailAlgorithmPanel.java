@@ -96,25 +96,25 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         } else if (algorithmName instanceof Cipher) {
             Cipher algorithm = (Cipher) algorithmName;
             switch (algorithm) {
-                case Cipher.AFFINE:
+                case AFFINE:
                     createAffinePanel();
                     break;
-                case Cipher.HILL:
+                case HILL:
                     createHillPanel();
                     break;
-                case Cipher.SUBSTITUTION:
+                case SUBSTITUTION:
                     createSubstitutionPanel();
                     break;
-                case Cipher.TRANSPOSITION:
+                case TRANSPOSITION:
                     createTransportation();
                     break;
-                case Cipher.VIGENERE:
+                case VIGENERE:
                     createVergenerePanel();
                     break;
-                case Cipher.AES, Cipher.BLOWFISH, Cipher.DES, Cipher.DESEDE, Cipher.RC2, Cipher.RC4:
+                case AES, BLOWFISH, DES, DESEDE, RC2, RC4,Camellia:
                     createSymmetric((Cipher) algorithmName);
                     break;
-                case Cipher.RSA:
+                case RSA:
                     createAsymmetric((Cipher) algorithmName);
                     break;
             }
@@ -1072,7 +1072,7 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         signKeySignature.setSelectedIndex(sig);
         signKeySecureRandom.setSelectedIndex(ser);
 
-        controller.updateKey(signKeySize.getSelectedItem(), signKeySignature.getSelectedItem(), signKeySecureRandom.getSelectedItem(),"");
+        controller.updateKey(signKeySize.getSelectedItem(), signKeySignature.getSelectedItem(), signKeySecureRandom.getSelectedItem(), "");
 
         signKeySize.addActionListener(kAl);
         signKeySignature.addActionListener(sAl);
@@ -1081,8 +1081,5 @@ public class DetailAlgorithmPanel extends JPanel implements AlphaObserver {
         signKeySize.repaint();
         signKeySignature.repaint();
         signKeySecureRandom.repaint();
-
-
-
     }
 }

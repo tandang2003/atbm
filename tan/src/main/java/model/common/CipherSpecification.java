@@ -20,6 +20,8 @@ public class CipherSpecification {
             case "Blowfish" -> Blowfish;
             case "RC2" -> RC2;
             case "RC4" -> RC4;
+            case "Camellia" -> CAMELLIA;
+
             default -> null;
         };
         if (result != null) {
@@ -46,6 +48,7 @@ public class CipherSpecification {
             case BLOWFISH -> Blowfish;
             case RC2 -> RC2;
             case RC4 -> RC4;
+            case Camellia -> CAMELLIA;
             default -> null;
         };
         if (result != null) {
@@ -63,6 +66,49 @@ public class CipherSpecification {
         return result;
     }
 
+    private static final CipherSpecification CAMELLIA = new CipherSpecification(
+            Cipher.Camellia,
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, List.of(Padding.NoPadding)),
+                    Map.entry(Mode.ECB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CBC, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB8, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB16, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB48, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB64, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.OFB128, List.of(Padding.NoPadding, Padding.PKCS5Padding, Padding.ISO10126Padding)),
+                    Map.entry(Mode.CTR, List.of(Padding.NoPadding)),
+                    Map.entry(Mode.CTS, List.of(Padding.NoPadding))
+
+            ),
+            Set.of(Size.Size_16, Size.Size_24, Size.Size_32),
+            Map.ofEntries(
+                    Map.entry(Mode.NONE, Size.Size_0),
+                    Map.entry(Mode.ECB, Size.Size_0),
+                    Map.entry(Mode.CBC, Size.Size_16),
+                    Map.entry(Mode.CFB, Size.Size_16),
+                    Map.entry(Mode.CFB8, Size.Size_16),
+                    Map.entry(Mode.CFB16, Size.Size_16),
+                    Map.entry(Mode.CFB48, Size.Size_16),
+                    Map.entry(Mode.CFB64, Size.Size_16),
+                    Map.entry(Mode.CFB128, Size.Size_16),
+                    Map.entry(Mode.OFB, Size.Size_16),
+                    Map.entry(Mode.OFB8, Size.Size_16),
+                    Map.entry(Mode.OFB16, Size.Size_16),
+                    Map.entry(Mode.OFB48, Size.Size_16),
+                    Map.entry(Mode.OFB64, Size.Size_16),
+                    Map.entry(Mode.OFB128, Size.Size_16),
+                    Map.entry(Mode.CTR, Size.Size_16),
+                    Map.entry(Mode.CTS, Size.Size_16)
+            )
+    );
     private static final CipherSpecification AES = new CipherSpecification(
             Cipher.AES,
             Map.ofEntries(
