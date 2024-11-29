@@ -9,7 +9,7 @@ import java.security.Security;
 
 public class main {
     public static void main(String[] args) {
-            Security.addProvider(new BouncyCastleProvider());
+        Security.addProvider(new BouncyCastleProvider());
         try {
             // Check if Twofish is available
             Cipher cipher = Cipher.getInstance("Twofish", "BC");
