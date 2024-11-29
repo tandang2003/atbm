@@ -7,7 +7,7 @@ import java.io.InputStream;
 public class MyFont {
     public static String ROBOTO_REGULAR = "/Roboto/Roboto-Regular.ttf";
     public static String ROBOTO_BOLD = "/Roboto/Roboto-Bold.ttf";
-    public static String ROBOTO_ITALIC = "/Roboto/Roboto-Italic.ttf";
+//    public static String ROBOTO_ITALIC = "/Roboto/Roboto-Italic.ttf";
 
 
     private MyFont() {

@@ -19,6 +19,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Exception;
 import java.security.InvalidKeyException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
@@ -33,8 +34,12 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     private VAlgorithmAbs algorithmAbs;
 
     public MainController() {
+        try {
+            Security.addProvider(new BouncyCastleProvider());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setLanguage(true);
-        Security.addProvider(new BouncyCastleProvider());
         observerAlgorithms = new ArrayList<>();
         algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);
         frame = new VFrame(this);
