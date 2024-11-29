@@ -18,13 +18,17 @@
             <artifactId>bcrypt</artifactId>
             <version>0.10.2</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.bouncycastle</groupId>-->
+<!--            <artifactId>bcpkix-jdk18on</artifactId>-->
+<!--            <version>1.79</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk18on</artifactId>
+            <artifactId>bcprov-jdk15to18</artifactId>
             <version>1.79</version>
-            <systemPath>
-            </systemPath>
         </dependency>
+
 
     </dependencies>
     <build>
@@ -35,7 +39,9 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
+                    <release>17</release>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -1,15 +1,22 @@
 package app;
 
 import controller.MainController;
-import view.VFrame;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
-import javax.crypto.NoSuchPaddingException;
+import javax.crypto.Cipher;
 import javax.swing.*;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.security.Security;
 
 public class main {
-    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
+    public static void main(String[] args) {
+            Security.addProvider(new BouncyCastleProvider());
+        try {
+            // Check if Twofish is available
+            Cipher cipher = Cipher.getInstance("Twofish", "BC");
+            System.out.println("Twofish is supported!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         new MainController();
     }
 }

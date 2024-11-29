@@ -73,7 +73,7 @@ public enum Cipher implements ICipherEnum {
     /**
      * Thuật toán mã hóa Camellia.
      */
-    Camellia("Camellia", "Camellia", Provider.BC),
+    Camellia("CAMELLIA", "Camellia", Provider.BC),
 
     /**
      * Thuật toán mã hóa Twofish.

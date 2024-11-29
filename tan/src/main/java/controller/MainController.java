@@ -11,7 +11,6 @@ import model.common.*;
 import observer.algorithm.ObserverAlgorithm;
 import observer.algorithm.SubjectAlgorithm;
 import observer.alphabet.AlphaSubject;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import view.algorithmPanel.VAlgorithmAbs;
 import view.VFrame;
 
@@ -34,11 +33,6 @@ public class MainController extends AlphaSubject implements SubjectAlgorithm {
     private VAlgorithmAbs algorithmAbs;
 
     public MainController() {
-        try {
-            Security.addProvider(new BouncyCastleProvider());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         setLanguage(true);
         observerAlgorithms = new ArrayList<>();
         algorithms = new AffineAlgorithm(isEnglish ? Alphabet.ENGLISH_CHAR_SET : Alphabet.VIETNAMESE_CHAR_SET);

@@ -9,8 +9,10 @@ import model.key.SymmetricKeyHelper;
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
 import java.io.*;
+import java.lang.Exception;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
+import java.security.Provider;
 import java.security.SecureRandom;
 import java.util.Base64;
 /**
@@ -34,6 +36,15 @@ public class SymmetricAlgorithm extends AAlgorithm {
     public SymmetricAlgorithm(Cipher cipher, Mode mode, Padding padding, Size keySize, Size ivSize) {
         super();
         this.key = new SymmetricKey(new SymmetricKeyHelper(cipher, keySize, mode, padding, ivSize));
+        try {
+            cipherIn = javax.crypto.Cipher.getInstance(((SymmetricKeyHelper)this.key.getKey()).getTransformation());
+            cipherOut =javax.crypto.Cipher.getInstance(((SymmetricKeyHelper)this.key.getKey()).getTransformation());
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
@@ -91,7 +102,8 @@ public class SymmetricAlgorithm extends AAlgorithm {
      * @throws NoSuchProviderException Nếu nhà cung cấp cipher không hợp lệ.
      */
     private void genKeySize(SymmetricKeyHelper symmetricKeyHelper) throws NoSuchAlgorithmException, NoSuchProviderException {
-        KeyGenerator keyGenerator = KeyGenerator.getInstance(symmetricKeyHelper.getCipher().getName(), symmetricKeyHelper.getCipher().getProvider().getName());
+//        KeyGenerator keyGenerator = KeyGenerator.getInstance(symmetricKeyHelper.getCipher().getName(), symmetricKeyHelper.getCipher().getProvider().getName());
+        KeyGenerator keyGenerator = KeyGenerator.getInstance(symmetricKeyHelper.getCipher().getName());
         keyGenerator.init(symmetricKeyHelper.getKeySize());
         symmetricKeyHelper.setSecretKey(keyGenerator.generateKey());
     }
@@ -107,9 +119,6 @@ public class SymmetricAlgorithm extends AAlgorithm {
      * @throws InvalidKeyException Nếu khóa không hợp lệ.
      */
     private void genCipher(SymmetricKeyHelper symmetricKeyHelper) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
-        cipherIn = javax.crypto.Cipher.getInstance(symmetricKeyHelper.getTransformation());
-        cipherOut = javax.crypto.Cipher.getInstance(symmetricKeyHelper.getTransformation());
-
         if (symmetricKeyHelper.getSecretKey() == null || symmetricKeyHelper.getIvParameterSpec() == null) {
             return;
         }
@@ -268,14 +277,14 @@ public class SymmetricAlgorithm extends AAlgorithm {
     @Override
     public void updateKey(Object[] objects) {
         SymmetricKeyHelper symmetricKeyHelper = (SymmetricKeyHelper) this.key.getKey();
-        if (objects.length == 5) {
-            try {
-                genCipher(symmetricKeyHelper);
-            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException e) {
-                throw new RuntimeException(e);
-            }
-            return;
-        }
+//        if (objects.length == 5) {
+//            try {
+//                genCipher(symmetricKeyHelper);
+//            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException e) {
+//                throw new RuntimeException(e);
+//            }
+//            return;
+//        }
         symmetricKeyHelper.setKeySize((Size) objects[0]);
         symmetricKeyHelper.setMode((Mode) objects[1]);
         symmetricKeyHelper.setPadding((Padding) objects[2]);
