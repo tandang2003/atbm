@@ -39,6 +39,7 @@ public class VHashFilePanel extends VFileAbs {
     @Override
     protected void initButtonPanel() {
         super.initButtonPanel();
+        encryptButton.setText("Hash");
         decryptButton.setText("Check");
     }
 

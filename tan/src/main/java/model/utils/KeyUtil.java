@@ -59,11 +59,6 @@ public class KeyUtil {
     }
 
     public static void main(String[] args) {
-//        saveKey("public1", "private1");
-//        saveKey("public2", "private2");
-//        saveKey("public3", "private3");
-//        saveKey("public4", "private4");
-//        saveKey("public5", "như thế ");
-        System.out.println(System.getProperty("os.name"));
+
     }
 }

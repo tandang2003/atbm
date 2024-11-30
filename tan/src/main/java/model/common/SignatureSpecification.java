@@ -49,13 +49,15 @@ public class SignatureSpecification {
                         Signature.SHA1withRSA,
                         Signature.SHA256withRSA,
                         Signature.SHA384withRSA,
-                        Signature.SHA512withRSA,
-                        Signature.SHA512_224withRSA,
-                        Signature.SHA512_256withRSA,
-                        Signature.SHA3_224withRSA,
-                        Signature.SHA3_256withRSA,
-                        Signature.SHA3_384withRSA,
-                        Signature.SHA3_512withRSA),
+                        Signature.SHA512withRSA
+//                        ,
+//                        Signature.SHA512_224withRSA,
+//                        Signature.SHA512_256withRSA,
+//                        Signature.SHA3_224withRSA,
+//                        Signature.SHA3_256withRSA,
+//                        Signature.SHA3_384withRSA,
+//                        Signature.SHA3_512withRSA
+                ),
                 List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
                 Set.of(Size.Size_128
                         ,Size.Size_256,
@@ -72,11 +74,12 @@ public class SignatureSpecification {
                         Signature.SHA224withDSA,
                         Signature.SHA256withDSA,
                         Signature.SHA384withDSA,
-                        Signature.SHA512withDSA,
-                        Signature.SHA3_224withDSA,
-                        Signature.SHA3_256withDSA,
-                        Signature.SHA3_384withDSA,
-                        Signature.SHA3_512withDSA
+                        Signature.SHA512withDSA
+//                        ,
+//                        Signature.SHA3_224withDSA,
+//                        Signature.SHA3_256withDSA,
+//                        Signature.SHA3_384withDSA,
+//                        Signature.SHA3_512withDSA
                 ),
                 List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
                 Set.of(Size.Size_64, Size.Size_128

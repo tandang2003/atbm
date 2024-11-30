@@ -84,6 +84,6 @@ public enum Hash implements ICipherEnum {
 
     @Override
     public String toString() {
-        return displayName;
+        return name;
     }
 }

@@ -29,6 +29,7 @@ public class VSignTextPanel extends VTextAbs {
     @Override
     protected void initButtonPanel() {
         super.initButtonPanel();
+        encryptButton.setText("Sign");
         decryptButton.setText("Verify");
     }
 

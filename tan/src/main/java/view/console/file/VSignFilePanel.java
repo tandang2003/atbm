@@ -38,6 +38,7 @@ public class VSignFilePanel extends VFileAbs{
     @Override
     protected void initButtonPanel() {
         super.initButtonPanel();
+        encryptButton.setText("Sign");
         decryptButton.setText("Check");
     }
 

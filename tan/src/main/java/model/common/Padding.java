@@ -33,6 +33,6 @@ public enum Padding {
 
     @Override
     public String toString() {
-        return displayName;
+        return name;
     }
 }

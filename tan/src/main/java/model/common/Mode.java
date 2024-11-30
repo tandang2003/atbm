@@ -46,7 +46,10 @@ public enum Mode  {
 
     @Override
     public String toString() {
-        return displayName;
+        if (this == Mode.NONE
+        || this == Mode.CBC)
+            return "None";
+        return name;
     }
 
 }

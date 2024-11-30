@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: app.main
+Class-Path: lib\flatlaf-3.5.2.jar lib\bcrypt-0.10.2.jar lib\bcprov-jdk18on-1.79.jar
+ lib\bytes-1.5.0.jar
+

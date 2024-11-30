@@ -20,6 +20,6 @@ public enum SecureRandom {
 
     @Override
     public String toString() {
-        return displayName;
+        return name;
     }
 }
