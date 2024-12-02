@@ -12,7 +12,7 @@ public class VSignPanel extends VAlgorithmAbs {
 
     @Override
     public void init() {
-        algorithms.addItem(KeyPairAlgorithm.RSA);
+//        algorithms.addItem(KeyPairAlgorithm.RSA);
         algorithms.addItem(KeyPairAlgorithm.DSA);
     }
 }

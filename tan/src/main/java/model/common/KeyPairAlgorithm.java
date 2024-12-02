@@ -1,7 +1,7 @@
 package model.common;
 
 public enum KeyPairAlgorithm implements ICipherEnum {
-    RSA("RSA", "RSA"),
+//    RSA("RSA", "RSA"),
     DSA("DSA", "DSA"),
     ;
     private String name;

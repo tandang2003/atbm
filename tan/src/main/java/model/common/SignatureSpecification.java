@@ -39,33 +39,33 @@ public class SignatureSpecification {
     }
 
 
-    public static SignatureSpecification RSA() {
-        return new SignatureSpecification(
-                KeyPairAlgorithm.RSA,
-                Provider.SUN_RSA_SIGN,
-                List.of(
-                        Signature.MD2withRSA,
-                        Signature.MD5withRSA,
-                        Signature.SHA1withRSA,
-                        Signature.SHA256withRSA,
-                        Signature.SHA384withRSA,
-                        Signature.SHA512withRSA,
-                        Signature.SHA512_224withRSA,
-                        Signature.SHA512_256withRSA,
-                        Signature.SHA3_224withRSA,
-                        Signature.SHA3_256withRSA,
-                        Signature.SHA3_384withRSA,
-                        Signature.SHA3_512withRSA),
-                List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
-                Set.of(Size.Size_128
-                        ,Size.Size_256,
-                        Size.Size_384
-                ));
-    }
+//    public static SignatureSpecification RSA() {
+//        return new SignatureSpecification(
+//                KeyPairAlgorithm.RSA,
+//                Provider.SUN_RSA_SIGN,
+//                List.of(
+//                        Signature.MD2withRSA,
+//                        Signature.MD5withRSA,
+//                        Signature.SHA1withRSA,
+//                        Signature.SHA256withRSA,
+//                        Signature.SHA384withRSA,
+//                        Signature.SHA512withRSA,
+//                        Signature.SHA512_224withRSA,
+//                        Signature.SHA512_256withRSA,
+//                        Signature.SHA3_224withRSA,
+//                        Signature.SHA3_256withRSA,
+//                        Signature.SHA3_384withRSA,
+//                        Signature.SHA3_512withRSA),
+//                List.of(SecureRandom.SHA1PRNG, SecureRandom.DRBG),
+//                Set.of(Size.Size_128
+//                        ,Size.Size_256,
+//                        Size.Size_384
+//                ));
+//    }
 
     public static SignatureSpecification DSA() {
         return new SignatureSpecification(
-                KeyPairAlgorithm.RSA,
+                KeyPairAlgorithm.DSA,
                 Provider.SUN,
                 List.of(
                         Signature.SHA1_WITH_DSA,
@@ -86,7 +86,7 @@ public class SignatureSpecification {
 
     public static SignatureSpecification findByKeyPairAlgorithm(KeyPairAlgorithm keyPairAlgorithm) {
         SignatureSpecification result = switch (keyPairAlgorithm) {
-            case RSA -> RSA();
+//            case RSA -> RSA();
             case DSA -> DSA();
             default -> null;
         };
@@ -100,7 +100,7 @@ public class SignatureSpecification {
 
     public static SignatureSpecification findByKeyPairAlgorithm(String keyPairAlgorithm) {
         SignatureSpecification result = switch (keyPairAlgorithm) {
-            case "RSA" -> RSA();
+//            case "RSA" -> RSA();
             case "DSA" -> DSA();
             default -> null;
         };

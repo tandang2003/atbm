@@ -13,7 +13,6 @@ import java.awt.*;
 public class VFrame extends JFrame {
 
     VMainPanel vMainPanel;
-    VMenuBar vMenuBar;
 
     public VFrame(MainController controller) {
 //        UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
@@ -67,8 +66,6 @@ public class VFrame extends JFrame {
 //        UIManager.put("List.selectionBackground", new Color(135, 206, 250));
 
         vMainPanel = new VMainPanel(controller);
-        vMenuBar = new VMenuBar(controller);
-        setJMenuBar(vMenuBar);
         add(vMainPanel);
         this.pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

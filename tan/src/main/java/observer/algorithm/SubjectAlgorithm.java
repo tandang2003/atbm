@@ -1,7 +1,6 @@
 package observer.algorithm;
 
 public interface SubjectAlgorithm {
-//    List<ObserverAlgorithm> observers = new ArrayList<>();
 
     boolean register(ObserverAlgorithm observer);
 

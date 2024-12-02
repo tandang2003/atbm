@@ -64,7 +64,7 @@ public abstract class VTextAbs extends VConsolePanelAbs {
     }
 
     @Override
-    protected void encrypt() {
+    protected void encrypt() throws ClassNotFoundException {
         if (planText.getText().isEmpty()) {
             JOptionPane.showMessageDialog(controller.getFrame(), "Please enter the text you want to encrypt", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -73,18 +73,16 @@ public abstract class VTextAbs extends VConsolePanelAbs {
         try {
             controller.getAlgorithms().validation();
         } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            throw e;
         }
     }
 
     @Override
-    protected void decrypt() {
+    protected void decrypt() throws ClassNotFoundException {
         try {
             controller.getAlgorithms().validation();
         } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            throw e;
         }
     }
 }

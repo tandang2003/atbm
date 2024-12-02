@@ -1,7 +1,6 @@
 package model.algorithms;
 
 
-import model.common.Hash;
 import model.common.ICipherEnum;
 import model.common.KeyPairAlgorithm;
 import model.key.IKey;
@@ -93,8 +92,6 @@ public abstract class AAlgorithm implements IAlgorithms {
         String nameFile = getCipher().getName() + ".tan.key";
         if (cipher instanceof KeyPairAlgorithm) {
             nameFile = "Sign_" + getCipher().getName() + ".tan.key";
-        } else if (cipher instanceof Hash) {
-            nameFile = "hash_" + getCipher().getName() + ".tan.key";
         }
         nameFile = Arrays.stream(nameFile.split(""))
                 .map(ch -> ch.matches("[a-zA-Z0-9._-]") ? ch : "_")

@@ -39,7 +39,7 @@ public class VSignTextPanel extends VTextAbs {
     }
 
     @Override
-    protected void encrypt() {
+    protected void encrypt() throws ClassNotFoundException {
         super.encrypt();
         String plainText = planText.getText();
         try {
@@ -53,7 +53,7 @@ public class VSignTextPanel extends VTextAbs {
     }
 
     @Override
-    protected void decrypt() {
+    protected void decrypt() throws ClassNotFoundException {
         super.decrypt();
         String plainText = planText.getText();
         String signedText = decryptText.getText();

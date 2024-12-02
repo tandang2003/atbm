@@ -36,15 +36,25 @@ public abstract class VConsolePanelAbs extends JPanel {
         buttonPanel.add(decryptButton);
 
         encryptButton.addActionListener(e -> {
-            encrypt();
+            try {
+                encrypt();
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
         });
         decryptButton.addActionListener(e -> {
-            decrypt();
+            try {
+                decrypt();
+            } catch (ClassNotFoundException ex) {
+                JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            }
         });
 
     }
 
-    protected abstract void encrypt();
+    protected abstract void encrypt() throws ClassNotFoundException;
 
-    protected abstract void decrypt();
+    protected abstract void decrypt() throws ClassNotFoundException;
 }

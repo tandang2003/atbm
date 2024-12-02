@@ -10,6 +10,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class SignKeyHelper implements Serializable {
@@ -27,6 +28,19 @@ public class SignKeyHelper implements Serializable {
         this.keyPairAlgorithm = keyPairAlgorithm;
         this.secureRandom = secureRandom;
         this.keySize = size;
+    }
+
+    @Override
+    public String toString() {
+        return "SignKeyHelper{" +
+                "secureRandom=" + secureRandom +
+                ", signature=" + signature +
+                ", keySize=" + keySize +
+                ", keyPairAlgorithm=" + keyPairAlgorithm +
+                ", provider=" + provider +
+                ", publicKey=" + Arrays.toString(publicKey) +
+                ", privateKey=" + Arrays.toString(privateKey) +
+                '}';
     }
 
     public String getSecureRandom() {

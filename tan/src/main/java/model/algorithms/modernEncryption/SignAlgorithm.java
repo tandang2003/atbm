@@ -48,6 +48,8 @@ public class SignAlgorithm extends AAlgorithm {
         genKeyPair();
         genSignature();
         genKeyPair((SignKeyHelper) this.key.getKey());
+//        System.out.println(((SignKeyHelper) this.key.getKey()).toString());
+
     }
 
     /**
@@ -242,6 +244,11 @@ public class SignAlgorithm extends AAlgorithm {
 
         genKeyPair();
         genSignature();
+
+        System.out.println("Key updated");
+        System.out.println(signKeyHelper.toString());
+
+
     }
 
     /**
