@@ -74,6 +74,8 @@ public class VToolPanel extends JPanel {
 
     private void loadKeyEvent() {
         loadKey.addActionListener(e -> {
+            //using JOptionPane for load public or private key
+            boolean isPublicKey = JOptionPane.showConfirmDialog(null, "Do you want to load public key?", "Load Key", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setDialogTitle("Specify a folder to save");
             fileChooser.setCurrentDirectory(new File("."));
@@ -83,21 +85,16 @@ public class VToolPanel extends JPanel {
                 @Override
                 public boolean accept(File f) {
                     // Accept files that end with ".tan.key"
-                    return f.getName().toLowerCase().endsWith(".tan.key");
+                    return f.getName().toLowerCase().equals(isPublicKey ? "pub.key" : "pri.key");
                 }
 
                 @Override
                 public String getDescription() {
-                    return "TAN Key Files (*.tan.key)";
+                    return "Key Files " + (isPublicKey ? "(pub.key)" : "(pri.key)");
                 }
             });
             if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                new LoadFileWorker(controller, this, fileChooser.getSelectedFile()).execute();
-//                try {
-//                    controller.loadKey(fileChooser.getSelectedFile());
-//                } catch (IOException | ClassNotFoundException ex) {
-//                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-//                }
+                new LoadFileWorker(controller, this, fileChooser.getSelectedFile(), isPublicKey).execute();
             }
         });
     }

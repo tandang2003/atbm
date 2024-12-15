@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
     private MainController controller;
@@ -17,13 +16,14 @@ public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
     private JDialog dialog;
     private JProgressBar progressBar;
     private File key;
-    private boolean isError;
+    private boolean isError, isPublicKey;
     private String message;
 
-    public LoadFileWorker(MainController controller, JPanel toolPanel, File key) {
+    public LoadFileWorker(MainController controller, JPanel toolPanel, File key, boolean isPublicKey) {
         this.vMainPanel = (VMainPanel) toolPanel.getParent();
         this.controller = controller;
         this.key = key;
+        this.isPublicKey = isPublicKey;
         init();
 
     }
@@ -31,7 +31,7 @@ public class LoadFileWorker extends SwingWorker<Void, Void> implements IWorker {
     @Override
     protected Void doInBackground() throws Exception {
         try {
-            controller.loadKey(key);
+            controller.loadKey(key, isPublicKey);
             isError = false;
         } catch (IOException ex) {
             isError = true;

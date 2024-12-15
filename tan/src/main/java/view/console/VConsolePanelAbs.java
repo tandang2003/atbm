@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public abstract class VConsolePanelAbs extends JPanel {
-    protected JButton encryptButton, decryptButton;
+    protected JButton encryptButton;
     protected JPanel inputPanel, buttonPanel;
     protected MainController controller;
 
@@ -30,22 +30,12 @@ public abstract class VConsolePanelAbs extends JPanel {
     protected void initButtonPanel() {
         buttonPanel = new JPanel();
         encryptButton = new JButton("Encrypt");
-        decryptButton = new JButton("Decrypt");
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 10));
         buttonPanel.add(encryptButton);
-        buttonPanel.add(decryptButton);
 
         encryptButton.addActionListener(e -> {
             try {
                 encrypt();
-            } catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-            }
-        });
-        decryptButton.addActionListener(e -> {
-            try {
-                decrypt();
             } catch (ClassNotFoundException ex) {
                 JOptionPane.showMessageDialog(controller.getFrame(), "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 

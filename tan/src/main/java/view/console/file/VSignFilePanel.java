@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class VSignFilePanel extends VFileAbs{
-    private JTextField checkedText;
+//    private JTextField checkedText;
     public VSignFilePanel(MainController controller) {
         super(controller);
     }
@@ -21,24 +21,11 @@ public class VSignFilePanel extends VFileAbs{
     @Override
     protected void initOutput() {
         outputFile = new JTextField(30);
-//        browseOutput = new JButton("Browse");
-//        browseOutput.addActionListener(e -> {
-//            JFileChooser fileChooser = new JFileChooser();
-//            fileChooser.setDialogTitle("Specify a FOLDER to save");
-//            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//            fileChooser.setAcceptAllFileFilterUsed(false);
-//            int result = fileChooser.showSaveDialog(null);
-//            if (result == JFileChooser.APPROVE_OPTION) {
-//                File file = fileChooser.getSelectedFile();
-//                outputFile.setText(file.getAbsolutePath());
-//            }
-//        });
     }
 
     @Override
     protected void initButtonPanel() {
         super.initButtonPanel();
-        decryptButton.setText("Check");
     }
 
     @Override
@@ -99,19 +86,19 @@ public class VSignFilePanel extends VFileAbs{
         inputPanel.add(outputFile, gbc);
 
 // Add destination file row without browse button
-        checkedText = new JTextField();
+//        checkedText = new JTextField();
+//
+//        gbc.gridx = 0;
+//        gbc.gridy = 3;
+//        gbc.weightx = 0.1; // Minimal space for the label
+//        gbc.gridwidth = 1;
+//        inputPanel.add(new JLabel("Verify signed text:"), gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.weightx = 0.1; // Minimal space for the label
-        gbc.gridwidth = 1;
-        inputPanel.add(new JLabel("Verify signed text:"), gbc);
-
-        gbc.gridx = 1;
-        gbc.weightx = 1.0; // Text field takes remaining space
-        gbc.gridwidth = 2; // Span across remaining columns
-        checkedText.setPreferredSize(largerSize);
-        inputPanel.add(checkedText, gbc);
+//        gbc.gridx = 1;
+//        gbc.weightx = 1.0; // Text field takes remaining space
+//        gbc.gridwidth = 2; // Span across remaining columns
+//        checkedText.setPreferredSize(largerSize);
+//        inputPanel.add(checkedText, gbc);
 
 // Add inputPanel to the main container (JFrame or parent panel)
         add(inputPanel, BorderLayout.CENTER);
@@ -136,28 +123,28 @@ public class VSignFilePanel extends VFileAbs{
         }
     }
 
-    @Override
-    protected void decrypt() {
-        super.decrypt();
-        String input = inputFile.getText();
-        String checked = checkedText.getText();
-
-        File inputFile = new File(input);
-        if (!inputFile.exists())
-            JOptionPane.showMessageDialog(controller.getFrame(), "Input file does not exist", "Error", JOptionPane.ERROR_MESSAGE);
-
-        try {
-            String op=controller.getAlgorithms().signOrHashFile(input);
-            outputFile.setText(op);
-            boolean isMatch = controller.getAlgorithms().verifyFile(input, checked);
-            if (isMatch) {
-                JOptionPane.showMessageDialog(controller.getFrame(), "Match", "Result", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(controller.getFrame(), "Not Match", "Result", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(controller.getFrame(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }
+//    @Override
+//    protected void decrypt() {
+//        super.decrypt();
+//        String input = inputFile.getText();
+////        String checked = checkedText.getText();
+//
+//        File inputFile = new File(input);
+//        if (!inputFile.exists())
+//            JOptionPane.showMessageDialog(controller.getFrame(), "Input file does not exist", "Error", JOptionPane.ERROR_MESSAGE);
+//
+//        try {
+//            String op=controller.getAlgorithms().signOrHashFile(input);
+//            outputFile.setText(op);
+//            boolean isMatch = controller.getAlgorithms().verifyFile(input, checked);
+//            if (isMatch) {
+//                JOptionPane.showMessageDialog(controller.getFrame(), "Match", "Result", JOptionPane.INFORMATION_MESSAGE);
+//            } else {
+//                JOptionPane.showMessageDialog(controller.getFrame(), "Not Match", "Result", JOptionPane.INFORMATION_MESSAGE);
+//            }
+//        } catch (IOException e) {
+//            JOptionPane.showMessageDialog(controller.getFrame(), e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+//        }
+//
+//    }
 }

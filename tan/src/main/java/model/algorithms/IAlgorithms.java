@@ -32,9 +32,10 @@ public interface IAlgorithms {
      * Tải khóa từ một tệp được chỉ định.
      *
      * @param selectedFile tệp chứa khóa cần tải.
+     * @param isPublicKey
      * @throws IOException nếu tệp không tồn tại hoặc có lỗi trong quá trình đọc.
      */
-    void loadKey(File selectedFile) throws IOException;
+    void loadKey(File selectedFile, boolean isPublicKey) throws IOException;
 
     /**
      * Mã hóa một chuỗi văn bản và trả về kết quả mã hóa.

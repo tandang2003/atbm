@@ -16,27 +16,7 @@ import static view.font.MyFont.ROBOTO_REGULAR;
 public class DetailAlgorithmPanel extends JPanel {
     private JPanel keyPanel, foreignPanel, alphabetsPanel;
     private Font keyFont;
-    //    private JTextField alphabetField;
-//    private JComboBox<String> hillKeySize;
     private MainController controller;
-//    private JComboBox<String> foreignCharacters;
-//
-//    //symmetric
-//    private JComboBox<Size> symmetricKeySize, symmetricIvSize;
-//    private JComboBox<Mode> symmetricKeyMode;
-//    private JComboBox<Padding> symmetricKeyPadding;
-//    private JTextField symmetricKeyField, symmetricIvField;
-//
-//    //asymmetric
-//    private JComboBox<Size> asymmetricKeySize;
-//    private JComboBox<Mode> asymmetricKeyMode;
-//    private JComboBox<Padding> asymmetricKeyPadding;
-//    private JTextField asymmetricPublic, asymmetricPrivate;
-//
-//    //hash
-//    private JComboBox<String> hashOutputFormat;
-//    private JRadioButton hashYes, hashNo;
-//    private JTextField hashKeyField;
 
     //sign
     private JComboBox<Size> signKeySize;
@@ -115,23 +95,23 @@ public class DetailAlgorithmPanel extends JPanel {
         keyPanel.setLayout(new BoxLayout(keyPanel, BoxLayout.Y_AXIS));
         JPanel keyFieldPanel = new JPanel();
         keyFieldPanel.setLayout(new BorderLayout());
-        JTextField keyField = new JTextField();
-        keyField.setEnabled(true);
-        keyField.setEditable(false);
-        keyField.setBackground(Color.WHITE);
+        signPublicKey = new JTextField();
+        signPublicKey.setEnabled(true);
+        signPublicKey.setEditable(false);
+        signPublicKey.setBackground(Color.WHITE);
         keyFieldPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Public key"));
-        keyField.setFont(keyFont);
-        keyFieldPanel.add(keyField, BorderLayout.CENTER);
+        signPublicKey.setFont(keyFont);
+        keyFieldPanel.add(signPublicKey, BorderLayout.CENTER);
         keyPanel.add(keyFieldPanel);
         JPanel privateKeydPanel = new JPanel();
         privateKeydPanel.setLayout(new BorderLayout());
-        JTextField privateKeyField = new JTextField();
-        privateKeyField.setEnabled(true);
-        privateKeyField.setEditable(false);
-        privateKeyField.setBackground(Color.WHITE);
+        signPrivateKey = new JTextField();
+        signPrivateKey.setEnabled(true);
+        signPrivateKey.setEditable(false);
+        signPrivateKey.setBackground(Color.WHITE);
         privateKeydPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Private key"));
-        privateKeyField.setFont(keyFont);
-        privateKeydPanel.add(privateKeyField, BorderLayout.CENTER);
+        signPrivateKey.setFont(keyFont);
+        privateKeydPanel.add(signPrivateKey, BorderLayout.CENTER);
         keyPanel.add(privateKeydPanel);
         gbc.gridx = 0; // Column 0
         gbc.gridy = 1; // Row 1
@@ -198,15 +178,9 @@ public class DetailAlgorithmPanel extends JPanel {
             }
         }
 
-        String[] texts = key.getKeys();
-        int index = 0;
-        for (Component c : keyPanel.getComponents()) {
-            if (c instanceof JPanel panel) {
-                if (panel.getComponent(0) instanceof JTextField textField)
-                    textField.setText(texts[index++]);
-            }
-        }
-
+        String[] texts = {key.getPrivateKeyString(), key.getPublicKeyString()};
+        signPublicKey.setText(texts[1]);
+        signPrivateKey.setText(texts[0]);
         signKeySize.setSelectedIndex(siz);
         signKeySignature.setSelectedIndex(sig);
         signKeySecureRandom.setSelectedIndex(ser);

@@ -61,8 +61,8 @@ public class MainController  implements SubjectAlgorithm {
         algorithms.saveKey(selectedFile);
     }
 
-    public void loadKey(File selectedFile) throws IOException {
-        algorithms.loadKey(selectedFile);
+    public void loadKey(File selectedFile, boolean isPublicKey) throws IOException {
+        algorithms.loadKey(selectedFile,isPublicKey);
     }
 
     public void updateKey(Object... objects) {

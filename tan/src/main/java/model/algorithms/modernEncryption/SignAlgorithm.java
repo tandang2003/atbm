@@ -81,7 +81,7 @@ public class SignAlgorithm extends AAlgorithm {
     private void genSignature() {
         SignKeyHelper signKeyHelper = (SignKeyHelper) this.key.getKey();
         try {
-            signatureObj = Signature.getInstance(signKeyHelper.getSignature(), signKeyHelper.getProvider());
+            signatureObj = Signature.getInstance(model.common.Signature.SHA1_WITH_DSA.getName(), Provider.SUN.getName());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchProviderException e) {
@@ -117,6 +117,7 @@ public class SignAlgorithm extends AAlgorithm {
     @Override
     public String encrypt(String input) throws IllegalBlockSizeException {
         try {
+            genSignature();
             byte[] bytes = input.getBytes();
             byte[] sign = null;
             signatureObj.initSign(privateKey);
@@ -142,6 +143,7 @@ public class SignAlgorithm extends AAlgorithm {
     @Override
     public String signOrHashFile(String fileIn) throws IOException {
         try {
+            genSignature();
             signatureObj.initSign(privateKey);
             BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(fileIn));
             byte[] buffer = new byte[1024];
@@ -261,11 +263,14 @@ public class SignAlgorithm extends AAlgorithm {
         if (key == null) {
             throw new ClassNotFoundException("Key is not initialized");
         }
+        SignKeyHelper signKeyHelper = (SignKeyHelper) key.getKey();
+        if  ((signKeyHelper.getPublicKeyString()) == null|| (signKeyHelper.getPrivateKeyString()) == null) {
+            throw new ClassNotFoundException("Key is not initialized");
+        }
+        if  ((signKeyHelper.getPublicKeyString()).isEmpty() || (signKeyHelper.getPrivateKeyString()).isEmpty()) {
+            throw new ClassNotFoundException("Key is not load enought key");
+        }
         return true;
     }
 
-    public static void main(String[] args) throws IllegalBlockSizeException {
-        String userHome = System.getProperty("user.home");
-        System.out.println(userHome);
-    }
 }

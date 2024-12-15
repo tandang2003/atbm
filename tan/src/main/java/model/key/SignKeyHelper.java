@@ -95,19 +95,29 @@ public class SignKeyHelper implements Serializable {
     public void setPrivateKey(byte[] privateKey) {
         this.privateKey = privateKey;
     }
+
     public void setPrivateKey(String privateKey) {
         this.privateKey = Base64.getDecoder().decode(privateKey);
     }
-    public String[] getKeys() {
-        return new String[]{Base64.getEncoder().encodeToString(publicKey), Base64.getEncoder().encodeToString(privateKey)};
+
+    //    public String[] getKeys() {
+//        return new String[]{Base64.getEncoder().encodeToString(publicKey), Base64.getEncoder().encodeToString(privateKey)};
+//    }
+    public String getPublicKeyString() {
+        return publicKey != null ? Base64.getEncoder().encodeToString(publicKey) : "";
+    }
+
+    public String getPrivateKeyString() {
+        return privateKey != null ? Base64.getEncoder().encodeToString(privateKey) : "";
     }
 
     public PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
-        if (privateKey == null) {
+        if (publicKey == null) {
             return null;
         }
         return KeyFactory.getInstance(keyPairAlgorithm.getName()).generatePublic(new X509EncodedKeySpec(publicKey));
     }
+
     public PrivateKey getPrivateKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
         if (privateKey == null) {
             return null;

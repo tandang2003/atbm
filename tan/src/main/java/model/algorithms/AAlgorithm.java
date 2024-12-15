@@ -2,11 +2,9 @@ package model.algorithms;
 
 
 import model.common.ICipherEnum;
-import model.common.KeyPairAlgorithm;
 import model.key.IKey;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 /**
  * Abstract base class for encryption and decryption algorithms.
@@ -33,16 +31,17 @@ public abstract class AAlgorithm implements IAlgorithms {
      * Tải khóa mật mã từ tệp được chỉ định.
      *
      * @param selectedFile tệp chứa khóa.
+     * @param isPublicKey
      * @throws IOException nếu tệp không tồn tại hoặc xảy ra lỗi khi đọc.
      */
     @Override
-    public void loadKey(File selectedFile) throws IOException {
+    public void loadKey(File selectedFile, boolean isPublicKey) throws IOException {
         if (!selectedFile.exists()) {
             throw new IOException("File not found");
         }
-        DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
-        key.loadFromFile(inputStream);
-        inputStream.close();
+//        DataInputStream inputStream = new DataInputStream(new FileInputStream(selectedFile));
+        key.loadFromFile(selectedFile, isPublicKey);
+//        inputStream.close();
     }
 
     /**
@@ -89,20 +88,16 @@ public abstract class AAlgorithm implements IAlgorithms {
             throw new IOException("Key is not created");
         }
         ICipherEnum cipher = getCipher();
-        String nameFile = getCipher().getName() + ".tan.key";
-        if (cipher instanceof KeyPairAlgorithm) {
-            nameFile = "Sign_" + getCipher().getName() + ".tan.key";
-        }
-        nameFile = Arrays.stream(nameFile.split(""))
-                .map(ch -> ch.matches("[a-zA-Z0-9._-]") ? ch : "_")
-                .reduce("", String::concat);
+        String pubFile = "pub.key";
+        String priFile = "pri.key";
         try {
-            File destination = new File(path + File.separator + nameFile);
-            if (!destination.exists())
-                destination.createNewFile();
-            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(destination));
-            key.saveToFile(outputStream);
-            outputStream.close();
+            File pubDestination = new File(path + File.separator + pubFile);
+            File priDestination = new File(path + File.separator + priFile);
+            if (!pubDestination.exists())
+                pubDestination.createNewFile();
+            if (!priDestination.exists())
+                priDestination.createNewFile();
+            key.saveToFile(pubDestination, priDestination);
         } catch (IOException e) {
             throw new IOException("Error while saving key. Please try again");
         }
